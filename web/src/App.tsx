@@ -1,8 +1,24 @@
 /**
+ * Copyright 2026 NEMT Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
  * NEMT Simulator - 主应用页面
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { 
   SpectrumChart, 
   EvolutionChart, 
@@ -10,19 +26,35 @@ import {
   NonlinearScanChart,
   ResultSummary,
   ParameterDisplay
-} from './Charts';
-import { ParamSliderGroup, PresetSelector, ActionButtons } from './Controls';
-import { NEMTSimulator, generateDemoData } from '../utils/nemtCore';
+} from './components/Charts';
+import { ParamSliderGroup, PresetSelector, ActionButtons } from './components/Controls';
+import { NEMTSimulator, generateDemoData } from './utils/nemtCore';
+import { NotionBoard } from './components/NotionBoard';
+import { NotionConfig, DEFAULT_NOTION_CONFIG } from './types/notion';
 import { 
   NEMTParams, 
   DEFAULT_PARAMS, 
   ExperimentResult,
   NoiseScanResult,
   NonlinearScanResult 
-} from '../types/nemt';
-import { Activity, BarChart3, TrendingUp, Zap, Info } from 'lucide-react';
+} from './types/nemt';
+import { Activity, BarChart3, TrendingUp, Zap, Info, LayoutDashboard } from 'lucide-react';
 
 type ExperimentMode = 'none' | 'single' | 'noise' | 'nonlinear';
+type MainTab = 'simulator' | 'notion';
+
+// 从 localStorage 加载 Notion 配置
+const loadNotionConfig = (): NotionConfig => {
+  try {
+    const saved = localStorage.getItem('notion_config');
+    if (saved) {
+      return { ...DEFAULT_NOTION_CONFIG, ...JSON.parse(saved) };
+    }
+  } catch (e) {
+    console.error('Failed to load Notion config:', e);
+  }
+  return DEFAULT_NOTION_CONFIG;
+};
 
 export const NEMTApp: React.FC = () => {
   // 参数状态
@@ -39,6 +71,17 @@ export const NEMTApp: React.FC = () => {
   
   // 标签页
   const [activeTab, setActiveTab] = useState<'spectrum' | 'evolution' | 'analysis'>('spectrum');
+  
+  // 主标签页 (模拟器 / Notion 看板)
+  const [mainTab, setMainTab] = useState<MainTab>('simulator');
+  
+  // Notion 配置
+  const [notionConfig, setNotionConfig] = useState<NotionConfig>(loadNotionConfig);
+  
+  // 保存 Notion 配置到 localStorage
+  useEffect(() => {
+    localStorage.setItem('notion_config', JSON.stringify(notionConfig));
+  }, [notionConfig]);
 
   // 参数更新
   const handleParamChange = useCallback((newParams: Partial<NEMTParams>) => {
@@ -117,20 +160,87 @@ export const NEMTApp: React.FC = () => {
         padding: '24px 32px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <Activity size={36} color="#00d4ff" />
-          <div>
-            <h1 style={{ margin: 0, fontSize: '28px', fontWeight: 600 }}>
-              NEMT Simulator
-            </h1>
-            <p style={{ margin: '4px 0 0', opacity: 0.8, fontSize: '14px' }}>
-              非平衡市场理论模拟器 | Non-Equilibrium Market Theory
-            </p>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <Activity size={36} color="#00d4ff" />
+            <div>
+              <h1 style={{ margin: 0, fontSize: '28px', fontWeight: 600 }}>
+                NEMT Simulator
+              </h1>
+              <p style={{ margin: '4px 0 0', opacity: 0.8, fontSize: '14px' }}>
+                非平衡市场理论模拟器 | Non-Equilibrium Market Theory
+              </p>
+            </div>
+          </div>
+          
+          {/* 主导航标签 */}
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              onClick={() => setMainTab('simulator')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 20px',
+                border: 'none',
+                borderRadius: '8px',
+                background: mainTab === 'simulator' ? '#00d4ff' : 'rgba(255,255,255,0.1)',
+                color: mainTab === 'simulator' ? '#1a1a2e' : 'white',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 500,
+                transition: 'all 0.2s'
+              }}
+            >
+              <Activity size={16} />
+              模拟器
+            </button>
+            <button
+              onClick={() => setMainTab('notion')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 20px',
+                border: 'none',
+                borderRadius: '8px',
+                background: mainTab === 'notion' ? '#00d4ff' : 'rgba(255,255,255,0.1)',
+                color: mainTab === 'notion' ? '#1a1a2e' : 'white',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 500,
+                transition: 'all 0.2s'
+              }}
+            >
+              <LayoutDashboard size={16} />
+              Notion 看板
+            </button>
           </div>
         </div>
       </header>
 
       <main style={{ padding: '24px 32px', maxWidth: '1600px', margin: '0 auto' }}>
+        {/* Notion 看板标签页 */}
+        {mainTab === 'notion' && (
+          <div style={{
+            background: 'white',
+            borderRadius: '12px',
+            padding: '24px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+          }}>
+            <NotionBoard 
+              initialConfig={notionConfig}
+              onTaskCreated={(task) => console.log('Task created:', task)}
+              onTaskUpdated={(task) => console.log('Task updated:', task)}
+              onTaskDeleted={(taskId) => console.log('Task deleted:', taskId)}
+              onConfigChange={(config) => setNotionConfig(config)}
+            />
+          </div>
+        )}
+
+        {/* 模拟器标签页 */}
+        {mainTab === 'simulator' && (
+          <>
         {/* 核心指标卡片 */}
         <div style={{ 
           display: 'grid', 
@@ -428,6 +538,8 @@ export const NEMTApp: React.FC = () => {
             </div>
           </div>
         </div>
+          </>
+        )}
       </main>
 
       {/* 动画样式 */}

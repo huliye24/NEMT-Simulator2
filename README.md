@@ -215,3 +215,18 @@ TypeScript实现位于 `web/` 目录，包含：
 这不是一个预测价格的系统，而是一个研究市场在噪声下结构响应的"市场物理学实验室"。
 
 理论文档请参考: [Notion NEMT理论中枢](https://www.notion.so/NEMT-34317dca0dd2801ba79ff2d5af7a5afe)
+
+---
+
+### 许可证
+
+本项目采用 [Apache License 2.0](LICENSE) 开源协议。
+
+**重要条款：**
+- 允许商业使用，可以闭源
+- 需要保留版权声明
+- 包含专利授权保护
+- 修改代码必须明确说明
+
+详细条款请参阅 [LICENSE](LICENSE) 文件。
+
