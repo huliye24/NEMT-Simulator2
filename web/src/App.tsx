@@ -29,8 +29,6 @@ import {
 } from './components/Charts';
 import { ParamSliderGroup, PresetSelector, ActionButtons } from './components/Controls';
 import { NEMTSimulator, generateDemoData } from './utils/nemtCore';
-import { NotionBoard } from './components/NotionBoard';
-import { NotionConfig, DEFAULT_NOTION_CONFIG } from './types/notion';
 import { 
   NEMTParams, 
   DEFAULT_PARAMS, 
@@ -38,23 +36,13 @@ import {
   NoiseScanResult,
   NonlinearScanResult 
 } from './types/nemt';
-import { Activity, BarChart3, TrendingUp, Zap, Info, LayoutDashboard } from 'lucide-react';
+import { Activity, BarChart3, TrendingUp, Zap, Info, LayoutDashboard, BookOpen, ActivitySquare } from 'lucide-react';
+import { TheoryTab } from './components/TheoryTab';
+import { KanbanBoard } from './components/KanbanBoard';
+import { OnChainDashboard } from './components/OnChainDashboard';
 
 type ExperimentMode = 'none' | 'single' | 'noise' | 'nonlinear';
-type MainTab = 'simulator' | 'notion';
-
-// 从 localStorage 加载 Notion 配置
-const loadNotionConfig = (): NotionConfig => {
-  try {
-    const saved = localStorage.getItem('notion_config');
-    if (saved) {
-      return { ...DEFAULT_NOTION_CONFIG, ...JSON.parse(saved) };
-    }
-  } catch (e) {
-    console.error('Failed to load Notion config:', e);
-  }
-  return DEFAULT_NOTION_CONFIG;
-};
+type MainTab = 'simulator' | 'dashboard' | 'kanban' | 'theory';
 
 export const NEMTApp: React.FC = () => {
   // 参数状态
@@ -71,17 +59,9 @@ export const NEMTApp: React.FC = () => {
   
   // 标签页
   const [activeTab, setActiveTab] = useState<'spectrum' | 'evolution' | 'analysis'>('spectrum');
-  
-  // 主标签页 (模拟器 / Notion 看板)
+
+  // 主标签页状态
   const [mainTab, setMainTab] = useState<MainTab>('simulator');
-  
-  // Notion 配置
-  const [notionConfig, setNotionConfig] = useState<NotionConfig>(loadNotionConfig);
-  
-  // 保存 Notion 配置到 localStorage
-  useEffect(() => {
-    localStorage.setItem('notion_config', JSON.stringify(notionConfig));
-  }, [notionConfig]);
 
   // 参数更新
   const handleParamChange = useCallback((newParams: Partial<NEMTParams>) => {
@@ -196,7 +176,7 @@ export const NEMTApp: React.FC = () => {
               模拟器
             </button>
             <button
-              onClick={() => setMainTab('notion')}
+              onClick={() => setMainTab('dashboard')}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -204,8 +184,28 @@ export const NEMTApp: React.FC = () => {
                 padding: '10px 20px',
                 border: 'none',
                 borderRadius: '8px',
-                background: mainTab === 'notion' ? '#00d4ff' : 'rgba(255,255,255,0.1)',
-                color: mainTab === 'notion' ? '#1a1a2e' : 'white',
+                background: mainTab === 'dashboard' ? '#00d4ff' : 'rgba(255,255,255,0.1)',
+                color: mainTab === 'dashboard' ? '#1a1a2e' : 'white',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 500,
+                transition: 'all 0.2s'
+              }}
+            >
+              <ActivitySquare size={16} />
+              指标
+            </button>
+            <button
+              onClick={() => setMainTab('kanban')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 20px',
+                border: 'none',
+                borderRadius: '8px',
+                background: mainTab === 'kanban' ? '#00d4ff' : 'rgba(255,255,255,0.1)',
+                color: mainTab === 'kanban' ? '#1a1a2e' : 'white',
                 cursor: 'pointer',
                 fontSize: '14px',
                 fontWeight: 500,
@@ -213,29 +213,49 @@ export const NEMTApp: React.FC = () => {
               }}
             >
               <LayoutDashboard size={16} />
-              Notion 看板
+              看板
+            </button>
+            <button
+              onClick={() => setMainTab('theory')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 20px',
+                border: 'none',
+                borderRadius: '8px',
+                background: mainTab === 'theory' ? '#00d4ff' : 'rgba(255,255,255,0.1)',
+                color: mainTab === 'theory' ? '#1a1a2e' : 'white',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 500,
+                transition: 'all 0.2s'
+              }}
+            >
+              <BookOpen size={16} />
+              NEMT理论
             </button>
           </div>
         </div>
       </header>
 
       <main style={{ padding: '24px 32px', maxWidth: '1600px', margin: '0 auto' }}>
-        {/* Notion 看板标签页 */}
-        {mainTab === 'notion' && (
-          <div style={{
-            background: 'white',
-            borderRadius: '12px',
-            padding: '24px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
-          }}>
-            <NotionBoard 
-              initialConfig={notionConfig}
-              onTaskCreated={(task) => console.log('Task created:', task)}
-              onTaskUpdated={(task) => console.log('Task updated:', task)}
-              onTaskDeleted={(taskId) => console.log('Task deleted:', taskId)}
-              onConfigChange={(config) => setNotionConfig(config)}
-            />
-          </div>
+        {/* 指标 Dashboard 标签页 */}
+        {mainTab === 'dashboard' && (
+          <OnChainDashboard />
+        )}
+
+        {/* 看板标签页 */}
+        {mainTab === 'kanban' && (
+          <KanbanBoard 
+            title="NEMT 任务看板"
+            accentColor="#00d4ff"
+          />
+        )}
+
+        {/* NEMT理论标签页 */}
+        {mainTab === 'theory' && (
+          <TheoryTab />
         )}
 
         {/* 模拟器标签页 */}

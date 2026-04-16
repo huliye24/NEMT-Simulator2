@@ -37,6 +37,20 @@ Thumbs.db
 # Jupyter
 .ipynb_checkpoints/
 
+# Cursor IDE
+.cursor/
+
 # Temporary files
 *.tmp
 *.bak
+*.exe
+test_*.py
+check_matlab_engine.py
+update_mcp_config.py
+.pr_body.md
+
+# Website placeholder
+website/
+
+# Learning notes (not ready for commit)
+11_SWITCHBOARD_LEARNING/
