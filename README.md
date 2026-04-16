@@ -21,6 +21,66 @@ i∂ψ/∂t + α∂²ψ/∂x² + β|ψ|²ψ = η(x,t)
 
 ### 安装
 
+#### 方式一：Docker 部署（推荐）
+
+**前提条件：**
+- Docker Desktop 4.0+ ([下载](https://www.docker.com/products/docker-desktop))
+- Docker Compose (已包含在 Docker Desktop 中)
+
+```bash
+# 克隆项目
+git clone https://github.com/huliye24/NEMT-Simulator2.git
+cd NEMT-Simulator2
+
+# 启动核心模拟器（仅 Python，无需 IDE）
+docker-compose up -d nemt-core
+
+# 查看运行日志
+docker-compose logs -f nemt-core
+
+# 停止服务
+docker-compose down
+```
+
+**启动完整系统（包含 Web 前端）：**
+```bash
+# 启动核心 + Web
+docker-compose --profile web up -d
+
+# 访问前端
+# 打开浏览器: http://localhost:3000
+```
+
+**启动量化系统（包含 Redis + 采集器 + 指标计算）：**
+```bash
+# 启动量化组件
+docker-compose --profile full up -d
+
+# 查看服务状态
+docker-compose ps
+
+# 查看 Redis 管理界面 (可选)
+docker-compose --profile tools up -d
+# 访问: http://localhost:8081
+```
+
+**常用命令：**
+```bash
+# 重新构建并启动
+docker-compose up -d --build
+
+# 查看所有日志
+docker-compose logs -f
+
+# 查看特定服务日志
+docker-compose logs -f nemt-core
+
+# 清理 Docker 资源
+docker-compose down -v
+```
+
+#### 方式二：本地运行
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -57,7 +117,15 @@ NEMT Simulator/
 ├── visualizer.py          # 可视化
 ├── experiments.py         # 实验模块
 ├── main.py               # 主程序
-├── requirements.txt      # 依赖
+├── requirements.txt      # Python 依赖
+│
+├── docker-compose.yml     # Docker 编排配置
+├── nemt-core/            # NEMT Core 镜像配置
+│   └── Dockerfile
+├── nemt-web/             # Web 前端镜像配置
+│   └── Dockerfile
+├── docker/               # Docker 共享配置
+│   └── nginx.conf
 └── README.md             # 说明文档
 ```
 

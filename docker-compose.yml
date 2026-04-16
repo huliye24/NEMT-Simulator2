@@ -1,0 +1,140 @@
+# Copyright 2026 NEMT Lab
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+
+# NEMT Simulator - 完整 Docker 编排
+# 使用方法:
+#   docker-compose up -d              # 启动所有服务 (前台运行)
+#   docker-compose up                  # 启动并查看日志
+#   docker-compose up -d --build       # 重新构建并启动
+#   docker-compose down                # 停止服务
+#   docker-compose --profile full up  # 启动完整系统 (含采集器)
+#   docker-compose logs -f [service]   # 查看日志
+
+version: "3.8"
+
+services:
+  # ============================================
+  # NEMT Core - Python 主程序 (核心模拟引擎)
+  # ============================================
+  nemt-core:
+    build:
+      context: .
+      dockerfile: nemt-core/Dockerfile
+    container_name: nemt-core
+    restart: unless-stopped
+    volumes:
+      - ./output:/app/output
+      - ./data:/app/data
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TZ=Asia/Shanghai
+    networks:
+      - nemt-net
+
+  # ============================================
+  # NEMT Web - 前端 (React + Vite)
+  # ============================================
+  nemt-web:
+    build:
+      context: .
+      dockerfile: nemt-web/Dockerfile
+    container_name: nemt-web
+    ports:
+      - "3000:80"
+    depends_on:
+      - nemt-core
+    restart: unless-stopped
+    networks:
+      - nemt-net
+    profiles:
+      - web
+
+  # ============================================
+  # Redis - 数据总线 / 消息队列
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: nemt-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - nemt-net
+    profiles:
+      - quant
+
+  # ============================================
+  # Collector - Go 数据采集器 (币安 WebSocket)
+  # ============================================
+  collector:
+    build:
+      context: ./quant-mvp/collector
+      dockerfile: Dockerfile
+    container_name: nemt-collector
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_ADDR=redis:6379
+      - GIN_MODE=release
+    restart: unless-stopped
+    networks:
+      - nemt-net
+    profiles:
+      - full
+
+  # ============================================
+  # Calculator - Python 技术指标计算
+  # ============================================
+  calculator:
+    build:
+      context: ./quant-mvp/calculator
+      dockerfile: Dockerfile
+    container_name: nemt-calculator
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    networks:
+      - nemt-net
+    profiles:
+      - quant
+
+  # ============================================
+  # Redis Commander - Web 管理界面 (可选)
+  # ============================================
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: nemt-redis-ui
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - nemt-net
+    profiles:
+      - tools
+
+volumes:
+  redis-data:
+    driver: local
+
+networks:
+  nemt-net:
+    driver: bridge
