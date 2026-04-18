@@ -1,0 +1,99 @@
+{
+  "phase_positions": {
+    "max_position_phase_a": 0.2,
+    "single_risk_phase_a": 0.01,
+    "leverage_phase_a": 0,
+    "max_position_phase_b": 0.5,
+    "single_risk_phase_b": 0.02,
+    "leverage_phase_b": 1,
+    "max_position_phase_c": 0.7,
+    "single_risk_phase_c": 0.03,
+    "leverage_phase_c": 2,
+    "max_position_phase_d": 1.0,
+    "single_risk_phase_d": 0.02,
+    "leverage_phase_d": 1
+  },
+  "stop_loss": {
+    "atr_multiplier_涡旋突破": 1.5,
+    "atr_multiplier_随机共振触发": 2.0,
+    "atr_multiplier_趋势回调加仓": 1.0
+  },
+  "rebalance": {
+    "reduce_triggers": [
+      {
+        "condition": "相位从D降级为B或A",
+        "action": "总仓位降至50%以下",
+        "target_ratio": 0.5
+      },
+      {
+        "condition": "宏观流动性评分下降2分以上",
+        "action": "总仓位降至60%以下",
+        "target_ratio": 0.6
+      },
+      {
+        "condition": "链上健康度评分降至≤3",
+        "action": "总仓位降至40%以下",
+        "target_ratio": 0.4
+      },
+      {
+        "condition": "单日波动超过10%且方向与持仓相反",
+        "action": "强制减仓20%（防范黑天鹅）",
+        "target_ratio": null
+      }
+    ],
+    "add_triggers": [
+      {
+        "condition": "相位从B升级为C或D",
+        "action": "总仓位可提升至对应上限",
+        "target_ratio": null
+      },
+      {
+        "condition": "宏观流动性评分上升2分以上且链上健康度≥6",
+        "action": "加仓至上限",
+        "target_ratio": null
+      },
+      {
+        "condition": "涡旋成熟突破确认",
+        "action": "按第七章规则执行初始+加仓",
+        "target_ratio": null
+      }
+    ]
+  },
+  "leverage": {
+    "allowed_phases": [
+      "C",
+      "D"
+    ],
+    "max_leverage": 3,
+    "safety_margin": 0.05,
+    "forbidden": [
+      "相位A（高噪声期）：杠杆会放大双向止损的损耗",
+      "宏观流动性评分≤3：紧缩环境下杠杆多头是自杀行为",
+      "链上健康度评分≤3：主力可能在派发",
+      "单日已亏损超过总资金5%：情绪受损时杠杆会加速毁灭",
+      "无明确信号的主观交易：冲动+杠杆=灾难"
+    ]
+  },
+  "black_swan": [
+    {
+      "scenario": "大型交易所暴雷",
+      "action": "分散至2-3个主流交易所+自托管钱包",
+      "priority": 1
+    },
+    {
+      "scenario": "稳定币脱锚",
+      "action": "配置部分稳定币资产，单一资产不超过50%",
+      "priority": 2
+    },
+    {
+      "scenario": "监管突变",
+      "action": "设置链上监控警报，提前减仓",
+      "priority": 3
+    },
+    {
+      "scenario": "比特币核心代码漏洞",
+      "action": "实时关注社区动态，必要时清仓",
+      "priority": 4
+    }
+  ]
+}

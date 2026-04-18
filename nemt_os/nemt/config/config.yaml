@@ -1,0 +1,40 @@
+# NEMT Quant OS 配置文件
+# Next Evolution Market Trading System
+
+# ============ 数据配置 ============
+data:
+  path: "matlab_data/BTC_1h.csv"  # 数据文件路径
+  start_date: null  # 开始日期，null 表示从头开始
+  end_date: null    # 结束日期，null 表示到数据末尾
+  symbol: "BTC/USDT"  # 交易品种
+
+# ============ 回测配置 ============
+backtest:
+  initial_capital: 10000.0    # 初始资金
+  slippage_bps: 1.0           # 滑点 (基点)
+  commission_bps: 5.0         # 手续费 (基点)
+  random_seed: 42             # 随机种子，确保可复现
+
+# ============ 风控配置 ============
+risk:
+  max_drawdown_pct: 0.20      # 最大回撤限制 20%
+  daily_loss_limit_pct: 0.05  # 日亏损限制 5%
+  strategy_exposure_cap: 0.4   # 单策略最大仓位 40%
+  market_exposure_cap: 0.6    # 单市场最大仓位 60%
+
+  # 风控状态阈值
+  caution_threshold: 0.05     # 回撤 > 5% 进入 Caution
+  defense_threshold: 0.10     # 回撤 > 10% 进入 Defense
+  shutdown_threshold: 0.15     # 回撤 > 15% 进入 Shutdown
+
+# ============ 进化配置 ============
+evolution:
+  eval_frequency: 20           # 每 N 个 bar 评分一次
+  keep_best: 3                # 保留前 N 名策略
+  min_score_threshold: 30.0  # 淘汰分数阈值
+  mutation_rate: 0.1          # 参数变异率
+
+# ============ 策略权重配置 ============
+strategy_weight:
+  equal_weight: true          # 是否使用等权重
+  lookback_days: 20           # 回顾天数
