@@ -2,7 +2,7 @@
  * NEMT可视化组件
  */
 
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -40,7 +40,6 @@ interface SpectrumChartProps {
 export const SpectrumChart: React.FC<SpectrumChartProps> = ({
   freqs,
   spectrum,
-  peakFrequencies = [],
   title = '频谱分析'
 }) => {
   const labels = Array.from(freqs).map(f => f.toFixed(3));
@@ -72,7 +71,7 @@ export const SpectrumChart: React.FC<SpectrumChartProps> = ({
       },
       tooltip: {
         callbacks: {
-          label: (context) => `振幅: ${context.parsed.y.toFixed(4)}`
+          label: (context) => `振幅: ${(context.parsed.y ?? 0).toFixed(4)}`
         }
       }
     },

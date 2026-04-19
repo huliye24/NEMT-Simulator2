@@ -1,7 +1,10 @@
-# NEMT Simulator V1
-## 非平衡市场模拟器 (BTC实验版)
+# NEMT Simulator
 
-### 核心数学模型
+**非平衡市场理论模拟器 (Non-Equilibrium Market Theory Simulator)**
+
+一个基于量子物理的市场结构分析工具，用于研究加密货币市场在噪声下的谱结构响应。
+
+## 核心模型
 
 改进的非线性薛定谔方程 (NLS):
 
@@ -15,63 +18,63 @@ i∂ψ/∂t + α∂²ψ/∂x² + β|ψ|²ψ = η(x,t)
 - β (beta): 非线性系数（情绪/杠杆/羊群效应）
 - η (eta): 噪声（外部扰动/随机交易）
 
-### 安装
-
-```bash
-pip install -r requirements.txt
-```
-
-### 使用方法
-
-```bash
-# 获取BTC数据并运行完整模拟
-python main.py
-
-# 仅获取数据
-python main.py --fetch
-
-# 使用演示数据（无需网络）
-python main.py --demo
-
-# 指定K线周期
-python main.py --interval 5m
-python main.py --interval 1h
-python main.py --interval 4h
-```
-
-### 项目结构
+## 技术架构
 
 ```
 NEMT Simulator/
-├── emt_core.py        # 核心模拟器
-├── data_fetcher.py    # 数据获取
-├── visualizer.py      # 可视化
-├── experiments.py     # 实验模块
-├── main.py           # 主程序
-├── requirements.txt  # 依赖
-└── README.md         # 说明文档
+├── web/                    # Web 前端 (React + Vite + Chart.js)
+│   ├── src/
+│   │   ├── App.tsx        # 主应用
+│   │   ├── components/    # UI 组件
+│   │   ├── utils/        # NEMT 核心算法 (TypeScript)
+│   │   └── types/        # 类型定义
+│   └── package.json
+│
+├── nemt_core.py           # Python 核心模拟器
+├── experiments.py         # 三个核心实验
+├── visualizer.py          # Python 可视化
+├── data_fetcher.py       # Binance 数据获取
+├── main.py               # Python 入口程序
+│
+└── NEMT_Vision/          # 愿景与原则文档
+    ├── VISION.md         # 核心愿景
+    ├── BOUNDARIES.md     # 边界定义
+    └── Principles/       # 原则详解
 ```
 
-### 三个核心实验
+## 快速开始
+
+### Web 界面
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+访问 http://localhost:3000
+
+### Python 版本
+
+```bash
+pip install -r requirements.txt
+python main.py --demo
+```
+
+## 三个核心实验
 
 1. **噪声扫描实验**: 研究不同噪声水平下的谱结构响应
 2. **非线性扫描实验**: 研究情绪/杠杆效应对市场的影响
 3. **真实vs模拟对比**: 比较原始价格与模拟后的差异
 
-### 输出
+## 部署
 
-- `output/spectrum.png`: 频谱结构图
-- `output/evolution.png`: 时空演化图
-- `output/resonance.png`: 共振分析图
-- `output/noise_experiment.png`: 噪声实验结果
-- `output/nonlinear_experiment.png`: 非线性实验结果
-- `output/comparison.png`: 对比分析图
-- `output/summary.txt`: 文本摘要
+### Cloudflare Pages
 
-### 核心指标
+本项目配置了 GitHub Actions 自动部署到 Cloudflare Pages。
 
-**谱宽 (Spectral Width)**: 描述市场结构稳定性的关键指标
+详见 [web/README.md](web/README.md)
 
-### 注意事项
+## 许可证
 
-这不是一个预测价格的系统，而是一个研究市场在噪声下结构响应的"市场物理学实验室"。
+MIT

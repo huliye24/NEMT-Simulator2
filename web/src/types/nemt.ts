@@ -27,7 +27,7 @@ export interface ExperimentResult {
   spectrum: Float64Array;
   freqs: Float64Array;
   psi: Complex[];
-  evolution: Float64Array[];  // 时间演化数据
+  evolution: number[][];  // 时间演化数据
   resonance: ResonanceResult;
   meanFrequency: number;
 }
@@ -65,7 +65,7 @@ export interface VisualizationData {
   spectralWidth: number;
   spectrum: Float64Array;
   freqs: Float64Array;
-  evolution?: Float64Array[];
+  evolution?: number[][];
   psi?: Complex[];
 }
 

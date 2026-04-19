@@ -3,23 +3,23 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import { 
-  SpectrumChart, 
-  EvolutionChart, 
-  NoiseScanChart, 
+import {
+  SpectrumChart,
+  EvolutionChart,
+  NoiseScanChart,
   NonlinearScanChart,
   ResultSummary,
   ParameterDisplay
-} from './Charts';
-import { ParamSliderGroup, PresetSelector, ActionButtons } from './Controls';
-import { NEMTSimulator, generateDemoData } from '../utils/nemtCore';
-import { 
-  NEMTParams, 
-  DEFAULT_PARAMS, 
+} from './components/Charts';
+import { ParamSliderGroup, PresetSelector, ActionButtons } from './components/Controls';
+import { NEMTSimulator, generateDemoData } from './utils/nemtCore';
+import {
+  NEMTParams,
+  DEFAULT_PARAMS,
   ExperimentResult,
   NoiseScanResult,
-  NonlinearScanResult 
-} from '../types/nemt';
+  NonlinearScanResult
+} from './types/nemt';
 import { Activity, BarChart3, TrendingUp, Zap, Info } from 'lucide-react';
 
 type ExperimentMode = 'none' | 'single' | 'noise' | 'nonlinear';
@@ -42,7 +42,7 @@ export const NEMTApp: React.FC = () => {
 
   // 参数更新
   const handleParamChange = useCallback((newParams: Partial<NEMTParams>) => {
-    setParams(prev => ({ ...prev, ...newParams }));
+    setParams((prev: NEMTParams) => ({ ...prev, ...newParams }));
   }, []);
 
   // 运行单次模拟
@@ -303,7 +303,7 @@ export const NEMTApp: React.FC = () => {
                   gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
                   gap: '16px'
                 }}>
-                  {noiseScanResult.results.map((result, idx) => (
+                  {noiseScanResult.results.map((result: ExperimentResult, idx: number) => (
                     <div key={idx} style={{ 
                       border: '1px solid #f0f0f0',
                       borderRadius: '8px',
@@ -344,7 +344,7 @@ export const NEMTApp: React.FC = () => {
                   gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
                   gap: '16px'
                 }}>
-                  {nonlinearScanResult.results.map((result, idx) => (
+                  {nonlinearScanResult.results.map((result: ExperimentResult, idx: number) => (
                     <div key={idx} style={{ 
                       border: '1px solid #f0f0f0',
                       borderRadius: '8px',
