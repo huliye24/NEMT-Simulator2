@@ -5,6 +5,10 @@
 build_command: npm run build
 build_output_dir: web/dist
 
+# 支持 SPA 路由 (必须)
+[build.environment]
+NODE_VERSION = "20"
+
 # 路由配置 (可选)
 # routes:
 #   - pattern: nemt.example.com
