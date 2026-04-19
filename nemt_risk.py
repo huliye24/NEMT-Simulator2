@@ -749,6 +749,129 @@ class NEMTRiskManager:
         print("=" * 60)
 
 
+    # =====================
+    # Notion 理论同步
+    # =====================
+
+    def sync_from_notion_config(self, config: Dict):
+        """
+        从 Notion 配置同步风控参数
+
+        Args:
+            config: 从 Notion 理论中枢获取的配置
+        """
+        if 'phase_positions' in config:
+            for key, value in config['phase_positions'].items():
+                if key in self.config:
+                    self.config[key] = value
+
+        if 'stop_loss' in config:
+            for key, value in config['stop_loss'].items():
+                if key in self.config:
+                    self.config[key] = value
+
+        if 'leverage' in config:
+            lev_config = config['leverage']
+            if 'max_leverage' in lev_config:
+                self.config['leverage_phase_c'] = min(lev_config['max_leverage'], 2)
+                self.config['leverage_phase_d'] = 1
+            if 'safety_margin' in lev_config:
+                self.config['leverage_safety_margin'] = lev_config['safety_margin']
+
+    def check_leverage_allowed(
+        self,
+        phase: MarketPhase,
+        macro_score: float,
+        onchain_score: float,
+        daily_loss_pct: float,
+        has_signal: bool = True
+    ) -> Tuple[bool, str]:
+        """
+        检查杠杆是否允许使用
+
+        Args:
+            phase: 当前相位
+            macro_score: 宏观评分
+            onchain_score: 链上评分
+            daily_loss_pct: 当日亏损百分比
+            has_signal: 是否有明确信号
+
+        Returns:
+            (是否允许, 原因)
+        """
+        # 规则1: 只在C和D相位使用
+        if phase == MarketPhase.PHASE_A_NOISE:
+            return False, "相位A（高噪声期）：杠杆会放大双向止损的损耗"
+
+        if phase == MarketPhase.PHASE_B_VORTEX:
+            return False, "相位B（涡旋蓄力期）：边界未清晰，避免杠杆放大风险"
+
+        # 规则2: 宏观评分检查
+        if macro_score <= 3:
+            return False, f"宏观流动性评分≤{macro_score}：紧缩环境下杠杆多头是自杀行为"
+
+        # 规则3: 链上评分检查
+        if onchain_score <= 3:
+            return False, f"链上健康度评分≤{onchain_score}：主力可能在派发，杠杆等于替人接盘"
+
+        # 规则4: 单日亏损检查
+        if daily_loss_pct > 0.05:
+            return False, f"单日已亏损超过{daily_loss_pct:.1%}：情绪受损时杠杆会加速毁灭"
+
+        # 规则5: 信号检查
+        if not has_signal:
+            return False, "无明确信号：冲动+杠杆=灾难"
+
+        return True, "允许使用杠杆"
+
+    def get_leverage_matrix(
+        self,
+        phase: MarketPhase,
+        entry_price: float,
+        stop_loss_price: float,
+        maintenance_margin: float = 0.005
+    ) -> List[Dict]:
+        """
+        获取杠杆倍数选择矩阵
+
+        Args:
+            phase: 当前相位
+            entry_price: 入场价格
+            stop_loss_price: 止损价格
+            maintenance_margin: 维持保证金率
+
+        Returns:
+            杠杆选择矩阵
+        """
+        max_leverage = {
+            MarketPhase.PHASE_A_NOISE: 0,
+            MarketPhase.PHASE_B_VORTEX: 1,
+            MarketPhase.PHASE_C_RESONANCE: 2,
+            MarketPhase.PHASE_D_TREND: 1
+        }.get(phase, 0)
+
+        matrix = []
+        safety_margin = self.config['leverage_safety_margin']
+
+        for leverage in range(1, max_leverage + 1):
+            # 计算强平价格
+            liquidation_price = entry_price * (1 - 1/leverage + maintenance_margin)
+
+            # 计算安全边际
+            safety_diff = stop_loss_price - liquidation_price
+            safety_pct = safety_diff / stop_loss_price if stop_loss_price > 0 else 0
+            is_safe = safety_pct >= safety_margin
+
+            matrix.append({
+                'leverage': leverage,
+                'liquidation_price': f"${liquidation_price:,.2f}",
+                'safety_margin': f"{safety_pct:.1%}",
+                'safe': '✓' if is_safe else '✗'
+            })
+
+        return matrix
+
+
 def create_risk_manager(initial_balance: float = 100000.0) -> NEMTRiskManager:
     """创建风险管理器"""
     return NEMTRiskManager(initial_balance)

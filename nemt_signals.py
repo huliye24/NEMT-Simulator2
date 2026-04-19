@@ -650,9 +650,8 @@ class NEMTSignalIndicators:
             "dci_reading": f"DCI={signals.dci.value:.3f} ({signals.dci.noise_state}噪声)",
             
             "vortex_reading": (
-                "涡旋已形成" if signals.vortex.is_vortex 
-                else f"涡旋未形成 ({sum([signals.vortex.bbw_narrow, signals.vortex.volume_uniform, 
-                     signals.vortex.oi_high_flat, signals.vortex.funding_neutral])}/4条件)"
+                "涡旋已形成" if signals.vortex.is_vortex
+                else f"涡旋未形成 ({sum([signals.vortex.bbw_narrow, signals.vortex.volume_uniform, signals.vortex.oi_high_flat, signals.vortex.funding_neutral])}/4条件)"
             ),
             
             "resonance_reading": (

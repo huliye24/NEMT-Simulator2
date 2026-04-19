@@ -1,0 +1,29 @@
+# quant-sync-server 依赖
+# FastAPI / Web
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.0.0
+
+# 定时任务
+apscheduler>=3.10.0
+
+# 数据库
+sqlalchemy>=2.0.0
+
+# Redis
+redis>=5.0.0
+
+# HTTP 客户端
+httpx>=0.27.0
+
+# 数据处理
+numpy>=1.21.0
+pandas>=1.3.0
+scipy>=1.7.0
+
+# 外部 API
+requests>=2.26.0
+python-dotenv>=1.0.0
+
+# 可选: MATLAB Engine (需要单独安装)
+# matlab>=1.0.0

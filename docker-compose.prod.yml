@@ -1,0 +1,129 @@
+# Copyright 2026 NEMT Lab
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# NEMT Quant-Sync 生产环境 Docker Compose
+# ==========================================
+#
+# 使用方法:
+#   本地开发: docker-compose -f docker-compose.prod.yml up -d
+#   查看日志: docker-compose -f docker-compose.prod.yml logs -f nemt-api
+#   停止:    docker-compose -f docker-compose.prod.yml down
+#
+# 云服务器部署:
+#   1. scp 上传整个项目目录
+#   2. 配置 .env 文件 (cp .env.example .env 后填入真实 token)
+#   3. docker-compose -f docker-compose.prod.yml up -d
+#   4. 配置 Nginx 反向代理到 8080 端口
+#   5. 配置 systemd 服务实现进程守护
+
+version: "3.8"
+
+services:
+  # ============================================
+  # NEMT API Server - 生产级 FastAPI 服务器
+  # ============================================
+  nemt-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: nemt-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TZ=Asia/Shanghai
+      - LOG_LEVEL=INFO
+      - DATABASE_PATH=/app/data/nemt_data.db
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    env_file:
+      - quant-sync-server/.env
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - nemt-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+  # ============================================
+  # Redis - 数据总线 / 消息队列
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: nemt-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nemt-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+  # ============================================
+  # Redis Commander - Web 管理界面 (可选)
+  # ============================================
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: nemt-redis-ui
+    restart: unless-stopped
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - nemt-net
+    profiles:
+      - tools
+
+  # ============================================
+  # Nginx - 反向代理 + 静态文件
+  # ============================================
+  nginx:
+    image: nginx:alpine
+    container_name: nemt-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./web/dist:/usr/share/nginx/html:ro
+    depends_on:
+      nemt-api:
+        condition: service_healthy
+    networks:
+      - nemt-net
+    profiles:
+      - web
+
+volumes:
+  redis-data:
+    driver: local
+
+networks:
+  nemt-net:
+    driver: bridge

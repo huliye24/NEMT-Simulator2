@@ -1,0 +1,7 @@
+1
+00:00:01,000 --> 00:00:05,000
+Welcome to the YouTube channel!
+
+2
+00:00:06,000 --> 00:00:10,000
+Today we're going to talk about AI.

@@ -113,7 +113,7 @@ export interface RealRateAnalysis {
 export class RealRateAnalyzer {
   analyzeRealRate(
     tipsYield: number,
-    tipsYield1Y Ago?: number
+    tipsYield1YAgo?: number
   ): RealRateAnalysis {
     const result: RealRateAnalysis = {
       currentRate: tipsYield,
@@ -139,8 +139,8 @@ export class RealRateAnalyzer {
     }
 
     // 二阶导分析
-    if (tipsYield1Y Ago !== undefined) {
-      const change = tipsYield - tipsYield1Y Ago;
+    if (tipsYield1YAgo !== undefined) {
+      const change = tipsYield - tipsYield1YAgo;
       result.yoyChange = change;
 
       if (change < -0.5) {
@@ -520,7 +520,7 @@ export class NEMTEconomicAnalyzer {
     currentBalanceSheet?: number;
     balance12MonthsAgo?: number;
     tipsYield?: number;
-    tipsYield1Y Ago?: number;
+    tipsYield1YAgo?: number;
     dxyChangePct?: number;
     vixRising?: boolean;
     treasuryYieldRising?: boolean;
@@ -537,7 +537,7 @@ export class NEMTEconomicAnalyzer {
       currentBalanceSheet = 0,
       balance12MonthsAgo = 0,
       tipsYield = 0,
-      tipsYield1Y Ago = 0,
+      tipsYield1YAgo = 0,
       dxyChangePct = 0,
       vixRising = false,
       treasuryYieldRising = false,
@@ -560,7 +560,7 @@ export class NEMTEconomicAnalyzer {
     // 2. 实际利率分析
     const realRate = this.realRateAnalyzer.analyzeRealRate(
       tipsYield,
-      tipsYield1Y Ago
+      tipsYield1YAgo
     );
 
     // 3. DXY分析

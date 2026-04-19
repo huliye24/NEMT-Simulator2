@@ -147,14 +147,15 @@ class NEMTDefaultParams:
 # ============================================================================
 class Config:
     def __init__(self):
+        # 重要: 先加载 .env 文件，再初始化其他配置
+        self._load_env_overrides()
+        
         self.paths = PathConfig()
         self.notion = NotionConfig()
         self.matlab = MatlabConfig()
         self.redis = RedisConfig()
         self.go_server = GoServerConfig()
         self.nemt_defaults = NEMTDefaultParams()
-
-        self._load_env_overrides()
 
     def _load_env_overrides(self):
         env_file = PROJECT_ROOT / ".env"

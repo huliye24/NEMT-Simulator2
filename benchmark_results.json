@@ -1,0 +1,18 @@
+{
+  "system_info": {
+    "platform": "Windows",
+    "platform_version": "10.0.19045",
+    "processor": "Intel64 Family 6 Model 142 Stepping 9, GenuineIntel",
+    "python_version": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+    "cpu_count": 4
+  },
+  "cpu_pi": 0.689854621887207,
+  "cpu_sieve": 0.030749797821044922,
+  "cpu_fibonacci": 0.8167812824249268,
+  "cpu_matrix": 0.010971307754516602,
+  "memory_copy": 19.483789920806885,
+  "file_write": 0.010225534439086914,
+  "file_read": 0.00498509407043457,
+  "sha256": 0.3534107208251953,
+  "sort": 0.02393794059753418
+}

@@ -542,3 +542,109 @@ export const MVRV_INTERPRETATION = {
   high: { threshold: 5, description: '高估区域' },
   extremelyHigh: { threshold: 7, description: '历史顶部区域' }
 };
+
+// =====================
+// Phase 4: NEMT Core Pipeline Types
+// =====================
+
+export enum NEMTPhase {
+  PHASE_A_NOISE = "PHASE_A_NOISE",
+  PHASE_B_VORTEX = "PHASE_B_VORTEX",
+  PHASE_C_RESONANCE = "PHASE_C_RESONANCE",
+  PHASE_D_TREND = "PHASE_D_TREND"
+}
+
+export enum NEMTSignalType {
+  VORTEX_BREAKOUT = "vortex_breakout",
+  RESONANCE_TRIGGER = "resonance_trigger",
+  TREND_CALLBACK = "trend_callback",
+  PHASE_TRANSITION = "phase_transition",
+  NOISE_SIGNAL = "noise_signal"
+}
+
+export enum NEMTSignalDirection {
+  BULLISH = "bullish",
+  BEARISH = "bearish",
+  NEUTRAL = "neutral"
+}
+
+export interface NEMTTradingSignal {
+  signalId: string;
+  signalType: NEMTSignalType;
+  direction: NEMTSignalDirection;
+  confidence: number;
+  strength: number;
+  reason: string;
+  price: number;
+  phase: string;
+  metadata: Record<string, any>;
+  timestamp: string;
+}
+
+export interface NEMTSpectralMetrics {
+  spectralWidth: number;
+  coherence: number;
+  entropy: number;
+  resonancePeaks: number;
+  meanFrequency: number;
+}
+
+export interface NEMTPhaseStrategy {
+  name: string;
+  strategyText: string;
+  maxPosition: number;
+  leverageAllowed: number;
+  focus: string;
+  avoid: string;
+}
+
+export interface NEMTRecommendations {
+  position: number;
+  leverage: number;
+}
+
+export interface NEMTState {
+  phase: string;
+  phaseConfidence: number;
+  phaseDescription: string;
+  spectralWidth: number;
+  coherence: number;
+  entropy: number;
+  resonancePeaks: number;
+  meanFrequency: number;
+  strategy: NEMTStrategy;
+  recommendations: NEMTRecommendations;
+  price: number;
+  timestamp: string;
+}
+
+export interface NEMTStrategy {
+  name: string;
+  strategyText: string;
+  maxPosition: number;
+  leverageAllowed: number;
+  focus: string;
+  avoid: string;
+}
+
+export interface NEMTPipelineConfig {
+  alpha: number;
+  beta: number;
+  noiseLevel: number;
+  dt: number;
+  dx: number;
+  steps: number;
+  lookbackPeriods: number;
+  updateInterval: number;
+}
+
+export const DEFAULT_NEMT_CONFIG: NEMTPipelineConfig = {
+  alpha: 0.5,
+  beta: 1.0,
+  noiseLevel: 0.1,
+  dt: 0.01,
+  dx: 1.0,
+  steps: 100,
+  lookbackPeriods: 128,
+  updateInterval: 10
+};

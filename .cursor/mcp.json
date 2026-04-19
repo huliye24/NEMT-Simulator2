@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "pycharm": {
+      "command": "python",
+      "args": [
+        "pycharm_mcp_server.py"
+      ],
+      "env": {
+        "PYTHONPATH": "E:/NEMT Simulator"
+      }
+    },
+    "matlab": {
+      "command": "C:\\Program Files\\Python311\\python.exe",
+      "args": [
+        "matlab_mcp_server.py"
+      ],
+      "env": {
+        "PYTHONPATH": "E:/NEMT Simulator"
+      }
+    },
+    "goland": {
+      "url": "http://127.0.0.1:64342/sse"
+    }
+  }
+}

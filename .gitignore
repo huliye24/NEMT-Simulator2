@@ -1,56 +1,72 @@
+# Copyright 2026 NEMT Lab
+
+# Environment - 安全第一
+.env
+.env.local
+.env.production
+
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
+*.py[cod]
+*$py.class
 *.so
-*.egg
+.Python
 *.egg-info/
+.eggs/
 dist/
 build/
-venv/
-.venv/
+*.egg
+
+# 数据库
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# 日志
+logs/
+*.log
+
+# 数据
+data/
+!data/.gitkeep
+
+# 前端
+web/node_modules/
+web/dist/
+web/.vite/
 
 # IDE
-.idea/
 .vscode/
+.idea/
 *.swp
 *.swo
 *~
-
-# Data (keep folder structure, ignore actual data files)
-matlab_data/*.mat
-data/*.csv
-data/*.json
-!data/.gitkeep
-output/*
-!output/.gitkeep
-
-# Logs
-*.log
-
-# OS
 .DS_Store
 Thumbs.db
 
-# Jupyter
-.ipynb_checkpoints/
-
-# Cursor IDE
-.cursor/
-
-# Temporary files
+# 临时文件
+tmp/
+temp/
 *.tmp
-*.bak
-*.exe
-test_*.py
-check_matlab_engine.py
-update_mcp_config.py
-.pr_body.md
+.cache/
 
-# Website placeholder
-website/
+# 敏感信息
+*.pem
+*.key
+credentials.json
+secrets.json
 
-# Learning notes (not ready for commit)
-11_SWITCHBOARD_LEARNING/
+# MATLAB
+matlab/*.asv
+
+# MCP 配置
+.venv/
+venv/
+env/
+
+# Nginx SSL
+nginx/ssl/
+
+# Docker
+.dockerignore

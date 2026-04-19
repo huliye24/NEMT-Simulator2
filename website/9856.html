@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NodeNet × AI Crypto Lab — 市场建模基础设施</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+    
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .title-font { font-family: 'Space Grotesk', sans-serif; }
+    .hero-bg {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 100%);
+    }
+    .neon-cyan {
+      text-shadow: 0 0 30px #22d3ee;
+    }
+    .glass {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(34, 211, 238, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-black text-zinc-200">
+
+  <!-- 导航栏 -->
+  <nav class="fixed top-0 w-full border-b border-cyan-500/20 bg-black/80 backdrop-blur-xl z-50">
+    <div class="max-w-7xl mx-auto px-8 py-5 flex justify-between items-center">
+      <div class="flex items-center gap-4">
+        <div class="w-9 h-9 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-2xl flex items-center justify-center font-bold text-xl">N</div>
+        <span class="title-font text-3xl font-semibold tracking-tighter">NodeNet</span>
+      </div>
+      <div class="hidden md:flex items-center gap-8 text-sm">
+        <a href="#lab" class="hover:text-cyan-400 transition">AI Crypto Lab</a>
+        <a href="#system" class="hover:text-cyan-400 transition">三层系统</a>
+        <a href="#roadmap" class="hover:text-cyan-400 transition">路线图</a>
+        <a href="#vision" class="hover:text-cyan-400 transition">愿景</a>
+      </div>
+      <button onclick="alert('NodeNet 早期社区正在组建中')" 
+              class="px-8 py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-semibold rounded-2xl transition">
+        加入构建
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero 区 -->
+  <section class="hero-bg min-h-screen flex items-center pt-20">
+    <div class="max-w-6xl mx-auto px-8 text-center">
+      <div class="inline-flex items-center gap-2 px-5 py-2 bg-white/5 border border-cyan-500/30 rounded-full text-sm mb-8">
+        <span class="text-cyan-400">●</span>
+        AI 时代的市场认知基础设施
+      </div>
+      
+      <h1 class="title-font text-7xl md:text-8xl font-bold tracking-tighter leading-none neon-cyan mb-6">
+        NodeNet
+      </h1>
+      <p class="text-4xl text-zinc-400 mb-4">× AI Crypto Lab</p>
+      
+      <p class="max-w-2xl mx-auto text-2xl text-zinc-300">
+        我们不是在做量化交易工具，<br>
+        而是在构建 <span class="text-cyan-400">AI 理解市场的基础设施</span>
+      </p>
+
+      <div class="mt-16 flex flex-col sm:flex-row gap-5 justify-center">
+        <button onclick="document.getElementById('lab').scrollIntoView({behavior:'smooth'})" 
+                class="px-12 py-6 bg-white text-black rounded-3xl text-xl font-semibold hover:scale-105 transition">
+          进入 AI Crypto Lab
+        </button>
+        <button onclick="alert('NodeNet 早期接入申请已开启')" 
+                class="px-12 py-6 border border-cyan-400 text-cyan-400 rounded-3xl text-xl font-medium hover:bg-cyan-400/10 transition">
+          成为 NodeNet 构建者
+        </button>
+      </div>
+
+      <div class="mt-20 text-xs text-zinc-500 flex justify-center gap-12">
+        <div>MATLAB 建模引擎</div>
+        <div>AI Agent 协作</div>
+        <div>去中心化协议</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 核心问题 -->
+  <section class="py-24 bg-zinc-950">
+    <div class="max-w-5xl mx-auto px-8">
+      <h2 class="text-5xl font-bold text-center mb-16">为什么现在需要 NodeNet？</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="glass rounded-3xl p-8">
+          <div class="text-amber-400 text-5xl mb-6">①</div>
+          <h3 class="text-xl font-semibold mb-4">市场认知仍停留在人类直觉</h3>
+          <p class="text-zinc-400">投资决策依赖情绪与消息，缺乏结构化、可复用的认知模型。</p>
+        </div>
+        <div class="glass rounded-3xl p-8">
+          <div class="text-amber-400 text-5xl mb-6">②</div>
+          <h3 class="text-xl font-semibold mb-4">量化体系高度封闭</h3>
+          <p class="text-zinc-400">机构模型不开放，散户缺乏建模能力，数据与方法严重割裂。</p>
+        </div>
+        <div class="glass rounded-3xl p-8">
+          <div class="text-amber-400 text-5xl mb-6">③</div>
+          <h3 class="text-xl font-semibold mb-4">AI 无法真正理解市场</h3>
+          <p class="text-zinc-400">当前 AI 只能做文本分析与简单预测，无法进行动态建模与系统级推演。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 三层系统 -->
+  <section id="system" class="py-24 bg-black">
+    <div class="max-w-6xl mx-auto px-8">
+      <h2 class="text-5xl font-bold text-center mb-16">三层市场建模系统</h2>
+      
+      <div class="grid md:grid-cols-3 gap-10">
+        <!-- Layer 1 -->
+        <div class="border border-cyan-500/30 rounded-3xl p-10 hover:border-cyan-400 transition">
+          <div class="text-cyan-400 text-6xl mb-6">🧠</div>
+          <h3 class="text-3xl font-semibold mb-2">Layer 1</h3>
+          <p class="text-cyan-400 mb-6">市场建模引擎</p>
+          <ul class="space-y-4 text-zinc-400">
+            <li>• 时间序列模型</li>
+            <li>• 波动率结构</li>
+            <li>• 噪声系统分析</li>
+            <li class="pt-4 text-emerald-400 font-medium">输出：市场的可计算结构</li>
+          </ul>
+        </div>
+
+        <!-- Layer 2 -->
+        <div class="border border-purple-500/30 rounded-3xl p-10 hover:border-purple-400 transition relative">
+          <div class="absolute -top-3 right-8 bg-purple-600 text-white text-xs px-4 py-1 rounded-full">未来</div>
+          <div class="text-purple-400 text-6xl mb-6">🤖</div>
+          <h3 class="text-3xl font-semibold mb-2">Layer 2</h3>
+          <p class="text-purple-400 mb-6">AI Agent 层</p>
+          <ul class="space-y-4 text-zinc-400">
+            <li>• 分析 Agent</li>
+            <li>• 策略 Agent</li>
+            <li>• 风控 Agent</li>
+            <li class="pt-4 text-emerald-400 font-medium">每个 Agent = NodeNet 节点</li>
+          </ul>
+        </div>
+
+        <!-- Layer 3 -->
+        <div class="border border-emerald-500/30 rounded-3xl p-10 hover:border-emerald-400 transition">
+          <div class="text-emerald-400 text-6xl mb-6">🌐</div>
+          <h3 class="text-3xl font-semibold mb-2">Layer 3</h3>
+          <p class="text-emerald-400 mb-6">NodeNet 协议层</p>
+          <ul class="space-y-4 text-zinc-400">
+            <li>• 去中心化建模网络</li>
+            <li>• 模型市场</li>
+            <li>• 数据与策略共享</li>
+            <li class="pt-4 text-emerald-400 font-medium">市场认知的去中心化网络</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 产品形态 -->
+  <section id="lab" class="py-24 bg-zinc-950">
+    <div class="max-w-5xl mx-auto px-8">
+      <h2 class="text-5xl font-bold text-center mb-16">产品路线</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="glass rounded-3xl p-8">
+          <div class="text-lg font-medium text-cyan-400 mb-3">第一阶段（当前）</div>
+          <h3 class="text-2xl font-semibold mb-6">AI Crypto Lab</h3>
+          <p class="text-zinc-400">MATLAB 建模实验平台<br>数据分析与可视化</p>
+        </div>
+        <div class="glass rounded-3xl p-8">
+          <div class="text-lg font-medium text-cyan-400 mb-3">第二阶段</div>
+          <h3 class="text-2xl font-semibold mb-6">Market Insight Dashboard</h3>
+          <p class="text-zinc-400">AI 驱动的市场结构可视化<br>类似 TradingView + 深度解释层</p>
+        </div>
+        <div class="glass rounded-3xl p-8">
+          <div class="text-lg font-medium text-cyan-400 mb-3">第三阶段</div>
+          <h3 class="text-2xl font-semibold mb-6">NodeNet Market Protocol</h3>
+          <p class="text-zinc-400">开放 API + 模型市场<br>AI Agent 自主接入</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 路线图 -->
+  <section id="roadmap" class="py-24 bg-black">
+    <div class="max-w-5xl mx-auto px-8">
+      <h2 class="text-5xl font-bold text-center mb-16">路线图</h2>
+      <div class="space-y-12">
+        <div class="flex flex-col md:flex-row gap-8 items-start">
+          <div class="w-48 text-cyan-400 font-medium shrink-0">2026 Q2（现在）</div>
+          <div>发布 AI Crypto Lab v1<br>建立 Notion + GitHub<br>聚集第一批量化与 AI 研究者</div>
+        </div>
+        <div class="flex flex-col md:flex-row gap-8 items-start">
+          <div class="w-48 text-cyan-400 font-medium shrink-0">2026 Q3</div>
+          <div>Market Insight Dashboard 原型<br>Python 重构系统<br>小规模封闭测试</div>
+        </div>
+        <div class="flex flex-col md:flex-row gap-8 items-start">
+          <div class="w-48 text-cyan-400 font-medium shrink-0">2026 Q4</div>
+          <div>AI Agent 系统初版<br>开放 API<br>模型市场 Beta</div>
+        </div>
+        <div class="flex flex-col md:flex-row gap-8 items-start opacity-70">
+          <div class="w-48 text-cyan-400 font-medium shrink-0">2027+</div>
+          <div>NodeNet 协议正式上线<br>去中心化建模网络<br>AI Agent 自治生态</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 愿景 -->
+  <section id="vision" class="py-32 bg-gradient-to-b from-black to-zinc-950 text-center">
+    <div class="max-w-3xl mx-auto px-8">
+      <p class="text-4xl leading-relaxed">
+        在未来，市场不再由人类凭直觉理解，<br>
+        而是由 AI 系统进行结构化建模与运行。
+      </p>
+      <p class="mt-12 text-2xl text-cyan-400">我们正在构建的，</p>
+      <p class="text-5xl title-font tracking-tighter mt-4">是这个系统的基础设施。</p>
+      
+      <div class="mt-20 text-sm text-zinc-500">
+        如果互联网时代的核心是「信息」，<br>
+        那么 AI 时代的核心是「结构」。
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-black py-16 border-t border-zinc-800">
+    <div class="max-w-7xl mx-auto px-8 text-center text-zinc-500 text-sm">
+      <p>NodeNet × AI Crypto Lab</p>
+      <p class="mt-2">把市场从信息，变成可计算的结构</p>
+      <p class="mt-10">© 2026 NodeNet Protocol</p>
+    </div>
+  </footer>
+
+</body>
+</html>
