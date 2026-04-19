@@ -80,6 +80,20 @@
 - [x] `RiskAdjustedCapitalManager` 风险调整分配器
 - [x] 单元测试通过 (19/19)
 
+### 2.4 TechLead 资源状态
+
+| 文档 | 状态 | 说明 |
+|------|------|------|
+| README.md | ✅ 完成 | 目录索引 |
+| CODE_REVIEW_GUIDELINES.md | ✅ 完成 | 代码审查清单 |
+| CODE_STANDARDS.md | ✅ 完成 | 代码规范细化版 |
+| SPRINT_GOALS.md | ✅ 完成 | Sprint 目标 |
+| BLOCKERS.md | ✅ 完成 | 阻塞项追踪 |
+| MODULE_OWNERSHIP.md | ✅ 完成 | 模块所有权 |
+| TECH_DEBT_ITEMS.md | ✅ 完成 | 技术债务清单 |
+| TASK_TEMPLATES/ | ✅ 完成 | 任务模板（BUG/FEATURE/REFACTOR）|
+| Daily_Logs/ | ✅ 完成 | 每日日志 |
+
 ---
 
 ## 三、开发阶段
