@@ -464,4 +464,4 @@ const MetricCard: React.FC<MetricCardProps> = ({ icon, title, value, subtitle })
   </div>
 );
 
-export default NEMTApp;
+export { NEMTApp as App };
