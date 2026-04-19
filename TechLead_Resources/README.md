@@ -15,11 +15,11 @@ TechLead_Resources/
 ├── MODULE_OWNERSHIP.md          # 模块所有权
 ├── BLOCKERS.md                  # 当前阻塞项
 ├── TECH_DEBT_ITEMS.md           # 技术债务清单
-├── DEVELOPMENT_WORKFLOW.md       # 开发流程
+├── DEVELOPMENT_WORKFLOW.md      # 开发流程
 ├── GIT_GUIDELINES.md           # Git 规范
-├── TESTING_REQUIREMENTS.md      # 测试要求
+├── TESTING_REQUIREMENTS.md     # 测试要求
 ├── LOCAL_DEV_SETUP.md          # 本地开发环境
-├── INTERFACE_CONTRACTS.md      # 接口契约
+├── INTERFACE_CONTRACTS.md       # 接口契约
 ├── TECH_RISKS.md               # 技术风险
 ├── DEPENDENCY_MATRIX.md        # 依赖矩阵
 ├── COMMANDS.md                 # 常用命令
@@ -31,7 +31,20 @@ TechLead_Resources/
 │   ├── scan_tasks.py           # 扫描停滞任务
 │   ├── fetch_prs.py           # 获取待审查 PR
 │   └── generate_weekly_report.py # 生成周报
-├── Daily_Logs/                # 每日日志
+├── Obsidian_Template/           # Obsidian 模板 (用于复制到 Obsidian 库)
+│   ├── README.md              # 使用说明
+│   ├── TL_COCKPIT.md         # TL 驾驶舱
+│   ├── 10_Inbox/
+│   │   └── TL_INBOX.md        # TL 收件箱
+│   ├── 20_Tasks/
+│   │   └── TASK_TEMPLATE.md    # 任务模板 (含技术字段)
+│   ├── 30_Decisions/
+│   │   └── DECISION_TEMPLATE.md # 决策请求模板
+│   ├── 60_Code_Reviews/
+│   │   └── CR_TEMPLATE.md     # 代码审查模板
+│   └── 70_Tech_Debt/
+│       └── TD_TEMPLATE.md      # 技术债模板
+├── Daily_Logs/                 # 每日日志
 │   └── Daily_Dev_Log_2026-04-19.md
 └── SPRINT_RETROSPECTIVE/       # Sprint 复盘
 ```
