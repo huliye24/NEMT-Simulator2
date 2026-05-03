@@ -216,6 +216,16 @@ TypeScript实现位于 `web/` 目录，包含：
 
 理论文档请参考: [Notion NEMT理论中枢](https://www.notion.so/NEMT-34317dca0dd2801ba79ff2d5af7a5afe)
 
+### MCP 服务器
+
+支持多种 IDE 的 MCP (Model Context Protocol) 服务器：
+
+| 文件 | IDE | 功能 |
+|------|-----|------|
+| `goland_mcp_server.go` | GoLand / JetBrains | Go 语言开发辅助 |
+| `pycharm_mcp_server.py` | PyCharm | Python 开发辅助 |
+| `matlab_mcp_server.py` | MATLAB | 数值计算辅助 |
+
 ---
 
 ### 许可证
