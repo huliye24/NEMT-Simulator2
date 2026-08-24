@@ -39,7 +39,7 @@ import {
   PHASE_STRATEGIES,
   PhaseStrategy
 } from './types/nemt';
-import { Activity, BarChart3, TrendingUp, Zap, Info, LayoutDashboard, BookOpen, ActivitySquare, TrendingDown, Minus, AlertTriangle, CheckCircle, Clock, History, Play, Loader2, Terminal, ChevronDown, ChevronRight, X, RefreshCw, Globe } from 'lucide-react';
+import { Activity, BarChart3, TrendingUp, Zap, Info, LayoutDashboard, BookOpen, ActivitySquare, TrendingDown, Minus, AlertTriangle, CheckCircle, Clock, History, Play, Loader2, Terminal, ChevronDown, ChevronRight, X, RefreshCw, Globe, Grid } from 'lucide-react';
 import { TheoryTab } from './components/TheoryTab';
 import { KanbanBoard } from './components/KanbanBoard';
 import { OnChainDashboard } from './components/OnChainDashboard';
@@ -50,9 +50,10 @@ import { QuickAssessmentButton } from './components/QuickAssessmentButton';
 import { TheoryDashboard } from './components/TheoryDashboard';
 import { MarketPanel } from './components/MarketPanel';
 import { NEMTDashboard } from './components/NEMTDashboard';
+import NemtPlatform from './components/NemtPlatform';
 
 type ExperimentMode = 'none' | 'single' | 'noise' | 'nonlinear' | 'pipeline';
-type MainTab = 'simulator' | 'dashboard' | 'kanban' | 'theory' | 'notion' | 'market' | 'nemt';
+type MainTab = 'simulator' | 'dashboard' | 'kanban' | 'theory' | 'notion' | 'market' | 'nemt' | 'platform';
 
 export const NEMTApp: React.FC = () => {
   // 参数状态
@@ -444,6 +445,26 @@ export const NEMTApp: React.FC = () => {
               <Activity size={16} />
               NEMT Core
             </button>
+            <button
+              onClick={() => setMainTab('platform')}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 20px',
+                border: 'none',
+                borderRadius: '8px',
+                background: mainTab === 'platform' ? '#8b5cf6' : 'rgba(255,255,255,0.1)',
+                color: mainTab === 'platform' ? '#1a1a2e' : 'white',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 500,
+                transition: 'all 0.2s'
+              }}
+            >
+              <Grid size={16} />
+              策略平台
+            </button>
           </div>
         </div>
       </header>
@@ -484,6 +505,11 @@ export const NEMTApp: React.FC = () => {
         {/* NEMT Core 标签页 */}
         {mainTab === 'nemt' && (
           <NEMTDashboard symbol="BTCUSDT" />
+        )}
+
+        {/* 策略平台标签页 */}
+        {mainTab === 'platform' && (
+          <NemtPlatform />
         )}
 
         {/* 模拟器标签页 */}
