@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  --nemt-primary: #3b82f6;
+  --nemt-secondary: #8b5cf6;
+  --nemt-accent: #10b981;
+  --nemt-danger: #ef4444;
+  --nemt-warning: #f59e0b;
+  --nemt-bg-dark: #0f172a;
+  --nemt-bg-card: #1e293b;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--nemt-bg-dark);
+  color: #f8fafc;
+}
+
+/* NEMT Brand Styles */
+.nemt-gradient {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+}
+
+.nemt-card {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 12px;
+}
+
+.nemt-glow {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.nemt-text-gradient {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

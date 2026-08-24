@@ -1,0 +1,94 @@
+# docker-compose.yml - 量化系统 MVP
+# 启动: docker-compose up -d
+# 查看日志: docker-compose logs -f collector
+
+version: "3.8"
+
+services:
+  # Redis - 数据总线/消息队列
+  redis:
+    image: redis:7-alpine
+    container_name: btc_redis
+    ports:
+      - "6379:6379"              # 本地访问 Redis
+    volumes:
+      - redis_data:/data        # 持久化数据
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - quant_net
+
+  # Go 采集器 - 币安 WebSocket
+  collector:
+    build:
+      context: ./collector
+      dockerfile: Dockerfile
+    container_name: btc_collector
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_ADDR=redis:6379
+    restart: unless-stopped
+    networks:
+      - quant_net
+
+  # 可选: Redis Commander (Web 管理界面)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: btc_redis_ui
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - quant_net
+    profiles:
+      - tools  # docker-compose --profile tools up
+
+  # Python 计算模块 - 技术指标
+  calculator:
+    build:
+      context: ./calculator
+      dockerfile: Dockerfile
+    container_name: btc_calculator
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    restart: unless-stopped
+    networks:
+      - quant_net
+
+  # Python 回测服务 (按需启动)
+  backtester:
+    build:
+      context: ./calculator
+      dockerfile: Dockerfile
+    container_name: btc_backtester
+    command: ["python", "backtest/backtest.py"]
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    networks:
+      - quant_net
+    profiles:
+      - backtest  # docker-compose --profile backtest up
+
+volumes:
+  redis_data:
+
+networks:
+  quant_net:
+    driver: bridge

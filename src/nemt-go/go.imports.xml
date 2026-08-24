@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<code_scheme name="NEMT-Go" version="173">
+  <GoCodeStyleSettings>
+    <option name="GOIMPORT_LOCAL_PREFIX" value="github.com/nemt-lab/nemt-go" />
+    <option name="GOIMPORT_SECTION_GROUPS" value="STDLIB;DEFAULT;LOCAL;OTHER" />
+    <option name="GOFORMAT_FLAGS" value="-local github.com/nemt-lab/nemt-go" />
+  </GoCodeStyleSettings>
+
+  <codeStyleSettings language="Go">
+    <option name="GO_REORDER_IMPORTS_ON_ORGANIZE" value="true" />
+    <option name="GO_SORT_IMPORTS" value="true" />
+    <option name="GO_STANDARD_LIBRARY_FIRST" value="true" />
+    <option name="GO_USE_INPORT_MARKER" value="true" />
+    <option name="GOUSE_INDENT_MARKER" value="true" />
+
+    <!-- Import ordering: std, third-party, local -->
+    <importGroup>
+      <group name="go">
+        <order kind="alphabetical" />
+      </group>
+      <group name="local" is_collapsed="false">
+        <order kind="alphabetical" />
+      </group>
+    </importGroup>
+  </codeStyleSettings>
+
+  <yaml>
+    <option name="CHAINED_CALL_INDENT" value="1" />
+  </yaml>
+</code_scheme>

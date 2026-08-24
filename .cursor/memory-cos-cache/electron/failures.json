@@ -1,0 +1,8 @@
+[
+  {
+    "problem": "直接用URL连接WebStorm失败",
+    "reason": "MCP Proxy需要正确配置IDE类型参数",
+    "avoid": "必须使用proxy + webstorm参数组合",
+    "timestamp": "2026-05-04T10:49:49.963959"
+  }
+]

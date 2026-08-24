@@ -1,0 +1,114 @@
+# SignalNode Schema
+
+name: signal_node
+version: 1.0.0
+description: Signal generation node for creating trading signals
+
+inputs:
+  - name: ohlcv
+    type: object
+    required: true
+    description: Market OHLCV data
+    properties:
+      symbol:
+        type: string
+      open:
+        type: number
+      high:
+        type: number
+      low:
+        type: number
+      close:
+        type: number
+      volume:
+        type: number
+    required_fields:
+      - symbol
+      - close
+
+  - name: market_phase
+    type: string
+    required: true
+    description: Detected market phase
+    enum:
+      - UNKNOWN
+      - TREND_UP
+      - TREND_DOWN
+      - RANGE
+      - VOLATILE
+
+outputs:
+  - name: signal
+    type: object
+    required: true
+    description: Trading signal
+    properties:
+      signal_id:
+        type: string
+        description: Unique signal ID
+      symbol:
+        type: string
+      direction:
+        type: string
+        enum: ["LONG", "SHORT", "NEUTRAL"]
+      signal_type:
+        type: string
+        enum: ["ENTRY", "EXIT", "STOP_LOSS", "TAKE_PROFIT"]
+      confidence:
+        type: number
+        minimum: 0
+        maximum: 1
+      entry_price:
+        type: number
+      stop_loss:
+        type: number
+      take_profit:
+        type: number
+      timestamp:
+        type: integer
+    required_fields:
+      - signal_id
+      - symbol
+      - direction
+      - confidence
+
+  - name: signals_summary
+    type: object
+    required: false
+    description: Summary of all active signals
+    properties:
+      total_signals:
+        type: integer
+      long_signals:
+        type: integer
+      short_signals:
+        type: integer
+      avg_confidence:
+        type: number
+
+constraints:
+  - name: min_confidence
+    type: validation
+    value: 0.6
+    description: Minimum confidence threshold
+    min: 0
+    max: 1
+
+  - name: max_signals_per_symbol
+    type: runtime
+    value: 5
+    description: Maximum concurrent signals per symbol
+    min: 1
+    max: 20
+
+  - name: signal_ttl_seconds
+    type: runtime
+    value: 300
+    description: Signal time-to-live
+    min: 60
+    max: 3600
+
+  - name: risk_per_trade
+    type: immutable
+    value: 0.02
+    description: Risk per trade (2%)

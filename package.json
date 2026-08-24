@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "nemt-desktop",
+  "productName": "NEMT Simulator",
+  "version": "1.0.0",
+  "description": "Non-Equilibrium Market Theory Simulator - Desktop Application",
+  "main": "dist/desktop/main/index.js",
+  "author": "NEMT Lab",
+  "license": "Apache-2.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:web\" \"npm run dev:desktop\"",
+    "dev:web": "cd src/web && npm run dev",
+    "dev:desktop": "npm run build:desktop && electron .",
+    "dev:hot": "npm run build:desktop && ts-node scripts/hot-reload.ts",
+    "build": "npm run build:web && npm run build:desktop && npm run build:gateway",
+    "build:web": "cd src/web && npm run build",
+    "build:desktop": "tsc -p src/desktop/tsconfig.json",
+    "build:gateway": "cd src/gateway && go build -o ../../dist/gateway ./cmd/gateway",
+    "build:collector": "cd src/collector && go build -o ../../dist/collector ./cmd/collector",
+    "build:scheduler": "cd src/scheduler && go build -o ../../dist/scheduler ./cmd/scheduler",
+    "package": "npm run build && electron-builder",
+    "package:win": "npm run build && electron-builder --win",
+    "package:mac": "npm run build && electron-builder --mac",
+    "package:linux": "npm run build && electron-builder --linux",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist/ release/",
+    "go:fmt": "cd src/gateway && go fmt ./...",
+    "go:test": "cd src/gateway && go test ./..."
+  },
+  "dependencies": {
+    "electron-log": "^5.0.0",
+    "electron-store": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "chokidar": "^5.0.0",
+    "concurrently": "^8.2.0",
+    "cross-env": "^7.0.3",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.0",
+    "electron-reload": "^2.0.0-alpha.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "build": {
+    "appId": "com.nemt.simulator",
+    "productName": "NEMT Simulator",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "dist/gateway",
+        "to": "gateway/gateway",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "src/nemt-os",
+        "to": "nemt-os",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "build/icon.icns"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}

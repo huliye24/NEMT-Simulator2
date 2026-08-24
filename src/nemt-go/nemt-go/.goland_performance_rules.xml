@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- NEMT-Go 性能检查规则 -->
+<performance_rules>
+  <rule>
+    <name>preallocate_slices</name>
+    <description>已知容量的 slice 应预分配</description>
+    <severity>WARNING</severity>
+    <pattern>make\(\[\]\w+</pattern>
+    <suggestion>如果已知容量，使用 make([]T, 0, capacity) 预分配</suggestion>
+  </rule>
+
+  <rule>
+    <name>string_concatenation</name>
+    <description>频繁字符串拼接应使用 strings.Builder</description>
+    <severity>WARNING</severity>
+    <pattern>s \+= </pattern>
+    <threshold>5</threshold>
+    <suggestion>循环内字符串拼接超过5次，建议使用 strings.Builder</suggestion>
+  </rule>
+
+  <rule>
+    <name>range_loop_pointer</name>
+    <description>循环中的指针变量需要小心处理</description>
+    <severity>WARNING</severity>
+    <pattern>for\s+.*range.*\{[^}]*&amp;</pattern>
+    <suggestion>循环中获取变量地址时注意避免所有迭代引用同一变量</suggestion>
+  </rule>
+
+  <rule>
+    <name>defer_in_loop</name>
+    <description>循环内使用 defer 需要谨慎</description>
+    <severity>WARNING</severity>
+    <pattern>for.*\{[^}]*defer</pattern>
+    <suggestion>循环内的 defer 会在函数结束时才执行，可能导致资源泄漏</suggestion>
+  </rule>
+
+  <rule>
+    <name>mutex_in_value_receiver</name>
+    <description>值接收者的方法无法修改原值</description>
+    <severity>WARNING</severity>
+    <pattern>func\s+\(\s*\w+\s+\w+\s*\)\s+\w+</pattern>
+    <context>mutex</context>
+    <suggestion>如果方法需要修改状态，使用指针接收者</suggestion>
+  </rule>
+
+  <rule>
+    <name>map_access_in_mutex</name>
+ <description>map 并发访问需要加锁</description>
+    <severity>ERROR</severity>
+    <pattern>\bmap\[</pattern>
+    <concurrent>true</concurrent>
+    <suggestion>map 不是并发安全的，并发访问需要使用 sync.RWMutex 或 sync.Map</suggestion>
+  </rule>
+</performance_rules>

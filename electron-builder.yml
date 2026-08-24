@@ -1,0 +1,79 @@
+appId: com.nemt.simulator
+productName: NEMT Simulator
+copyright: Copyright © 2026 NEMT Lab
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  # Desktop app
+  - dist/desktop/**/*
+  # Web app
+  - src/web/dist/**/*
+  # Gateway binary (will be added via extraResources)
+  - package.json
+
+extraResources:
+  # Go Gateway binary
+  - from: dist/gateway/gateway
+    to: gateway/gateway
+    filter:
+      - "**/*"
+
+# Windows configuration
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: build/icon.ico
+  artifactName: "${productName}-${version}-Setup.${ext}"
+
+# macOS configuration
+mac:
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+  icon: build/icon.icns
+  category: public.app-category.finance
+  artifactName: "${productName}-${version}.${ext}"
+
+# Linux configuration
+linux:
+  target:
+    - target: AppImage
+      arch:
+        - x64
+  icon: build/icons
+  category: Finance
+  artifactName: "${productName}-${version}.${ext}"
+
+# NSIS installer configuration (Windows)
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  deleteAppDataOnUninstall: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: NEMT Simulator
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  installerHeaderIcon: build/icon.ico
+  license: LICENSE.txt
+
+# Auto-updater (optional, for future use)
+# publish:
+#   provider: github
+#   owner: nemt-lab
+#   repo: nemt-simulator
+
+# ASAR packaging
+asar: true
+compression: maximum
+
+# AfterPack hook for additional configuration
+afterPack: ./scripts/afterPack.js

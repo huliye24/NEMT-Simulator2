@@ -1,0 +1,2 @@
+cos-python-sdk-v5>=1.9.6
+python-dotenv>=1.0.0

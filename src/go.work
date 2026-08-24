@@ -1,0 +1,13 @@
+// NEMT Simulator - Go Workspace Configuration
+// This file unifies multiple Go modules for the NEMT Desktop application
+
+go 1.24.0
+
+use (
+    ./gateway
+    ./gateway-pkg
+    ./nemt-go/nemt-go
+)
+
+// Note: collector and scheduler modules are planned for future phases
+// They will be added when the multi-process architecture is expanded

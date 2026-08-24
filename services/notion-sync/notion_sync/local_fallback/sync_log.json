@@ -1,0 +1,26 @@
+{
+  "last_updated": "2026-04-21T12:57:04.285177",
+  "total_entries": 2,
+  "entries": [
+    {
+      "timestamp": "2026-04-21T12:54:43.815592",
+      "direction": "local_only",
+      "record_type": "decision",
+      "local_id": "9c3c9e55",
+      "notion_id": "",
+      "status": "success",
+      "error": "",
+      "retry_count": 0
+    },
+    {
+      "timestamp": "2026-04-21T12:57:04.281187",
+      "direction": "local_only",
+      "record_type": "decision",
+      "local_id": "cdd5f29d",
+      "notion_id": "",
+      "status": "success",
+      "error": "",
+      "retry_count": 0
+    }
+  ]
+}

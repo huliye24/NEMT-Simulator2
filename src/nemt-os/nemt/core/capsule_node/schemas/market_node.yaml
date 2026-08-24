@@ -1,0 +1,128 @@
+# MarketNode Schema
+
+name: market_node
+version: 1.0.0
+description: Market data node for receiving and processing market feeds
+
+inputs:
+  - name: raw_feed
+    type: object
+    required: true
+    description: Raw market feed from exchange
+    properties:
+      symbol:
+        type: string
+        description: Trading pair symbol
+      price:
+        type: number
+        description: Current price
+      volume:
+        type: number
+        description: Trading volume
+      timestamp:
+        type: integer
+        description: Unix timestamp
+    required_fields:
+      - symbol
+      - price
+      - timestamp
+
+  - name: kline_request
+    type: object
+    required: false
+    description: Request for historical klines
+    properties:
+      symbol:
+        type: string
+      timeframe:
+        type: string
+        enum: ["1m", "5m", "15m", "1h", "4h", "1d"]
+      limit:
+        type: integer
+        minimum: 1
+        maximum: 1000
+    required_fields:
+      - symbol
+
+outputs:
+  - name: ohlcv
+    type: object
+    required: true
+    description: Processed OHLCV bars
+    properties:
+      symbol:
+        type: string
+      open:
+        type: number
+      high:
+        type: number
+      low:
+        type: number
+      close:
+        type: number
+      volume:
+        type: number
+      timestamp:
+        type: integer
+    required_fields:
+      - symbol
+      - open
+      - high
+      - low
+      - close
+      - volume
+
+  - name: price_update
+    type: object
+    required: false
+    description: Price update event
+    properties:
+      symbol:
+        type: string
+      price:
+        type: number
+      change_24h:
+        type: number
+      volume_24h:
+        type: number
+    required_fields:
+      - symbol
+      - price
+
+  - name: phase
+    type: string
+    required: true
+    description: Detected market phase
+    enum:
+      - UNKNOWN
+      - TREND_UP
+      - TREND_DOWN
+      - RANGE
+      - VOLATILE
+
+constraints:
+  - name: max_latency_ms
+    type: runtime
+    value: 1000
+    description: Maximum processing latency
+    min: 0
+    max: 10000
+
+  - name: min_confidence
+    type: validation
+    value: 0.5
+    description: Minimum confidence threshold
+    min: 0
+    max: 1
+
+  - name: max_cache_size
+    type: runtime
+    value: 1000
+    description: Maximum bar cache size
+    min: 1
+    max: 10000
+
+  - name: symbols_case
+    type: immutable
+    value: uppercase
+    description: Symbol case normalization

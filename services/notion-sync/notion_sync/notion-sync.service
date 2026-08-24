@@ -1,0 +1,25 @@
+[Unit]
+Description=Notion Obsidian Live Sync Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root
+Environment="PYTHONUNBUFFERED=1"
+ExecStart=/usr/bin/python3 /root/quant-sync-server/notion_live_sync.py --daemon --interval 180
+Restart=always
+RestartSec=10
+
+# 安全设置
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/root/obsidian_vault /root/quant-sync-server /root
+
+# 日志
+StandardOutput=append:/root/quant-sync-server/live_sync.log
+StandardError=append:/root/quant-sync-server/live_sync.log
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- NEMT-Go 包结构约束规则 -->
+<constraints>
+  <package_structure>
+    <rule>
+      <name>cmd_only_main</name>
+      <description>cmd/ 目录只能包含 main.go</description>
+      <path>cmd/*</path>
+      <allowed_files>
+        <file>main.go</file>
+      </allowed_files>
+      <error>cmd/ 目录应只包含 main.go 文件</error>
+    </rule>
+
+    <rule>
+      <name>pkg_contains_packages</name>
+      <description>pkg/ 目录应包含可导入的包</description>
+      <path>pkg/*</path>
+      <error>pkg/ 目录结构不正确</error>
+    </rule>
+
+    <rule>
+      <name>no_internal_in_pkg</name>
+      <description>pkg/ 不应包含 internal 包</description>
+      <path>pkg/internal/*</path>
+      <error>请将 internal 包放在项目根目录的 internal/ 下</error>
+    </rule>
+  </package_structure>
+
+  <import_rules>
+    <rule>
+      <name>local_imports_last</name>
+      <description>本地包应在 import 段的最后</description>
+      <pattern>github\.com/nemt-lab/nemt-go.*</pattern>
+      <position>last</position>
+      <error>本地包导入应放在 import 段的最后</error>
+    </rule>
+
+    <rule>
+      <name>no_circular_dependencies</name>
+      <description>禁止循环依赖</description>
+      <error>检测到循环依赖</error>
+    </rule>
+  </import_rules>
+</constraints>

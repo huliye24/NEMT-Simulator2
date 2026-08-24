@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<idea-plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:noNamespaceSchemaLocation="plugins\Common\bin\main\META-INF\idea-plugin.xsd">
+  <id>com.nemt.constraints</id>
+  <name>NEMT-Go Constraints</name>
+  <vendor email="nemt@example.com" url="https://github.com/nemt-lab/nemt-go">NEMT Lab</vendor>
+  <description>
+    NEMT-Go 代码约束插件
+
+    提供以下约束检查：
+    1. 包结构检查 - cmd/ 只允许 main.go
+    2. 包名小写检查
+    3. 文件名 snake_case 检查
+    4. Import 顺序检查
+  </description>
+  <depends>com.go.lang</depends>
+
+  <extensions defaultExtensionNs="com.go.lang">
+    <!-- Go 特定配置 -->
+    <codeStyleSettingsProvider implementation="nemt.go.NEMTCodeStyleProvider"/>
+  </extensions>
+
+  <application-components>
+    <component>
+      <implementation-class>nemt.go.NEMTGoPlugin</implementation-class>
+    </component>
+  </application-components>
+</idea-plugin>

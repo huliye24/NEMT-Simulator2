@@ -1,0 +1,237 @@
+// NEMT Gateway Proto Definition
+// Interface Contract for Go <-> Python Communication
+
+syntax = "proto3";
+
+package nemt;
+
+option go_package = "github.com/nemt-lab/nemt-go/pkg/proto";
+
+// ============================================================================
+// Strategy Management
+// ============================================================================
+
+message Strategy {
+    string id = 1;
+    string name = 2;
+    string author = 3;
+    StrategyType type = 4;
+    string code = 5;
+    double sharpe_ratio = 6;
+    double max_drawdown = 7;
+    int32 total_trades = 8;
+    double win_rate = 9;
+    StrategyStatus status = 10;
+    int64 created_at = 11;
+    int64 updated_at = 12;
+}
+
+enum StrategyType {
+    TREND_FOLLOWING = 0;
+    MEAN_REVERSION = 1;
+    ARBITRAGE = 2;
+    MARKET_MAKING = 3;
+    ML_BASED = 4;
+}
+
+enum StrategyStatus {
+    DRAFT = 0;
+    ACTIVE = 1;
+    PAUSED = 2;
+    ARCHIVED = 3;
+}
+
+message CreateStrategyRequest {
+    string name = 1;
+    string author = 2;
+    StrategyType type = 3;
+    string code = 4;
+}
+
+message CreateStrategyResponse {
+    Strategy strategy = 1;
+    bool success = 2;
+    string error = 3;
+}
+
+message GetStrategyRequest {
+    string id = 1;
+}
+
+message ListStrategiesRequest {
+    StrategyType filter_type = 1;
+    StrategyStatus filter_status = 2;
+    int32 page = 3;
+    int32 page_size = 4;
+}
+
+message ListStrategiesResponse {
+    repeated Strategy strategies = 1;
+    int32 total = 2;
+    int32 page = 3;
+    int32 page_size = 4;
+}
+
+message DeleteStrategyRequest {
+    string id = 1;
+}
+
+message Empty {}
+
+// ============================================================================
+// Capsule Management
+// ============================================================================
+
+message Capsule {
+    string id = 1;
+    string name = 2;
+    string version = 3;
+    string author = 4;
+    CapsuleType type = 5;
+    string code = 6;
+    repeated string dependencies = 7;
+    int64 created_at = 8;
+    int64 updated_at = 9;
+}
+
+enum CapsuleType {
+    MARKET = 0;
+    SIGNAL = 1;
+    RISK = 2;
+    EXECUTION = 3;
+    BRAIN = 4;
+    MONITOR = 5;
+}
+
+message RegisterCapsuleRequest {
+    string name = 1;
+    string version = 2;
+    string author = 3;
+    CapsuleType type = 4;
+    string code = 5;
+    repeated string dependencies = 6;
+}
+
+message RegisterCapsuleResponse {
+    Capsule capsule = 1;
+    bool success = 2;
+    string error = 3;
+}
+
+message ListCapsulesRequest {
+    CapsuleType filter_type = 1;
+    string filter_version = 2;
+}
+
+message ListCapsulesResponse {
+    repeated Capsule capsules = 1;
+}
+
+// ============================================================================
+// Backtest
+// ============================================================================
+
+message BacktestRequest {
+    string strategy_id = 1;
+    string data_source = 2;
+    string symbol = 3;
+    string interval = 4;
+    int64 start_time = 5;
+    int64 end_time = 6;
+    double initial_capital = 7;
+}
+
+message BacktestResult {
+    int32 bar_index = 1;
+    double equity = 2;
+    double position = 3;
+    double pnl = 4;
+    double drawdown = 5;
+}
+
+message BacktestProgress {
+    int32 current_bar = 1;
+    int32 total_bars = 2;
+    double progress_pct = 3;
+}
+
+message BacktestReport {
+    string id = 1;
+    string strategy_id = 2;
+    double initial_capital = 3;
+    double final_equity = 4;
+    double total_pnl = 5;
+    double return_pct = 6;
+    double max_drawdown = 7;
+    double sharpe_ratio = 8;
+    double win_rate = 9;
+    double profit_factor = 10;
+    int32 total_trades = 11;
+    int32 total_bars = 12;
+    repeated Trade trades = 13;
+    repeated EquityPoint equity_curve = 14;
+}
+
+message Trade {
+    int32 id = 1;
+    string side = 2;
+    double price = 3;
+    double quantity = 4;
+    double pnl = 5;
+    int64 timestamp = 6;
+}
+
+message EquityPoint {
+    int64 timestamp = 1;
+    double equity = 2;
+    double drawdown = 3;
+}
+
+message GetBacktestRequest {
+    string id = 1;
+}
+
+// ============================================================================
+// Market Data
+// ============================================================================
+
+message MarketDataRequest {
+    string symbol = 1;
+    string interval = 2;
+    int32 limit = 3;
+}
+
+message MarketData {
+    string symbol = 1;
+    int64 timestamp = 2;
+    double open = 3;
+    double high = 4;
+    double low = 5;
+    double close = 6;
+    double volume = 7;
+}
+
+// ============================================================================
+// Gateway Service
+// ============================================================================
+
+service NEMTGateway {
+    // Strategy Management
+    rpc CreateStrategy(CreateStrategyRequest) returns (CreateStrategyResponse);
+    rpc GetStrategy(GetStrategyRequest) returns (Strategy);
+    rpc ListStrategies(ListStrategiesRequest) returns (ListStrategiesResponse);
+    rpc UpdateStrategy(CreateStrategyRequest) returns (CreateStrategyResponse);
+    rpc DeleteStrategy(DeleteStrategyRequest) returns (Empty);
+
+    // Capsule Management
+    rpc RegisterCapsule(RegisterCapsuleRequest) returns (RegisterCapsuleResponse);
+    rpc ListCapsules(ListCapsulesRequest) returns (ListCapsulesResponse);
+
+    // Backtest
+    rpc StartBacktest(BacktestRequest) returns (stream BacktestResult);
+    rpc GetBacktestResult(GetBacktestRequest) returns (BacktestReport);
+
+    // Market Data
+    rpc SubscribeMarketData(MarketDataRequest) returns (stream MarketData);
+    rpc GetMarketData(MarketDataRequest) returns (MarketData);
+}
