@@ -1,0 +1,155 @@
+[
+  {
+    "id": "analysis-001",
+    "date": "2026-08-25T08:30:00Z",
+    "humanThesis": {
+      "macroView": "美联储降息预期升温，流动性改善",
+      "marketJudgment": "BTC突破关键阻力位，趋势转多",
+      "riskFactors": "短期涨幅过大，可能回调",
+      "actionPlan": "分批建仓，设置止损"
+    },
+    "marketContext": {
+      "phase": "MARKUP",
+      "dominantSymbol": "BTCUSDT",
+      "avgDci": 72.5,
+      "sentiment": "BULLISH",
+      "keyLevels": {
+        "support": 65000,
+        "resistance": 70000
+      }
+    },
+    "aiReasoning": {
+      "marketInterpretation": "DCI指标显示强劲动能，Phase处于Markup阶段。链上数据显示 accumulation 持续，鲸鱼地址增加。",
+      "riskAssessment": {
+        "level": "MEDIUM",
+        "factors": [
+          " funding rate 偏高，多头拥挤",
+          " 短期 RSI 进入超买区域",
+          " 波动率指数上升"
+        ]
+      },
+      "recommendation": "BUY",
+      "confidence": 78.2,
+      "reasoning": [
+        "DCI 72.5 处于 HIGH band，动能充足",
+        "Phase Markup 确认，趋势向上",
+        "成交量放大，突破有效",
+        "链上指标支持上涨"
+      ]
+    },
+    "finalDecision": {
+      "action": "BUY",
+      "size": "30%",
+      "entry": 67400,
+      "stopLoss": 65200,
+      "takeProfit": 72000
+    },
+    "result": {
+      "status": "PENDING",
+      "pnl": null,
+      "exitPrice": null
+    }
+  },
+  {
+    "id": "analysis-002",
+    "date": "2026-08-24T14:20:00Z",
+    "humanThesis": {
+      "macroView": "ETH ETF 资金流入放缓",
+      "marketJudgment": "ETH 相对 BTC 弱势，可能补跌",
+      "riskFactors": "L2 竞争加剧，叙事疲劳",
+      "actionPlan": "观望，不追多"
+    },
+    "marketContext": {
+      "phase": "ACCUMULATION",
+      "dominantSymbol": "ETHUSDT",
+      "avgDci": 58.3,
+      "sentiment": "NEUTRAL",
+      "keyLevels": {
+        "support": 3000,
+        "resistance": 3300
+      }
+    },
+    "aiReasoning": {
+      "marketInterpretation": "ETH DCI 处于 MEDIUM band，Phase Accumulation。相对 BTC 的汇率持续走低，缺乏独立叙事。",
+      "riskAssessment": {
+        "level": "LOW",
+        "factors": [
+          " 资金费率中性",
+          " 波动率适中",
+          " 支撑位明确"
+        ]
+      },
+      "recommendation": "HOLD",
+      "confidence": 65.4,
+      "reasoning": [
+        "DCI 58.3 处于 MEDIUM band",
+        "Phase Accumulation，观望为主",
+        "缺乏明确方向信号",
+        "建议等待突破"
+      ]
+    },
+    "finalDecision": {
+      "action": "WAIT",
+      "size": "0%",
+      "entry": null,
+      "stopLoss": null,
+      "takeProfit": null
+    },
+    "result": {
+      "status": "SKIPPED",
+      "pnl": 0,
+      "exitPrice": null
+    }
+  },
+  {
+    "id": "analysis-003",
+    "date": "2026-08-23T09:15:00Z",
+    "humanThesis": {
+      "macroView": "SOL 生态活跃度下降",
+      "marketJudgment": "Distribution 阶段，考虑减仓",
+      "riskFactors": "Meme 币热度退潮，链上活动减少",
+      "actionPlan": "减仓 50%"
+    },
+    "marketContext": {
+      "phase": "DISTRIBUTION",
+      "dominantSymbol": "SOLUSDT",
+      "avgDci": 51.2,
+      "sentiment": "CAUTIOUS",
+      "keyLevels": {
+        "support": 135,
+        "resistance": 150
+      }
+    },
+    "aiReasoning": {
+      "marketInterpretation": "SOL Phase Distribution，DCI 下降中。价格横盘但动能减弱，Distribution 特征明显。",
+      "riskAssessment": {
+        "level": "HIGH",
+        "factors": [
+          " DCI 从 64 降至 51",
+          " 资金费率转负",
+          " 大额转账增加"
+        ]
+      },
+      "recommendation": "REDUCE",
+      "confidence": 72.8,
+      "reasoning": [
+        "DCI 下降趋势确认",
+        "Phase Distribution，风险上升",
+        "链上活动减少",
+        "建议减仓避险"
+      ]
+    },
+    "finalDecision": {
+      "action": "SELL",
+      "size": "50%",
+      "entry": 142.50,
+      "stopLoss": null,
+      "takeProfit": 138
+    },
+    "result": {
+      "status": "CLOSED",
+      "pnl": -2.8,
+      "exitPrice": 138.50
+    }
+  }
+]

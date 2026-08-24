@@ -12,6 +12,8 @@ import tradesData from "@/data/trades.json";
 import portfolioData from "@/data/portfolio.json";
 import journalData from "@/data/journal.json";
 
+import analysisData from "@/data/analysis.json";
+
 import type {
   AIReport,
   JournalEntry,
@@ -19,6 +21,7 @@ import type {
   MarketSymbol,
   Portfolio,
   Trade,
+  Analysis,
 } from "./types";
 
 /**
@@ -92,8 +95,25 @@ export async function getPortfolio(): Promise<Portfolio> {
 }
 
 // --------------------------------------------------------------------------
-// Journal
+// Analysis (AI Reasoning Layer)
 // --------------------------------------------------------------------------
+
+export async function getAnalyses(): Promise<Analysis[]> {
+  await wait(SIMULATED_LATENCY_MS);
+  return (analysisData as Analysis[]).sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+}
+
+export async function getLatestAnalysis(): Promise<Analysis | undefined> {
+  const all = await getAnalyses();
+  return all[0];
+}
+
+export async function getAnalysisById(id: string): Promise<Analysis | undefined> {
+  const all = await getAnalyses();
+  return all.find((a) => a.id === id);
+}
 
 export async function getJournal(): Promise<JournalEntry[]> {
   await wait(SIMULATED_LATENCY_MS);

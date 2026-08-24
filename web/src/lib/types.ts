@@ -118,3 +118,59 @@ export interface KpiCard {
   delta?: number;            // optional percent change
   hint?: string;
 }
+
+// AI Reasoning Layer Types
+export interface HumanThesis {
+  macroView: string;
+  marketJudgment: string;
+  riskFactors: string;
+  actionPlan: string;
+}
+
+export interface MarketContext {
+  phase: MarketPhase;
+  dominantSymbol: string;
+  avgDci: number;
+  sentiment: Sentiment;
+  keyLevels: {
+    support: number;
+    resistance: number;
+  };
+}
+
+export interface RiskAssessment {
+  level: "LOW" | "MEDIUM" | "HIGH";
+  factors: string[];
+}
+
+export interface AIReasoning {
+  marketInterpretation: string;
+  riskAssessment: RiskAssessment;
+  recommendation: Recommendation;
+  confidence: number;
+  reasoning: string[];
+}
+
+export interface FinalDecision {
+  action: Recommendation;
+  size: string;
+  entry: number | null;
+  stopLoss: number | null;
+  takeProfit: number | null;
+}
+
+export interface AnalysisResult {
+  status: "PENDING" | "CLOSED" | "SKIPPED";
+  pnl: number | null;
+  exitPrice: number | null;
+}
+
+export interface Analysis {
+  id: string;
+  date: string;
+  humanThesis: HumanThesis;
+  marketContext: MarketContext;
+  aiReasoning: AIReasoning;
+  finalDecision: FinalDecision;
+  result: AnalysisResult;
+}
