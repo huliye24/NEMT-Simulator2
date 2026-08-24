@@ -1,45 +1,163 @@
+/* ==========================================================================
+   NEMT Web Alpha — Global Styles
+   Visual direction: Bloomberg Terminal + OpenAI Research
+   - Dark background
+   - High information density
+   - Data first
+   - Minimal borders
+   - Amber gold brand accents
+   ========================================================================== */
+
 @import "tailwindcss";
 
 :root {
-  --nemt-primary: #3b82f6;
-  --nemt-secondary: #8b5cf6;
-  --nemt-accent: #10b981;
-  --nemt-danger: #ef4444;
-  --nemt-warning: #f59e0b;
-  --nemt-bg-dark: #0f172a;
-  --nemt-bg-card: #1e293b;
+  /* NEMT Brand Palette (Amber Gold) */
+  --nemt-amber-50: #fffbeb;
+  --nemt-amber-100: #fef3c7;
+  --nemt-amber-200: #fde68a;
+  --nemt-amber-300: #fcd34d;
+  --nemt-amber-400: #fbbf24;
+  --nemt-amber-500: #f59e0b;   /* primary brand */
+  --nemt-amber-600: #d97706;
+  --nemt-amber-700: #b45309;
+  --nemt-amber-800: #92400e;
+  --nemt-amber-900: #78350f;
+
+  /* Slate (Bloomberg-like base) */
+  --nemt-bg-deep: #0a0e1a;        /* deepest background */
+  --nemt-bg-base: #0f1420;        /* page background */
+  --nemt-bg-panel: #161b2c;       /* panel/card background */
+  --nemt-bg-elevated: #1d2336;    /* elevated panel */
+  --nemt-bg-hover: #232a3f;
+
+  --nemt-border: rgba(245, 158, 11, 0.12);
+  --nemt-border-strong: rgba(245, 158, 11, 0.28);
+
+  --nemt-text-primary: #f8fafc;
+  --nemt-text-secondary: #94a3b8;
+  --nemt-text-muted: #64748b;
+
+  /* Semantic */
+  --nemt-up: #10b981;
+  --nemt-down: #ef4444;
+  --nemt-warn: #f59e0b;
+  --nemt-info: #3b82f6;
+  --nemt-neutral: #64748b;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-nemt-amber-50: var(--nemt-amber-50);
+  --color-nemt-amber-100: var(--nemt-amber-100);
+  --color-nemt-amber-200: var(--nemt-amber-200);
+  --color-nemt-amber-300: var(--nemt-amber-300);
+  --color-nemt-amber-400: var(--nemt-amber-400);
+  --color-nemt-amber-500: var(--nemt-amber-500);
+  --color-nemt-amber-600: var(--nemt-amber-600);
+  --color-nemt-amber-700: var(--nemt-amber-700);
+
+  --color-nemt-bg-deep: var(--nemt-bg-deep);
+  --color-nemt-bg-base: var(--nemt-bg-base);
+  --color-nemt-bg-panel: var(--nemt-bg-panel);
+  --color-nemt-bg-elevated: var(--nemt-bg-elevated);
+  --color-nemt-bg-hover: var(--nemt-bg-hover);
+
+  --color-nemt-up: var(--nemt-up);
+  --color-nemt-down: var(--nemt-down);
+  --color-nemt-warn: var(--nemt-warn);
+  --color-nemt-info: var(--nemt-info);
+  --color-nemt-neutral: var(--nemt-neutral);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
+html,
 body {
-  background: var(--nemt-bg-dark);
-  color: #f8fafc;
+  background: var(--nemt-bg-base);
+  color: var(--nemt-text-primary);
+  -webkit-font-smoothing: antialiased;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* NEMT Brand Styles */
-.nemt-gradient {
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+/* ==========================================================================
+   NEMT Brand Primitives
+   ========================================================================== */
+
+.nemt-amber-gradient {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #b45309 100%);
 }
 
-.nemt-card {
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  border-radius: 12px;
-}
-
-.nemt-glow {
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-}
-
-.nemt-text-gradient {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+.nemt-amber-text {
+  background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  color: transparent;
 }
+
+.nemt-amber-glow {
+  box-shadow: 0 0 24px rgba(245, 158, 11, 0.18), 0 0 1px rgba(245, 158, 11, 0.4);
+}
+
+.nemt-panel {
+  background: var(--nemt-bg-panel);
+  border: 1px solid var(--nemt-border);
+  border-radius: 8px;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.nemt-panel:hover {
+  border-color: var(--nemt-border-strong);
+}
+
+.nemt-panel-flat {
+  background: var(--nemt-bg-panel);
+  border: 1px solid var(--nemt-border);
+  border-radius: 6px;
+}
+
+.nemt-divider {
+  border-color: var(--nemt-border);
+}
+
+.nemt-up { color: var(--nemt-up); }
+.nemt-down { color: var(--nemt-down); }
+.nemt-warn { color: var(--nemt-warn); }
+.nemt-info { color: var(--nemt-info); }
+.nemt-muted { color: var(--nemt-text-muted); }
+.nemt-secondary { color: var(--nemt-text-secondary); }
+
+/* Data-first utility (monospace numeric display) */
+.nemt-mono {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Subtle scanline / terminal feel */
+.nemt-grid-bg {
+  background-image:
+    linear-gradient(rgba(245, 158, 11, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 158, 11, 0.025) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Phase chip base */
+.nemt-phase-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid currentColor;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--nemt-bg-base); }
+::-webkit-scrollbar-thumb { background: var(--nemt-bg-elevated); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--nemt-bg-hover); }

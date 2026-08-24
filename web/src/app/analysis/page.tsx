@@ -1,85 +1,92 @@
-import { mockAIReport } from "@/data/mock";
+import { AIReportCard } from "@/components/AIReport";
+import { Card } from "@/components/Card";
+import { getReports, getMarketSymbols } from "@/lib/api";
+import { classNames } from "@/lib/format";
+import type { Recommendation } from "@/lib/types";
 
-export default function AnalysisPage() {
+
+const REC_LABEL: Record<Recommendation, string> = {
+  STRONG_BUY: "Strong Buy",
+  BUY: "Buy",
+  HOLD: "Hold",
+  REDUCE: "Reduce",
+  SELL: "Sell",
+  WAIT: "Wait",
+};
+
+const REC_TONE: Record<Recommendation, string> = {
+  STRONG_BUY: "text-emerald-300 bg-emerald-500/10 ring-emerald-500/30",
+  BUY: "text-emerald-300 bg-emerald-500/10 ring-emerald-500/20",
+  HOLD: "text-slate-300 bg-slate-500/10 ring-slate-500/30",
+  REDUCE: "text-amber-300 bg-amber-500/10 ring-amber-500/30",
+  SELL: "text-rose-300 bg-rose-500/10 ring-rose-500/30",
+  WAIT: "text-slate-300 bg-slate-500/10 ring-slate-500/20",
+};
+
+export default async function AnalysisPage() {
+  const [reports, symbols] = await Promise.all([getReports(), getMarketSymbols()]);
+
+  // Group by recommendation for the matrix view
+  const byRec = reports.reduce<Record<Recommendation, number>>((acc, r) => {
+    acc[r.recommendation] = (acc[r.recommendation] ?? 0) + 1;
+    return acc;
+  }, {} as Record<Recommendation, number>);
+
+  const symById = new Map(symbols.map((s) => [s.symbol, s]));
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Analysis</h1>
-        <p className="text-slate-400">AI-powered market analysis and reasoning</p>
-      </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <header>
+        <div className="text-[11px] uppercase tracking-wider text-amber-400 mb-1">Analysis</div>
+        <h1 className="text-2xl font-bold text-slate-100">AI Reasoning Layer</h1>
+        <p className="text-sm text-slate-400 mt-1">
+          Council-generated reports with full reasoning chains. Each report is a complete audit trail.
+        </p>
+      </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Current Analysis */}
-        <div className="nemt-card p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">Current Analysis</h2>
-          <div className="space-y-4">
-            <div className="p-4 bg-slate-800/50 rounded-lg">
-              <span className="text-slate-400 text-sm">Summary</span>
-              <p className="text-white mt-2 text-lg">{mockAIReport.summary}</p>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <span className="text-slate-400">Recommendation:</span>
-              <span className={`px-4 py-2 rounded-full text-sm font-bold ${
-                mockAIReport.recommendation === "buy" ? "bg-emerald-500/20 text-emerald-400" :
-                mockAIReport.recommendation === "sell" ? "bg-red-500/20 text-red-400" :
-                mockAIReport.recommendation === "hold" ? "bg-amber-500/20 text-amber-400" :
-                "bg-blue-500/20 text-blue-400"
-              }`}>
-                {mockAIReport.recommendation.toUpperCase()}
-              </span>
-            </div>
-
-            <div className="p-4 bg-slate-800/50 rounded-lg">
-              <span className="text-slate-400 text-sm">AI Reasoning</span>
-              <ul className="mt-2 space-y-2 text-slate-300">
-                {mockAIReport.reasoning.split("\n").filter(Boolean).map((line, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="text-blue-400 mt-1">•</span>
-                    <span>{line.replace(/^\d+\.\s*/, "")}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* Analysis History */}
-        <div className="nemt-card p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">Analysis History</h2>
-          <div className="space-y-3">
-            {[
-              { date: "2025-08-24", summary: "BTC breakout confirmed", rec: "buy", confidence: 85 },
-              { date: "2025-08-22", summary: "ETH accumulation phase", rec: "hold", confidence: 72 },
-              { date: "2025-08-20", summary: "SOL distribution warning", rec: "sell", confidence: 68 },
-            ].map((item, idx) => (
-              <div key={idx} className="p-4 bg-slate-800/50 rounded-lg">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-slate-400 text-sm">{item.date}</span>
-                  <span className={`px-2 py-1 rounded text-xs font-medium ${
-                    item.rec === "buy" ? "bg-emerald-500/20 text-emerald-400" :
-                    item.rec === "sell" ? "bg-red-500/20 text-red-400" :
-                    "bg-amber-500/20 text-amber-400"
-                  }`}>
-                    {item.rec.toUpperCase()}
-                  </span>
-                </div>
-                <p className="text-white">{item.summary}</p>
-                <div className="mt-2 flex items-center gap-2">
-                  <span className="text-slate-500 text-xs">Confidence:</span>
-                  <div className="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-blue-500 rounded-full"
-                      style={{ width: `${item.confidence}%` }}
-                    />
-                  </div>
-                  <span className="text-slate-400 text-xs">{item.confidence}%</span>
-                </div>
+      {/* Recommendation matrix */}
+      <Card title="Recommendation Matrix" subtitle="current stance by intensity">
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+          {(Object.keys(REC_LABEL) as Recommendation[]).map((rec) => (
+            <div
+              key={rec}
+              className={classNames(
+                "p-3 rounded-md ring-1",
+                REC_TONE[rec]
+              )}
+            >
+              <div className="text-[10px] uppercase tracking-wider opacity-80">
+                {REC_LABEL[rec]}
               </div>
-            ))}
-          </div>
+              <div className="text-2xl font-semibold nemt-mono mt-1">
+                {byRec[rec] ?? 0}
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
+      </Card>
+
+      {/* Reports feed */}
+      <section className="space-y-4">
+        <div className="flex items-end justify-between">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-300">
+            Reports
+          </h2>
+          <span className="text-[11px] text-slate-500">{reports.length} total</span>
+        </div>
+        {reports.map((r) => (
+          <div key={r.id} className="space-y-2">
+            <div className="flex items-center gap-2 text-[11px] text-slate-500">
+              <span className="nemt-mono">{r.symbol}</span>
+              <span>·</span>
+              <span>{symById.get(r.symbol)?.display ?? r.symbol}</span>
+              <span>·</span>
+              <span>{r.author}</span>
+            </div>
+            <AIReportCard report={r} />
+          </div>
+        ))}
+      </section>
     </div>
   );
 }

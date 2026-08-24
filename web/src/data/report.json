@@ -1,0 +1,97 @@
+[
+  {
+    "id": "rpt-2026-08-25-001",
+    "title": "BTC — Mark-up Phase Continuation, Watch 68.4k",
+    "symbol": "BTCUSDT",
+    "summary": "BTC is sustaining its mark-up phase with DCI holding above 70 and confidence steady near 78%. On-chain accumulation remains healthy and funding is balanced. We see room for a measured push toward 70k before distribution risk rises.",
+    "reasoning": [
+      "DCI 72.5 sits in the HIGH band with rising breadth across 4h and 1d timeframes.",
+      "Volume profile shows a clear value-area high near 68.4k acting as immediate resistance.",
+      "Spot CVD has stayed positive for 6 consecutive 4h closes, indicating genuine demand.",
+      "Funding rate is mildly positive (0.012%) — no euphoria, no squeeze risk yet.",
+      "Cross-asset confirmation: ETH DCI aligned at 68.1, both rotating together."
+    ],
+    "recommendation": "BUY",
+    "confidence": 78.2,
+    "dci": 72.5,
+    "phase": "MARKUP",
+    "generatedAt": "2026-08-25T06:30:00Z",
+    "author": "NEMT Council"
+  },
+  {
+    "id": "rpt-2026-08-25-002",
+    "title": "ETH — L2 Activity Re-accelerates, Constructive Bias",
+    "symbol": "ETHUSDT",
+    "summary": "ETH mirrors BTC's mark-up with stronger relative strength over the last 48h. L2 transaction counts and stablecoin TVL are both inflecting upward — a constructive combination for medium-term thesis.",
+    "reasoning": [
+      "DCI 68.1 trending up from 61.4 three days ago.",
+      "L2 daily tx count reached 12.4M, a 30-day high.",
+      "Stablecoin TVL on Ethereum mainnet up 2.8% week-over-week.",
+      "ETH/BTC ratio broke out of a 3-week descending channel.",
+      "Risk: gas fees remain low, suggesting retail is not yet overheated."
+    ],
+    "recommendation": "BUY",
+    "confidence": 74.6,
+    "dci": 68.1,
+    "phase": "MARKUP",
+    "generatedAt": "2026-08-25T05:55:00Z",
+    "author": "NEMT Council"
+  },
+  {
+    "id": "rpt-2026-08-25-003",
+    "title": "SOL — Distribution Risk Rising, Trim Into Strength",
+    "symbol": "SOLUSDT",
+    "summary": "SOL is showing early distribution signatures: DCI cooling while price holds, and long/short ratio tilting excessive. A pullback toward the 138–140 zone is plausible before any renewed bid.",
+    "reasoning": [
+      "DCI 51.3 down from 64.1 last week — momentum decay despite flat price.",
+      "Long/short ratio elevated at 1.84 — crowded long.",
+      "Funding turned slightly negative on the front quarter.",
+      "Volume on up-moves contracting relative to down-moves.",
+      "No new narrative catalyst on the immediate horizon."
+    ],
+    "recommendation": "REDUCE",
+    "confidence": 62.0,
+    "dci": 51.3,
+    "phase": "DISTRIBUTION",
+    "generatedAt": "2026-08-25T05:20:00Z",
+    "author": "NEMT Council"
+  },
+  {
+    "id": "rpt-2026-08-25-004",
+    "title": "XRP — Markdown Phase, Stay Defensive",
+    "symbol": "XRPUSDT",
+    "summary": "XRP is in markdown with weak DCI. The structural trend is intact to the downside until price reclaims 0.58 with volume. We are not adding exposure here.",
+    "reasoning": [
+      "DCI 34.8 in LOW band, sub-50 for 6 straight sessions.",
+      "Lower-highs sequence intact on the daily.",
+      "On-chain: active addresses flat, no inflow signal.",
+      "Legal overhang remains a tail risk, not a base case.",
+      "Relative weakness vs BTC at multi-month extreme."
+    ],
+    "recommendation": "SELL",
+    "confidence": 58.9,
+    "dci": 34.8,
+    "phase": "MARKDOWN",
+    "generatedAt": "2026-08-25T04:40:00Z",
+    "author": "NEMT Council"
+  },
+  {
+    "id": "rpt-2026-08-25-005",
+    "title": "ADA — Recovery Phase, Early Invalidation Above 0.36",
+    "symbol": "ADAUSDT",
+    "summary": "ADA is in early recovery with constructive DCI and improving breadth. A measured long bias is warranted, with invalidation if price loses 0.328.",
+    "reasoning": [
+      "DCI 64.2 — up from 49.2 a week ago, fresh cross above 60.",
+      "Higher-low formed at 0.3306 on rising volume.",
+      "Developer activity index ticking up month-over-month.",
+      "RSI neutral, no overbought condition.",
+      "Risk: low liquidity depth can amplify drawdowns."
+    ],
+    "recommendation": "BUY",
+    "confidence": 70.3,
+    "dci": 64.2,
+    "phase": "RECOVERY",
+    "generatedAt": "2026-08-25T04:05:00Z",
+    "author": "NEMT Council"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "j-2026-08-25",
+    "date": "2026-08-25",
+    "title": "Council notes — rotation into majors",
+    "body": "Council flagged the rotation from alts back into BTC/ETH over the last 36h. We trimmed SOL into strength per the latest report and are sizing up BTC and ETH modestly. Risk: crowded long on SOL and a potential squeeze if BTC cools.",
+    "tags": ["rotation", "council", "risk"],
+    "mood": "CAUTIOUS"
+  },
+  {
+    "id": "j-2026-08-24",
+    "date": "2026-08-24",
+    "title": "Re-entered ETH on L2 catalyst",
+    "body": "L2 daily tx counts hit a 30-day high. Added 2.4 ETH at 3020 with stop under 2980. Reasoning: relative strength + on-chain confirmation, with DCI still trending up. Target 3.2k zone.",
+    "tags": ["eth", "l2", "entry"],
+    "mood": "BULLISH"
+  },
+  {
+    "id": "j-2026-08-23",
+    "date": "2026-08-23",
+    "title": "ADA recovery — early add",
+    "body": "Took a starter position in ADA on the recovery phase DCI cross above 60. Sizing kept small (1.2% of book) given low liquidity depth. Plan: add on a pullback to 0.328 with confirmation.",
+    "tags": ["ada", "recovery", "starter"],
+    "mood": "BULLISH"
+  },
+  {
+    "id": "j-2026-08-22",
+    "date": "2026-08-22",
+    "title": "BTC add-on after consolidation",
+    "body": "Added 0.15 BTC at 65800 after a clean 4h consolidation. Trail stop under 66.4k. Reasoning: structure remains bullish, funding neutral, breadth confirming.",
+    "tags": ["btc", "add-on", "structure"],
+    "mood": "BULLISH"
+  },
+  {
+    "id": "j-2026-08-21",
+    "date": "2026-08-21",
+    "title": "Stopped on ETH false breakout",
+    "body": "Took a -0.84% loss on a 2-ETH long that failed at the 3k breakout. Review: breakout was on low volume and into weekend liquidity. Will require volume-confirmed breakouts going forward.",
+    "tags": ["eth", "loss", "review"],
+    "mood": "BEARISH"
+  }
+]

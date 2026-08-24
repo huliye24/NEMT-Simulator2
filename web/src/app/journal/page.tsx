@@ -1,74 +1,63 @@
-import { mockTradeMemory } from "@/data/mock";
+import { Card } from "@/components/Card";
+import { getJournal } from "@/lib/api";
+import { classNames } from "@/lib/format";
+import type { Sentiment } from "@/lib/types";
 
-export default function JournalPage() {
+
+const MOOD_TONE: Record<Sentiment, string> = {
+  BULLISH: "text-emerald-300 bg-emerald-500/10 ring-emerald-500/30",
+  BEARISH: "text-rose-300 bg-rose-500/10 ring-rose-500/30",
+  NEUTRAL: "text-slate-300 bg-slate-500/10 ring-slate-500/30",
+  CAUTIOUS: "text-amber-300 bg-amber-500/10 ring-amber-500/30",
+};
+
+export default async function JournalPage() {
+  const entries = await getJournal();
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Journal</h1>
-        <p className="text-slate-400">Trade memory and learning</p>
-      </div>
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <header>
+        <div className="text-[11px] uppercase tracking-wider text-amber-400 mb-1">Journal</div>
+        <h1 className="text-2xl font-bold text-slate-100">Trading Journal</h1>
+        <p className="text-sm text-slate-400 mt-1">
+          Daily notes from the desk and the council. Searchable, taggable, honest.
+        </p>
+      </header>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="nemt-card p-4">
-          <span className="text-slate-400 text-sm">Total Trades</span>
-          <span className="text-2xl font-bold text-white mt-1 block">24</span>
-        </div>
-        <div className="nemt-card p-4">
-          <span className="text-slate-400 text-sm">Win Rate</span>
-          <span className="text-2xl font-bold text-emerald-400 mt-1 block">68%</span>
-        </div>
-        <div className="nemt-card p-4">
-          <span className="text-slate-400 text-sm">Total P&L</span>
-          <span className="text-2xl font-bold text-emerald-400 mt-1 block">+$2,450</span>
-        </div>
-        <div className="nemt-card p-4">
-          <span className="text-slate-400 text-sm">Avg Trade</span>
-          <span className="text-2xl font-bold text-white mt-1 block">$102</span>
-        </div>
-      </div>
-
-      {/* Trade Log */}
-      <div className="nemt-card p-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Trade Memory</h2>
-        <div className="space-y-4">
-          {mockTradeMemory.map((trade, idx) => (
-            <div key={idx} className="p-4 bg-slate-800/50 rounded-lg">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-slate-400 text-sm">{trade.date}</span>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  trade.result === "win" ? "bg-emerald-500/20 text-emerald-400" :
-                  trade.result === "loss" ? "bg-red-500/20 text-red-400" :
-                  "bg-slate-500/20 text-slate-400"
-                }`}>
-                  {trade.result.toUpperCase()}
+      <div className="space-y-4">
+        {entries.map((entry) => (
+          <Card
+            key={entry.id}
+            title={
+              <div className="flex items-center gap-2">
+                <span className="nemt-mono text-amber-300 text-[12px]">{entry.date}</span>
+                <span className="text-slate-500">·</span>
+                <span className="text-slate-100">{entry.title}</span>
+              </div>
+            }
+            rightSlot={
+              <span
+                className={classNames("nemt-phase-chip ring-1", MOOD_TONE[entry.mood])}
+              >
+                {entry.mood}
+              </span>
+            }
+          >
+            <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-line">
+              {entry.body}
+            </p>
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {entry.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-nemt-bg-elevated text-slate-400 ring-1 ring-amber-500/10"
+                >
+                  #{tag}
                 </span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <span className="text-slate-500 text-xs uppercase tracking-wide">Human Thesis</span>
-                  <p className="text-white mt-1">{trade.human_thesis}</p>
-                </div>
-                <div>
-                  <span className="text-slate-500 text-xs uppercase tracking-wide">AI Reasoning</span>
-                  <p className="text-slate-300 mt-1">{trade.ai_reasoning}</p>
-                </div>
-              </div>
-
-              {trade.pnl !== undefined && (
-                <div className="mt-3 pt-3 border-t border-slate-700/50 flex items-center justify-between">
-                  <span className="text-slate-400 text-sm">P&L</span>
-                  <span className={`text-lg font-bold ${
-                    trade.pnl > 0 ? "text-emerald-400" : "text-red-400"
-                  }`}>
-                    {trade.pnl > 0 ? "+" : ""}${trade.pnl.toFixed(2)}
-                  </span>
-                </div>
-              )}
+              ))}
             </div>
-          ))}
-        </div>
+          </Card>
+        ))}
       </div>
     </div>
   );
