@@ -11,8 +11,8 @@ import reportData from "@/data/report.json";
 import tradesData from "@/data/trades.json";
 import portfolioData from "@/data/portfolio.json";
 import journalData from "@/data/journal.json";
-
 import analysisData from "@/data/analysis.json";
+import systemStateData from "@/data/system-state.json";
 
 import type {
   AIReport,
@@ -120,4 +120,13 @@ export async function getJournal(): Promise<JournalEntry[]> {
   return (journalData as JournalEntry[]).sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
+}
+
+// --------------------------------------------------------------------------
+// System State (Financial OS)
+// --------------------------------------------------------------------------
+
+export async function getSystemState(): Promise<any> {
+  await wait(SIMULATED_LATENCY_MS);
+  return systemStateData;
 }

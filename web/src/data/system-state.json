@@ -1,0 +1,90 @@
+{
+  "version": "1.0.0",
+  "status": "running",
+  "startedAt": "2026-08-25T00:00:00Z",
+  "modules": {
+    "dashboard": {
+      "status": "healthy",
+      "version": "1.0.0",
+      "lastUpdate": "2026-08-25T10:00:00Z"
+    },
+    "market": {
+      "status": "healthy",
+      "symbols": 6,
+      "lastUpdate": "2026-08-25T10:00:00Z"
+    },
+    "aiCouncil": {
+      "status": "healthy",
+      "agents": 5,
+      "lastSession": "2026-08-25T09:30:00Z"
+    },
+    "memory": {
+      "status": "healthy",
+      "records": 24,
+      "lastUpdate": "2026-08-25T10:00:00Z"
+    },
+    "trading": {
+      "status": "healthy",
+      "mode": "paper",
+      "openTrades": 2,
+      "lastUpdate": "2026-08-25T10:00:00Z"
+    },
+    "engine": {
+      "status": "healthy",
+      "version": "2.1.0",
+      "lastUpdate": "2026-08-25T10:00:00Z"
+    },
+    "execution": {
+      "status": "healthy",
+      "exchange": "binance",
+      "connection": "testnet",
+      "lastUpdate": "2026-08-25T10:00:00Z"
+    }
+  },
+  "marketState": {
+    "phase": "MARKUP",
+    "sentiment": "BULLISH",
+    "avgDci": 67.4,
+    "avgConfidence": 72.1,
+    "trackedSymbols": 6,
+    "activeSignals": 3
+  },
+  "aiCouncil": {
+    "lastVerdict": {
+      "id": "council-001",
+      "outcome": "CONSENSUS",
+      "recommendation": "BUY",
+      "confidence": 78.2,
+      "timestamp": "2026-08-25T09:30:00Z"
+    },
+    "agents": [
+      { "id": "TECHNICAL", "status": "active", "weight": 0.25 },
+      { "id": "SENTIMENT", "status": "active", "weight": 0.20 },
+      { "id": "MACRO", "status": "active", "weight": 0.25 },
+      { "id": "RISK", "status": "active", "weight": 0.20 },
+      { "id": "CONTRARIAN", "status": "active", "weight": 0.10 }
+    ]
+  },
+  "portfolio": {
+    "capital": 10000.0,
+    "equity": 10523.50,
+    "pnl": 523.50,
+    "pnlPct": 5.24,
+    "positions": 2,
+    "winRate": 68.5
+  },
+  "memory": {
+    "totalDecisions": 24,
+    "totalTrades": 18,
+    "winningTrades": 12,
+    "losingTrades": 6,
+    "avgHoldingTime": "3.2 days"
+  },
+  "risk": {
+    "emergencyStop": false,
+    "dailyLoss": -45.20,
+    "dailyLossLimit": 500.0,
+    "maxPositionSize": 10000.0,
+    "maxPositionRatio": 0.3
+  }
+}
