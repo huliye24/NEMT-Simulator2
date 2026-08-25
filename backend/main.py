@@ -10,6 +10,7 @@ from contextlib import asynccontextmanager
 from routes.market import router as market_router
 from routes.analysis import router as analysis_router
 from routes.simulation import router as simulation_router
+from routes.execution import router as execution_router
 
 
 @asynccontextmanager
@@ -43,6 +44,7 @@ app.add_middleware(
 app.include_router(market_router, prefix="/market", tags=["Market"])
 app.include_router(analysis_router, prefix="/analysis", tags=["Analysis"])
 app.include_router(simulation_router, prefix="/simulation", tags=["Simulation"])
+app.include_router(execution_router, prefix="/execution", tags=["Execution"])
 
 
 @app.get("/")
