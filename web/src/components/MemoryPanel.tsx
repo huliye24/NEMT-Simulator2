@@ -52,8 +52,19 @@ export function MemoryPanel() {
   const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
-    setReport(detectStorage());
-    Memory.Stats.summary().then(setCounts);
+    // Read browser storage after hydration to avoid a server/client mismatch.
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      if (cancelled) return;
+      setReport(detectStorage());
+      void Memory.Stats.summary().then((next) => {
+        if (!cancelled) setCounts(next);
+      });
+    }, 0);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
   }, []);
 
   const refresh = async () => {

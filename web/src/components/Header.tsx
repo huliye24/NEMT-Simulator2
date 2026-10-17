@@ -52,10 +52,17 @@ export default function Header({ rightSlot }: HeaderProps) {
             })}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {rightSlot}
+            <Link
+              href="/trade"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] font-semibold uppercase tracking-wider text-cyan-300 bg-cyan-500/10 ring-1 ring-cyan-400/25 hover:bg-cyan-500/15 transition-colors"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-300" />
+              Trade
+            </Link>
             <MemoryIndicator />
-            <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-emerald-500/10 ring-1 ring-emerald-500/20">
+            <div className="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-md bg-emerald-500/10 ring-1 ring-emerald-500/20">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-[10px] font-semibold tracking-wider text-emerald-300 uppercase">
                 Alpha

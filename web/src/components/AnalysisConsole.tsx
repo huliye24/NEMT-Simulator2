@@ -258,10 +258,11 @@ function DraftRestoredNotice({
   draft: ThesisDraft | null;
   hydrated: boolean;
 }) {
+  const [renderedAt] = useState(() => Date.now());
   if (!hydrated || !draft) return null;
   const minutes = Math.max(
     0,
-    Math.floor((Date.now() - new Date(draft.updatedAt).getTime()) / 60000)
+    Math.floor((renderedAt - new Date(draft.updatedAt).getTime()) / 60000)
   );
   return (
     <div className="text-[11px] text-slate-500 flex items-center gap-2">
@@ -410,12 +411,14 @@ function HumanThesisInputWithDraft({
 
   // When a draft is restored after mount, hydrate the fields.
   useEffect(() => {
-    if (draft) {
+    if (!draft) return;
+    const timer = window.setTimeout(() => {
       setMacro(draft.macroView);
       setJudgment(draft.marketJudgment);
       setRisk(draft.riskFactors);
       setPlan(draft.actionPlan);
-    }
+    }, 0);
+    return () => window.clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draft?.updatedAt]);
 

@@ -279,3 +279,68 @@ export interface CouncilVerdict {
   /** Sizing rule derived from the decision + confidence. */
   size: string;
 }
+
+// --------------------------------------------------------------------------
+// Financial OS system state (local research dashboard; not the trading API)
+// --------------------------------------------------------------------------
+
+export interface SystemModuleState {
+  status: string;
+  version?: string;
+  lastUpdate?: string;
+  symbols?: number;
+  agents?: number;
+  mode?: string;
+  records?: number;
+  exchange?: string;
+  connection?: string;
+  lastSession?: string;
+  openTrades?: number;
+}
+
+export interface SystemState {
+  version: string;
+  status: string;
+  startedAt: string;
+  modules: Record<string, SystemModuleState>;
+  marketState: {
+    phase: MarketPhase;
+    sentiment: Sentiment;
+    avgDci: number;
+    avgConfidence: number;
+    trackedSymbols: number;
+    activeSignals: number;
+  };
+  aiCouncil: {
+    lastVerdict: {
+      id: string;
+      outcome: string;
+      recommendation: Recommendation;
+      confidence: number;
+      timestamp: string;
+    };
+    agents: { id: string; status: string; weight: number }[];
+  };
+  portfolio: {
+    capital: number;
+    equity: number;
+    pnl: number;
+    pnlPct: number;
+    positions: number;
+    winRate: number;
+  };
+  memory: {
+    totalDecisions: number;
+    totalTrades: number;
+    winningTrades: number;
+    losingTrades: number;
+    avgHoldingTime: string;
+  };
+  risk: {
+    emergencyStop: boolean;
+    dailyLoss: number;
+    dailyLossLimit: number;
+    maxPositionSize: number;
+    maxPositionRatio: number;
+  };
+}

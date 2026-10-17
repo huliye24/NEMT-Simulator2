@@ -1,6 +1,7 @@
 import { Card } from "@/components/Card";
 import { getSystemState } from "@/lib/api";
 import { classNames } from "@/lib/format";
+import type { SystemModuleState } from "@/lib/types";
 
 export default async function SystemPage() {
   const systemState = await getSystemState();
@@ -30,7 +31,7 @@ export default async function SystemPage() {
         />
         <StatusCard
           title="Modules"
-          value={`${Object.values(systemState.modules).filter((m: any) => m.status === "healthy").length}/${Object.keys(systemState.modules).length}`}
+          value={`${Object.values(systemState.modules).filter((m) => m.status === "healthy").length}/${Object.keys(systemState.modules).length}`}
           status="healthy"
         />
         <StatusCard
@@ -43,7 +44,7 @@ export default async function SystemPage() {
       {/* Module Status */}
       <Card title="Module Status" subtitle="All system modules">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {Object.entries(systemState.modules).map(([name, module]: [string, any]) => (
+          {Object.entries(systemState.modules).map(([name, module]) => (
             <ModuleCard
               key={name}
               name={name}
@@ -108,7 +109,7 @@ export default async function SystemPage() {
           <div className="pt-4 border-t border-slate-800">
             <span className="text-xs text-slate-500 uppercase tracking-wider mb-2 block">Active Agents</span>
             <div className="flex flex-wrap gap-2">
-              {systemState.aiCouncil.agents.map((agent: any) => (
+              {systemState.aiCouncil.agents.map((agent) => (
                 <span
                   key={agent.id}
                   className="text-xs px-2 py-1 rounded bg-nemt-bg-elevated text-slate-300 border border-nemt-border"
@@ -154,7 +155,13 @@ function StatusCard({ title, value, status }: { title: string; value: string; st
   );
 }
 
-function ModuleCard({ name, module }: { name: string; module: any }) {
+function ModuleCard({
+  name,
+  module,
+}: {
+  name: string;
+  module: SystemModuleState;
+}) {
   const statusColors: Record<string, string> = {
     healthy: "text-emerald-400",
     warning: "text-amber-400",
@@ -182,7 +189,8 @@ function ModuleCard({ name, module }: { name: string; module: any }) {
         <div className="text-xs text-slate-500 capitalize">{module.mode} mode</div>
       )}
       <div className="text-xs text-slate-600 mt-2">
-        Last update: {new Date(module.lastUpdate).toLocaleTimeString()}
+        Last update:{" "}
+        {module.lastUpdate ? new Date(module.lastUpdate).toLocaleTimeString() : "—"}
       </div>
     </div>
   );

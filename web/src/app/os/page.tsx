@@ -5,6 +5,7 @@ import { PortfolioView } from "@/components/Portfolio";
 import { getMarketState, getMarketSymbols, getPortfolio, getOpenTrades, getLatestReport } from "@/lib/api";
 import { getSystemState } from "@/lib/api";
 import { classNames } from "@/lib/format";
+import type { MarketSymbol } from "@/lib/types";
 
 export default async function FinancialOSPage() {
   const [marketState, symbols, portfolio, trades, latestReport, systemState] = await Promise.all([
@@ -54,7 +55,7 @@ export default async function FinancialOSPage() {
         <SystemStatusCard
           title="Trading"
           status={systemState.modules.trading.status}
-          value={systemState.modules.trading.mode}
+          value={systemState.modules.trading.mode ?? "—"}
         />
         <SystemStatusCard
           title="Engine"
@@ -235,7 +236,7 @@ function SectionHeader({
   );
 }
 
-function MarketCard({ symbol }: { symbol: any }) {
+function MarketCard({ symbol }: { symbol: MarketSymbol }) {
   const isPositive = symbol.change24h >= 0;
 
   return (

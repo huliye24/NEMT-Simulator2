@@ -19,6 +19,36 @@ i∂ψ/∂t + α∂²ψ/∂x² + β|ψ|²ψ = η(x,t)
 
 ---
 
+## NEMT App V0.1 — 手机优先交易终端
+
+`/trade` 是手机可直接使用的 Binance Spot **DEMO/Testnet** 终端：实时公共行情、
+服务端认证/RBAC、一次性确认下单、独立风控、Kill Switch、审计与订单历史。
+浏览器不接触任何交易所密钥；V0.1 **不提供实盘（LIVE）下单路径**。
+
+- 运行手册：[`docs/NEMT_APP_RUNBOOK.md`](docs/NEMT_APP_RUNBOOK.md)
+- Testnet 验收清单：[`docs/NEMT_APP_TESTNET_ACCEPTANCE.md`](docs/NEMT_APP_TESTNET_ACCEPTANCE.md)
+- 工程基线 ADR：[`docs/ADR-001-nemt-app-baseline.md`](docs/ADR-001-nemt-app-baseline.md)
+- 安全清理（已确认的历史密钥风险）：[`docs/SECURITY_CLEANUP_PLAN.md`](docs/SECURITY_CLEANUP_PLAN.md)
+
+```bash
+# API (DEMO, no keys)
+venv/Scripts/pip install -r backend/trade_requirements.txt
+venv/Scripts/python backend/trade_main.py
+
+# Web PWA
+cd web && npm install && npm run build && npm start
+# open http://localhost:3000/trade
+```
+
+Android USB 真机：`adb reverse tcp:3000 tcp:3000`，然后用 Chrome 打开
+`http://localhost:3000/trade`。
+
+云端 DEMO 已部署：`https://postyouth.club/trade`（nginx HTTPS + Basic Auth；
+访问密码只存放在服务器 `/root/nemt-app-access.txt`）。Testnet 仍需要
+Binance Spot Testnet 专用密钥并在服务端显式启用。
+
+---
+
 ### 安装
 
 #### 方式一：Docker 部署（推荐）

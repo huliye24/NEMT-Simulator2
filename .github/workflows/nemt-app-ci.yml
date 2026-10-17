@@ -1,0 +1,67 @@
+name: NEMT App CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend tests (DEMO, no secrets)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/trade_requirements.txt
+      - name: Install app API dependencies
+        run: pip install -r trade_requirements.txt
+      - name: Run tests (never uses LIVE or real credentials)
+        run: python -m pytest
+
+  web:
+    name: Web lint, typecheck, build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Production build
+        run: npm run build
+
+  secret-hygiene:
+    name: New-source secret guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Known historical findings are documented in docs/SECURITY_CLEANUP_PLAN.md.
+      # This guard only fails on private-key material or obvious non-empty
+      # exchange/COS secrets inside the new app source.
+      - name: Scan app source for committed secrets
+        run: |
+          set -euo pipefail
+          if grep -RInE 'BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY|COS_SECRET_KEY=[^[:space:]#]+|NEMT_BINANCE_API_(KEY|SECRET)=[^[:space:]#]+' \
+              backend/trade_app backend/tests web/src; then
+            echo "::error::Potential committed secret detected in app source"
+            exit 1
+          fi
+          echo "No obvious secrets in app source."

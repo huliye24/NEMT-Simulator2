@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#04070c" />
+    <title>NEMT · 离线</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; min-height: 100svh; display: grid; place-items: center;
+        background:
+          radial-gradient(60rem 60rem at 50% -20%, rgba(16, 219, 233, 0.12), transparent 55%),
+          #04070c;
+        color: #e6edf5; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        padding: 28px;
+      }
+      .card {
+        width: min(420px, 100%); border: 1px solid rgba(148, 163, 184, 0.16);
+        background: rgba(10, 16, 26, 0.86); border-radius: 22px; padding: 28px 24px;
+        text-align: center; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+      }
+      .mark { width: 64px; height: 64px; margin: 0 auto 16px; display: block; }
+      h1 { font-size: 20px; letter-spacing: 0.02em; margin: 0 0 8px; }
+      p { color: #8fa0b5; font-size: 14px; line-height: 1.7; margin: 8px 0; }
+      .warn {
+        margin-top: 20px; padding: 12px 14px; border-radius: 12px;
+        background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.22);
+        color: #fcd34d; font-size: 12px; line-height: 1.6;
+      }
+      button {
+        margin-top: 22px; width: 100%; min-height: 48px; border: 0; border-radius: 14px;
+        background: linear-gradient(135deg, #10dbe9, #009fc5); color: #03131a;
+        font-weight: 700; font-size: 15px; cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <svg class="mark" viewBox="0 0 160 160" aria-hidden="true">
+        <defs>
+          <linearGradient id="n" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stop-color="#F5F8FA" />
+            <stop offset=".53" stop-color="#CCD4DE" />
+            <stop offset=".54" stop-color="#00D8EB" />
+            <stop offset="1" stop-color="#00A5D9" />
+          </linearGradient>
+        </defs>
+        <path d="M35 122 L40 38 L56 38 L104 98 L109 38 L125 30 L119 122 L104 122 L55 61 L50 122 Z" fill="url(#n)" />
+        <path d="M22 91 C49 74 63 119 87 95 S117 67 139 89" stroke="#10DBE9" stroke-width="4" stroke-linecap="round" fill="none" />
+      </svg>
+      <h1>网络已断开</h1>
+      <p>NEMT 无法连接服务端，行情与账户状态不可用。</p>
+      <div class="warn">离线状态下不会提交任何订单，也不会缓存账户或订单数据。</div>
+      <button onclick="location.reload()">重新连接</button>
+    </div>
+  </body>
+</html>

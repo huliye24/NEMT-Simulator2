@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="NEMT">
+  <defs>
+    <linearGradient id="nemtN" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#F5F8FA"/>
+      <stop offset=".53" stop-color="#CCD4DE"/>
+      <stop offset=".54" stop-color="#00D8EB"/>
+      <stop offset="1" stop-color="#00A5D9"/>
+    </linearGradient>
+  </defs>
+  <path d="M35 122 L40 38 L56 38 L104 98 L109 38 L125 30 L119 122 L104 122 L55 61 L50 122 Z" fill="url(#nemtN)"/>
+  <path d="M22 91 C49 74 63 119 87 95 S117 67 139 89" stroke="#10DBE9" stroke-width="4" stroke-linecap="round" fill="none"/>
+</svg>

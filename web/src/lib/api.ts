@@ -22,6 +22,7 @@ import type {
   Portfolio,
   Trade,
   Analysis,
+  SystemState,
 } from "./types";
 
 /**
@@ -126,7 +127,7 @@ export async function getJournal(): Promise<JournalEntry[]> {
 // System State (Financial OS)
 // --------------------------------------------------------------------------
 
-export async function getSystemState(): Promise<any> {
+export async function getSystemState(): Promise<SystemState> {
   await wait(SIMULATED_LATENCY_MS);
-  return systemStateData;
+  return systemStateData as SystemState;
 }

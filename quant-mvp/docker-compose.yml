@@ -10,7 +10,7 @@ services:
     image: redis:7-alpine
     container_name: btc_redis
     ports:
-      - "6379:6379"              # 本地访问 Redis
+      - "127.0.0.1:6379:6379"    # 只绑定本机；禁止 Redis 暴露公网
     volumes:
       - redis_data:/data        # 持久化数据
     command: redis-server --appendonly yes
@@ -44,7 +44,7 @@ services:
     environment:
       - REDIS_HOSTS=local:redis:6379
     ports:
-      - "8081:8081"
+      - "127.0.0.1:8081:8081"    # 仅本机；且需 --profile tools
     depends_on:
       - redis
     networks:

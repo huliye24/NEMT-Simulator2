@@ -2,8 +2,9 @@
 
 # Environment - 安全第一
 .env
-.env.local
-.env.production
+.env.*
+!.env.example
+!**/.env.example
 
 # Python
 __pycache__/
@@ -31,10 +32,18 @@ logs/
 data/
 !data/.gitkeep
 
-# 前端
-web/node_modules/
+# 前端 / 依赖
+node_modules/
+**/node_modules/
+web/.next/
+web/out/
 web/dist/
 web/.vite/
+
+# NEMT App 本地数据
+backend/.data/
+*.sqlite3-wal
+*.sqlite3-shm
 
 # IDE
 .vscode/
@@ -82,3 +91,9 @@ output/_smoke_now/
 # 一次性抓取产物与空文件
 btc_data.csv
 heart_shape.png
+
+# 已发现的历史敏感文件（清理前保持忽略；历史清理需独立批准）
+cos_sync.env
+ssh_key_nemt
+ssh_key_nemt.pub
+*.keychain
