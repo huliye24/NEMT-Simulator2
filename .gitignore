@@ -70,3 +70,15 @@ nginx/ssl/
 
 # Docker
 .dockerignore
+
+# 研究运行产物（可由命令重算，不入库）
+output/research/
+output/research_smoke/
+output/_smoke_now/
+
+# 本机工具配置
+.codex/
+
+# 一次性抓取产物与空文件
+btc_data.csv
+heart_shape.png
