@@ -174,3 +174,108 @@ export interface Analysis {
   finalDecision: FinalDecision;
   result: AnalysisResult;
 }
+
+// ==========================================================================
+// Multi-Agent Council (Alpha 009)
+// --------------------------------------------------------------------------
+// A debate record: 5 agents propose, contrarian challenges, chairman
+// resolves to a weighted consensus. The full transcript is stored so the
+// operator can audit the reasoning chain end-to-end.
+// ==========================================================================
+
+export type AgentId =
+  | "TECHNICAL"
+  | "SENTIMENT"
+  | "MACRO"
+  | "RISK"
+  | "CONTRARIAN";
+
+export type Vote = "AGREE" | "DISAGREE" | "ABSTAIN";
+
+export interface AgentSpec {
+  id: AgentId;
+  /** Display name shown in the transcript */
+  name: string;
+  /** Short tagline for tooltips / headers */
+  tagline: string;
+  /** Hex color used for the agent's card accent */
+  color: string;
+  /** Voting weight in consensus (must sum to 1.0 across all agents) */
+  weight: number;
+}
+
+export interface AgentProposal {
+  agent: AgentId;
+  /** Initial recommendation from this agent's first pass. */
+  recommendation: Recommendation;
+  /** 0–100. */
+  confidence: number;
+  /** Plain-language rationale shown in the debate panel. */
+  rationale: string;
+  /** Supporting evidence points (max ~3). */
+  evidence: string[];
+}
+
+export interface AgentChallenge {
+  from: AgentId;
+  to: AgentId;
+  vote: Vote;
+  /** A single-sentence rebuttal or endorsement. */
+  statement: string;
+}
+
+export interface AgentRevision {
+  agent: AgentId;
+  /** Optional revision after seeing challenges (only if agent changed mind). */
+  recommendation?: Recommendation;
+  confidence?: number;
+  /** A note explaining whether the challenge moved the needle. */
+  note: string;
+}
+
+export interface CouncilTranscript {
+  proposals: AgentProposal[];
+  /** Contrarian-led challenges before deliberation. */
+  challenges: AgentChallenge[];
+  /** Optional revisions after challenges were aired. */
+  revisions: AgentRevision[];
+}
+
+export type CouncilOutcome = "CONSENSUS" | "SPLIT" | "OVERRIDE";
+
+export interface ConsensusBreakdown {
+  /** Weighted vote tally for the winning recommendation. */
+  winner: Recommendation;
+  /** Sum of weights that voted for the winner. */
+  weight: number;
+  /** Highest individual agent confidence in support of winner. */
+  leadingConfidence: number;
+  /** Mean confidence of agents that voted with the winner. */
+  avgConfidence: number;
+  /** Was the chairman forced to override because no majority? */
+  override: boolean;
+  /** Per-recommendation weight distribution (audit trail). */
+  distribution: Record<Recommendation, number>;
+}
+
+export interface CouncilVerdict {
+  id: string;
+  /** ISO timestamp when the session started. */
+  startedAt: string;
+  /** ISO timestamp when consensus was reached. */
+  decidedAt: string;
+  /** Session duration in ms. */
+  durationMs: number;
+  humanThesis: HumanThesis;
+  marketContext: MarketContext;
+  transcript: CouncilTranscript;
+  consensus: ConsensusBreakdown;
+  /** The single recommendation the chairman signs off on. */
+  decision: Recommendation;
+  /** Aggregated confidence from the consensus calculation. */
+  confidence: number;
+  /** Overall verdict tag. */
+  outcome: CouncilOutcome;
+  /** Sizing rule derived from the decision + confidence. */
+  size: string;
+}

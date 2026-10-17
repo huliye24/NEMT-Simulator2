@@ -1,4 +1,5 @@
 import { Card } from "@/components/Card";
+import { MemoryPanel } from "@/components/MemoryPanel";
 
 
 export default function SettingsPage() {
@@ -14,8 +15,8 @@ export default function SettingsPage() {
 
       <Card title="Environment" subtitle="read-only build info">
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
-          <Row label="Build" value="NEMT Web Alpha · 002" />
-          <Row label="Stage" value="Foundation" />
+          <Row label="Build" value="NEMT Web Alpha · 009" />
+          <Row label="Stage" value="Multi-Agent Council" />
           <Row label="Data Source" value="Local Mock JSON" />
           <Row label="Live Trading" value="Disabled" tone="warn" />
           <Row label="Framework" value="Next.js 16 App Router" />
@@ -34,16 +35,18 @@ export default function SettingsPage() {
         </ul>
       </Card>
 
+      <MemoryPanel />
+
       <Card title="Roadmap" subtitle="what unlocks next">
         <ul className="space-y-2 text-sm text-slate-300">
           {[
             "003 · Dashboard Intelligence — live data adapters, websocket feeds",
             "004 · AI Reasoning Layer — full multi-agent council",
             "005 · Paper Trading — execution simulator with P/L replay",
-            "006 · Financial Memory — long-term signal retention",
+            "006 · Financial Memory — local persistence (shipped)",
             "007 · NEMT Engine API — FastAPI backend integration",
             "008 · Binance Execution Layer — read-only market data",
-            "009 · Multi-Agent Council — coordinated reasoning",
+            "009 · Multi-Agent Council — coordinated reasoning (shipped)",
             "010 · Financial OS — unified operator surface",
           ].map((item) => (
             <li

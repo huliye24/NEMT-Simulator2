@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { classNames } from "@/lib/format";
+import { MemoryIndicator } from "./MemoryIndicator";
 
 const navItems = [
   { href: "/", label: "Dashboard" },
@@ -53,6 +54,7 @@ export default function Header({ rightSlot }: HeaderProps) {
 
           <div className="flex items-center gap-3">
             {rightSlot}
+            <MemoryIndicator />
             <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-emerald-500/10 ring-1 ring-emerald-500/20">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-[10px] font-semibold tracking-wider text-emerald-300 uppercase">
