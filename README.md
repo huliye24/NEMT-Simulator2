@@ -1,4 +1,17 @@
 # NEMT Simulator V2
+
+## 🚀 NEMT App V0.1 — 当前开发入口
+
+> **进行中：手机优先的 Binance Spot Testnet 交易终端。** 当前研究模拟器与未来交易 App 是两个相互隔离的工作流，勿将现有策略模拟结果视作可直接实盘的交易信号。
+
+- **[开发总任务（Epic #5）](https://github.com/huliye24/NEMT-Simulator2/issues/5)** — 版本目标、子任务认领与验收。
+- **[开发实施方案](docs/NEMT_APP_V0.1_IMPLEMENTATION_PLAN.md)** — 架构图、API 契约、依赖顺序、测试矩阵、安全要求。
+- **[GitHub 开发 Issues](https://github.com/huliye24/NEMT-Simulator2/issues)** — 按编号认领任务，提交对应 PR。
+
+V0.1 仅面向 **DEMO / Spot TESTNET** 交易闭环；LIVE 仅只读接入，后续需独立审批，默认禁用真实资金下单。
+
+---
+
 ## 非平衡市场理论模拟器 (BTC实验版)
 
 基于Notion理论中枢开发的完整NEMT交易系统实现。
