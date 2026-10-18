@@ -88,6 +88,9 @@ output/_smoke_now/
 # 本机工具配置
 .codex/
 
+# 旧版独立仓库仅保留为本地参考，不再嵌套跟踪
+/NEMT-Simulator2/
+
 # 一次性抓取产物与空文件
 btc_data.csv
 heart_shape.png
