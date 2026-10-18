@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
-import TradeApp from "@/components/trade/TradeApp";
+import StudioApp from "@/components/trade/studio/StudioApp";
 
 export const metadata: Metadata = {
-  title: "Trade",
+  title: "NEMT Studio",
   description:
-    "NEMT Trade — mobile-first Binance Spot DEMO/Testnet terminal. Server-side risk controls, one-time confirmation and no browser-held exchange keys.",
+    "NEMT Studio — professional digital asset trading workbench with real-time market data, server-side risk controls, and DEMO execution.",
 };
 
-export default function TradePage() {
-  return <TradeApp />;
+export default async function TradePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+  return <StudioApp initialLogin={params.login === "1"} />;
 }

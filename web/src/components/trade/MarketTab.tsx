@@ -186,7 +186,7 @@ export default function MarketTab({
         </div>
       </section>
 
-      <section className="trade-card-flat p-4">
+      <section className="hidden">
         <div className="flex items-center justify-between">
           <p className="text-[11px] font-semibold text-slate-300">行情说明</p>
           <span className="trade-chip">REST POLL 5s</span>

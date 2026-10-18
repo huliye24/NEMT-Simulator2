@@ -85,3 +85,22 @@ export function isoToClock(iso: string | null | undefined): string {
   if (Number.isNaN(date.getTime())) return "--:--:--";
   return date.toLocaleTimeString("zh-CN", { hour12: false });
 }
+
+export function fmtNumber(value: string | number | null | undefined): string {
+  const parsed = num(value);
+  if (!parsed) return "0";
+  return parsed.toLocaleString("en-US", { maximumFractionDigits: 2 });
+}
+
+export function formatTime(iso: string | number | null | undefined): string {
+  if (!iso) return "—";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "—";
+  return date.toLocaleString("zh-CN", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+}

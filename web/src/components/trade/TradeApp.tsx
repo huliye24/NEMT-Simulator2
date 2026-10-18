@@ -11,6 +11,7 @@ import OverviewTab from "./OverviewTab";
 import SettingsTab from "./SettingsTab";
 import TradeTab from "./TradeTab";
 import { useTradingData } from "./useTradingData";
+import ArtDirection from "./ArtDirection";
 import type { ToastKind } from "./workspace-shared";
 import {
   BrandMark,
@@ -50,19 +51,38 @@ function initialTab(): TradeTabKey {
 
 export default function TradeApp() {
   const [session, setSession] = useState<Session | null>(null);
-  const [checking, setChecking] = useState(true);
   const [notice, setNotice] = useState<string | null>(null);
+  const [showLogin, setShowLogin] = useState(
+    () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("login") === "1"
+  );
+  const [checking, setChecking] = useState(!showLogin);
 
   useEffect(() => {
     let cancelled = false;
+    if (showLogin) {
+      return () => {
+        cancelled = true;
+      };
+    }
     tradeApi
       .getMe()
       .then((next) => {
         if (!cancelled) setSession(next);
       })
-      .catch((error: unknown) => {
+      .catch(async (error: unknown) => {
         if (cancelled) return;
-        if (!(error instanceof ApiError) || error.status !== 401) {
+        if (error instanceof ApiError && error.status === 401) {
+          try {
+            const guest = await tradeApi.demoLogin("demo");
+            if (!cancelled) setSession(guest);
+          } catch (guestError) {
+            if (!cancelled) {
+              setShowLogin(true);
+              setNotice(guestError instanceof Error ? guestError.message : "访客模式暂不可用");
+            }
+          }
+        } else {
+          setShowLogin(true);
           setNotice(
             error instanceof Error
               ? `无法恢复会话：${error.message}`
@@ -76,7 +96,7 @@ export default function TradeApp() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [showLogin]);
 
   useEffect(() => {
     if (process.env.NODE_ENV !== "production") return;
@@ -96,6 +116,7 @@ export default function TradeApp() {
   if (checking) {
     return (
       <div className="trade-shell flex items-center justify-center px-6">
+        <ArtDirection />
         <div className="flex flex-col items-center text-center">
           <div className="relative">
             <div className="absolute inset-0 -m-5 rounded-full bg-cyan-400/10 blur-2xl" />
@@ -115,13 +136,18 @@ export default function TradeApp() {
 
   if (!session) {
     return (
-      <LoginScreen
-        notice={notice}
-        onLoggedIn={(next) => {
-          setNotice(null);
-          setSession(next);
-        }}
-      />
+      <>
+        <ArtDirection />
+        <LoginScreen
+          notice={notice}
+          onLoggedIn={(next) => {
+            setNotice(null);
+            setSession(next);
+            setShowLogin(false);
+            window.history.replaceState(null, "", "/trade");
+          }}
+        />
+      </>
     );
   }
 
@@ -136,6 +162,8 @@ export default function TradeApp() {
       onLogout={() => {
         setSession(null);
         setNotice(null);
+        setShowLogin(true);
+        window.history.replaceState(null, "", "/trade?login=1");
       }}
     />
   );
@@ -182,8 +210,9 @@ function TradingWorkspace({
 
   return (
     <div className="trade-shell pb-24">
+      <ArtDirection />
       <header className="sticky top-0 z-40 trade-safe-top">
-        <div className="bg-[#04070c]/88 backdrop-blur-xl border-b border-white/[0.06]">
+        <div className="bg-[#f0eadf]/88 backdrop-blur-xl border-b border-black/10">
           <div className="max-w-[560px] mx-auto px-4">
             <div className="h-[52px] flex items-center justify-between gap-3">
               <button
@@ -193,11 +222,11 @@ function TradingWorkspace({
                 aria-label="NEMT Trade 总览"
               >
                 <BrandMark size={27} />
-                <span className="text-[13px] font-bold tracking-[0.08em] text-slate-100">
+                <span className="text-[14px] font-black tracking-[-0.02em] text-slate-100">
                   NEMT
                 </span>
-                <span className="text-[9px] font-semibold tracking-[0.18em] text-cyan-300/80">
-                  TRADE
+                <span className="text-[9px] font-black tracking-[0.18em] text-cyan-300/80 -rotate-3">
+                  STUDIO
                 </span>
               </button>
 
@@ -327,7 +356,7 @@ function TradingWorkspace({
                     className={cn(
                       "w-7 h-7 rounded-full flex items-center justify-center -mt-0.5 transition-colors",
                       active
-                        ? "bg-gradient-to-br from-cyan-300 to-cyan-600 text-[#03131a] shadow-[0_4px_16px_rgba(16,219,233,0.25)]"
+                        ? "bg-[#161714] text-[#f0eadf] shadow-[4px_4px_0_#c84538]"
                         : "bg-white/[0.05] text-slate-400"
                     )}
                   >

@@ -85,9 +85,7 @@ export default function OrdersTab({
       <div className="flex items-start justify-between gap-3">
         <div>
           <h1 className="text-[17px] font-semibold text-slate-100">订单</h1>
-          <p className="text-[10px] text-slate-500 mt-0.5">
-            服务端持久化状态 · 行情 {data.system?.market.source === "demo" ? "SIM" : "BINANCE"}
-          </p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 mt-0.5">Cloud orders</p>
         </div>
         <button
           type="button"
@@ -155,15 +153,6 @@ export default function OrdersTab({
         </div>
       )}
 
-      <section className="trade-card-flat p-3.5">
-        <div className="flex items-center gap-2">
-          <Icon name="info" size={13} className="text-slate-500" />
-          <p className="text-[10px] leading-relaxed text-slate-500">
-            撤单只撤销未成交部分，不会自动平掉已成交仓位。提交或撤单结果未知时，
-            请先刷新核对，切勿反复操作。
-          </p>
-        </div>
-      </section>
     </div>
   );
 }

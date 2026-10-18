@@ -100,8 +100,8 @@ export default function OverviewTab({ data, onNavigate }: OverviewProps) {
       {system.mode === "DEMO" ? (
         <div className="flex items-center gap-2.5 rounded-xl border border-amber-300/15 bg-amber-300/[0.05] px-3.5 py-2.5">
           <Icon name="info" size={15} className="text-amber-300/80 flex-none" />
-          <p className="text-[11px] leading-relaxed text-amber-100/65">
-            DEMO 演示环境 · 本地模拟账本 · 订单不会发送到任何交易所
+          <p className="text-[10px] font-black uppercase tracking-[0.14em] text-amber-900/70">
+            Demo ledger · no real funds
           </p>
         </div>
       ) : null}

@@ -577,7 +577,7 @@ export default function TradeTab({
         )}
       </form>
 
-      <section>
+      <section className="hidden">
         <SectionHeader
           title="风控与保护"
           hint="所有限制由服务端强制执行，前端无法覆盖"

@@ -159,7 +159,7 @@ export default function SettingsTab({
         />
       </section>
 
-      <section>
+      <section className="hidden">
         <SectionHeader title="环境与能力" hint="由服务端配置决定，前端无法切换" />
         <div className="trade-card-flat p-4 space-y-3">
           <div className="flex items-start gap-3">
@@ -259,7 +259,7 @@ export default function SettingsTab({
         </div>
       </section>
 
-      <section>
+      <section className="hidden">
         <SectionHeader title="风险限额" hint="硬限制由后端执行，移动端不可修改" />
         <div className="trade-card-flat p-4">
           {system ? (
@@ -418,7 +418,7 @@ export default function SettingsTab({
         </section>
       ) : null}
 
-      <section>
+      <section className="hidden">
         <SectionHeader title="安装与隐私" />
         <div className="trade-card-flat p-4 space-y-3">
           <div className="flex items-start gap-3">
@@ -471,13 +471,13 @@ export default function SettingsTab({
         >
           <span className="flex items-center gap-2">
             {logoutBusy ? <Spinner size={14} /> : <Icon name="logout" size={14} />}
-            {logoutBusy ? "正在退出…" : "退出登录"}
+            {logoutBusy ? "正在切换…" : "切换账户"}
           </span>
           <Icon name="chevronRight" size={13} />
         </button>
       </section>
 
-      <div className="text-center text-[9px] leading-relaxed text-slate-600 px-6 pb-2">
+      <div className="hidden">
         NEMT App V0.1 · {system?.mode ?? session.mode} · 不构成投资建议
         <br />
         总资产/估值仅用于界面展示，不代表真实盈亏或可提取资金

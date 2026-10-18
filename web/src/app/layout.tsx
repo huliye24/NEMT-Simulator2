@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./trade.css";
+import "./studio.css";
 import SiteChrome from "@/components/SiteChrome";
 
 export const metadata: Metadata = {
