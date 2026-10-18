@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/trade/format";
-import type { SystemStatus } from "@/lib/trade/types";
 import { StudioBrand, StudioIcon } from "../icons";
 import { STUDIO_NAV_GROUPS } from "../navigation";
 import type { StudioSection } from "../types";
@@ -10,8 +9,6 @@ interface StudioSidebarProps {
   section: StudioSection;
   collapsed: boolean;
   mobileOpen: boolean;
-  system: SystemStatus | null;
-  online: boolean;
   onNavigate: (section: StudioSection) => void;
   onToggleCollapsed: () => void;
   onCloseMobile: () => void;
@@ -21,8 +18,6 @@ export default function StudioSidebar({
   section,
   collapsed,
   mobileOpen,
-  system,
-  online,
   onNavigate,
   onToggleCollapsed,
   onCloseMobile,
@@ -75,18 +70,6 @@ export default function StudioSidebar({
       </div>
 
       <div className="ns-sidebar-footer">
-        <div className="ns-sidebar-status" title={`NEMT Cloud API ${system?.version ?? ""}`}>
-          <span className={cn("ns-sidebar-status-dot", online ? "is-online" : "is-offline")} />
-          <span className="ns-sidebar-status-copy">
-            <span className="ns-sidebar-status-title">
-              {online ? "NEMT Cloud 已连接" : "NEMT Cloud 离线"}
-            </span>
-            <span className="ns-sidebar-status-meta">
-              API v{system?.version ?? "—"} · {system?.mode ?? "DEMO"}
-            </span>
-          </span>
-        </div>
-
         <div className="ns-sidebar-controls">
           <button
             type="button"

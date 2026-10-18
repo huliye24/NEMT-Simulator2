@@ -1,204 +1,143 @@
 /**
- * Frontend contracts for NEMT Studio's strategy-first modules.
+ * NEMT Studio cloud contracts.
  *
- * These endpoints are reserved for the NEMT Cloud backend. The current UI
- * renders NOT_CONNECTED / empty states and never fabricates strategy,
- * research, experiment, execution-run, or performance data.
+ * Current scope: strategy registry + execution health. NEMT Cloud does not yet
+ * expose these services, so the Studio shows explicit "Not Connected" states
+ * rather than fabricating runs or performance.
+ *
+ * Research and Experiments are deferred to a later product phase (removed from
+ * the current navigation and routes on 2026-10-18). Their implementation and
+ * API contract are preserved under deliverables/deferred/research-experiments.
+ *
+ * Future endpoints (authenticated, server-side risk enforced):
+ *   GET  /api/v1/strategies                      -> StrategyListResponse
+ *   GET  /api/v1/strategies/{id}                 -> StrategyDetail
+ *   GET  /api/v1/execution/health                -> ExecutionHealth
+ *
+ * Execution decisions, risk validation and exchange adapters must stay in the
+ * cloud service. The browser only monitors and issues authorised admin actions.
  */
 
-export type ModuleConnectionState =
-  | "CONNECTED"
-  | "NOT_CONNECTED"
-  | "NOT_CONFIGURED"
-  | "NOT_AVAILABLE"
-  | "LOADING"
-  | "ERROR";
+export type ResourceState = "not_connected" | "loading" | "ready" | "error";
 
-export const STUDIO_API_PATHS = {
-  strategies: "/api/v1/studio/strategies",
-  strategy: (strategyId: string) =>
-    `/api/v1/studio/strategies/${encodeURIComponent(strategyId)}`,
-  research: "/api/v1/studio/research",
-  researchItem: (researchId: string) =>
-    `/api/v1/studio/research/${encodeURIComponent(researchId)}`,
-  experiments: "/api/v1/studio/experiments",
-  experiment: (experimentId: string) =>
-    `/api/v1/studio/experiments/${encodeURIComponent(experimentId)}`,
-  executionRuns: "/api/v1/studio/execution/runs",
-  executionEvents: "/api/v1/studio/execution/events",
-  portfolioHistory: "/api/v1/studio/portfolio/history",
-} as const;
+export const STRATEGY_LIFECYCLE = [
+  { id: "draft", label: "Draft", zh: "草稿" },
+  { id: "backtested", label: "Backtested", zh: "已回测" },
+  { id: "validated", label: "Validated", zh: "已验证" },
+  { id: "paper", label: "Paper", zh: "模拟盘" },
+  { id: "risk_approval", label: "Risk Approval", zh: "风控审批" },
+  { id: "live", label: "Live", zh: "实盘" },
+  { id: "paused", label: "Paused / Stopped", zh: "暂停 / 停止" },
+] as const;
 
-export type StrategyStage =
-  | "DRAFT"
-  | "BACKTESTED"
-  | "VALIDATED"
-  | "PAPER_TRADING"
-  | "RISK_APPROVAL"
-  | "LIVE"
+export type StrategyLifecycle = (typeof STRATEGY_LIFECYCLE)[number]["id"];
+
+export type StrategyRunMode = "BACKTEST" | "PAPER" | "LIVE";
+
+export type StrategyDeploymentState =
+  | "NOT_DEPLOYED"
+  | "PENDING_APPROVAL"
+  | "APPROVED"
+  | "DEPLOYED"
   | "PAUSED"
   | "STOPPED";
 
-export const STRATEGY_STAGES: {
-  id: StrategyStage;
-  label: string;
-  shortLabel: string;
-}[] = [
-  { id: "DRAFT", label: "Draft", shortLabel: "草稿" },
-  { id: "BACKTESTED", label: "Backtested", shortLabel: "已回测" },
-  { id: "VALIDATED", label: "Validated", shortLabel: "已验证" },
-  { id: "PAPER_TRADING", label: "Paper Trading", shortLabel: "模拟" },
-  { id: "RISK_APPROVAL", label: "Risk Approval", shortLabel: "风控审批" },
-  { id: "LIVE", label: "Live", shortLabel: "实盘" },
-  { id: "PAUSED", label: "Paused", shortLabel: "暂停" },
-  { id: "STOPPED", label: "Stopped", shortLabel: "停止" },
-];
-
-export type StrategyFilter = "ALL" | "DRAFT" | "TESTING" | "PAPER" | "LIVE" | "PAUSED";
-
-export const STRATEGY_FILTERS: { id: StrategyFilter; label: string }[] = [
-  { id: "ALL", label: "全部" },
-  { id: "DRAFT", label: "草稿" },
-  { id: "TESTING", label: "测试中" },
-  { id: "PAPER", label: "模拟盘" },
-  { id: "LIVE", label: "实盘" },
-  { id: "PAUSED", label: "已暂停" },
-];
-
-export type StrategyDetailSection =
-  | "overview"
-  | "parameters"
-  | "backtests"
-  | "experiments"
-  | "deployment"
-  | "performance"
-  | "logs";
-
-export const STRATEGY_DETAIL_SECTIONS: {
-  id: StrategyDetailSection;
-  label: string;
-}[] = [
-  { id: "overview", label: "Overview" },
-  { id: "parameters", label: "Parameters" },
-  { id: "backtests", label: "Backtests" },
-  { id: "experiments", label: "Experiments" },
-  { id: "deployment", label: "Deployment" },
-  { id: "performance", label: "Performance" },
-  { id: "logs", label: "Logs" },
-];
-
-export type RiskRating = "LOW" | "MEDIUM" | "HIGH" | "UNRATED";
+export type RiskGrade = "UNRATED" | "LOW" | "MEDIUM" | "HIGH";
 
 export interface StrategySummary {
   id: string;
   name: string;
   version: string;
-  stage: StrategyStage;
+  lifecycle: StrategyLifecycle;
+  mode: StrategyRunMode;
   market: string;
-  researchHypothesisId: string | null;
-  riskRating: RiskRating;
-  deploymentStatus: "NONE" | "PAPER" | "LIVE" | "PAUSED";
-  lastActivityAt: string | null;
+  risk_grade: RiskGrade;
+  deployment_state: StrategyDeploymentState;
+  last_activity_at: string | null;
+  research_id: string | null;
+  hypothesis: string | null;
+}
+
+export interface StrategyParameter {
+  key: string;
+  value: string;
+  unit: string | null;
+  description: string | null;
+}
+
+export interface BacktestSummary {
+  id: string;
+  label: string;
+  started_at: string;
+  finished_at: string | null;
+  sharpe: number | null;
+  max_drawdown: number | null;
+  metrics_available: boolean;
 }
 
 export interface StrategyDetail extends StrategySummary {
-  parameters: Record<string, string | number | boolean>;
-  linkedExperimentIds: string[];
-  backtestSummary: {
-    period: string;
-    netReturn: number;
-    maxDrawdown: number;
-    sharpe: number;
-  } | null;
-  approvedBy: string | null;
-  approvedAt: string | null;
+  parameters: StrategyParameter[];
+  backtests: BacktestSummary[];
+  /** References reserved for the deferred Experiments phase. */
+  experiment_ids: string[];
+  performance_note: string | null;
+  performance_available: boolean;
+  deployment_note: string | null;
+  logs: { at: string; level: "info" | "warning" | "error"; message: string }[];
 }
 
-export type ResearchCategory = "HYPOTHESIS" | "MODEL" | "REPORT";
-export type ResearchFilter = "ALL" | ResearchCategory;
-
-export const RESEARCH_FILTERS: { id: ResearchFilter; label: string }[] = [
-  { id: "ALL", label: "全部" },
-  { id: "HYPOTHESIS", label: "假设" },
-  { id: "MODEL", label: "模型" },
-  { id: "REPORT", label: "报告" },
-];
-
-export interface ResearchItem {
-  id: string;
-  title: string;
-  category: ResearchCategory;
-  market: string | null;
-  datasets: string[];
-  version: string;
-  linkedExperimentIds: string[];
-  linkedStrategyIds: string[];
-  updatedAt: string;
+export interface StrategyListSnapshot {
+  state: ResourceState;
+  items: StrategySummary[];
+  reason: string | null;
+  fetched_at: string | null;
 }
 
-export type ExperimentFilter = "ALL" | "MATLAB" | "GPU";
-export type ExperimentKind = "MATLAB" | "GPU";
-export type ExperimentStatus =
-  | "QUEUED"
-  | "RUNNING"
-  | "SUCCEEDED"
-  | "FAILED"
-  | "CANCELLED";
-
-export const EXPERIMENT_FILTERS: { id: ExperimentFilter; label: string }[] = [
-  { id: "ALL", label: "全部" },
-  { id: "MATLAB", label: "MATLAB" },
-  { id: "GPU", label: "GPU" },
-];
-
-export interface ExperimentRun {
-  id: string;
-  name: string;
-  kind: ExperimentKind;
-  status: ExperimentStatus;
-  durationSeconds: number | null;
-  createdAt: string;
-  researchId: string | null;
-  dataset: string | null;
-  artifactCount: number;
+export interface ExecutionHealth {
+  state: ResourceState;
+  service_connected: boolean;
+  active_runs: number;
+  risk_validation: "unknown" | "connected" | "blocked";
+  reason: string | null;
 }
 
-export type ExecutionRunStatus = "RUNNING" | "PAUSED" | "STOPPED" | "ERROR";
+const STRATEGY_REASON =
+  "NEMT Cloud Strategy API 尚未接入。策略、回测与部署数据不会被前端伪造。";
 
-export interface ExecutionRun {
-  id: string;
-  strategyId: string;
-  strategyName: string;
-  status: ExecutionRunStatus;
-  startedAt: string;
-  lastHeartbeatAt: string | null;
+export const STRATEGY_SNAPSHOT: StrategyListSnapshot = {
+  state: "not_connected",
+  items: [],
+  reason: STRATEGY_REASON,
+  fetched_at: null,
+};
+
+export const EXECUTION_HEALTH: ExecutionHealth = {
+  state: "not_connected",
+  service_connected: false,
+  active_runs: 0,
+  risk_validation: "unknown",
+  reason: "策略执行服务尚未接入；当前没有自动执行实例。",
+};
+
+/**
+ * Future client boundary. These functions are deliberately not called until
+ * the corresponding cloud endpoints exist; the UI uses the explicit snapshot
+ * above so that "Not Connected" can never be confused with an empty result.
+ */
+export interface StrategyService {
+  list(): Promise<StrategyListSnapshot>;
+  get(id: string): Promise<StrategyDetail | null>;
+  executionHealth(): Promise<ExecutionHealth>;
 }
 
-export type ExecutionEventSeverity = "INFO" | "WARNING" | "ERROR";
-
-export interface ExecutionEvent {
-  id: string;
-  type: string;
-  severity: ExecutionEventSeverity;
-  message: string;
-  createdAt: string;
-  orderId: string | null;
-}
-
-export interface PortfolioMetrics {
-  realizedPnl: string | null;
-  unrealizedPnl: string | null;
-  maxDrawdown: string | null;
-  exposure: string | null;
-  equityHistory: { timestamp: string; equity: string }[];
-}
-
-export type ExecutionTab = "runs" | "orders" | "fills" | "events" | "risk";
-
-export const EXECUTION_TABS: { id: ExecutionTab; label: string }[] = [
-  { id: "runs", label: "运行实例" },
-  { id: "orders", label: "订单" },
-  { id: "fills", label: "成交" },
-  { id: "events", label: "事件" },
-  { id: "risk", label: "风控" },
-];
+export const strategyService: StrategyService = {
+  async list() {
+    return STRATEGY_SNAPSHOT;
+  },
+  async get() {
+    return null;
+  },
+  async executionHealth() {
+    return EXECUTION_HEALTH;
+  },
+};

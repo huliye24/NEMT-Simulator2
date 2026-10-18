@@ -51,15 +51,19 @@ function initialTab(): TradeTabKey {
 
 export default function TradeApp() {
   const [session, setSession] = useState<Session | null>(null);
+  const [checking, setChecking] = useState(true);
   const [notice, setNotice] = useState<string | null>(null);
   const [showLogin, setShowLogin] = useState(
     () => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("login") === "1"
   );
-  const [checking, setChecking] = useState(!showLogin);
 
   useEffect(() => {
     let cancelled = false;
     if (showLogin) {
+      // Boot flag must be cleared when the URL already requests the login
+      // screen; this effect intentionally synchronizes that UI state.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setChecking(false);
       return () => {
         cancelled = true;
       };

@@ -11,7 +11,12 @@ import { StudioIcon } from "./icons";
 import StudioLogin from "./StudioLogin";
 import StudioSidebar from "./layout/StudioSidebar";
 import StudioTopbar from "./layout/StudioTopbar";
-import { MOBILE_PRIMARY_NAV, SECTION_LABELS } from "./navigation";
+import {
+  MOBILE_PRIMARY_NAV,
+  SECTION_LABELS,
+  parseStudioRoute,
+  studioRouteUrl,
+} from "./navigation";
 import ExecutionPage from "./pages/ExecutionPage";
 import ExperimentsPage from "./pages/ExperimentsPage";
 import MarketsPage from "./pages/MarketsPage";
@@ -20,7 +25,11 @@ import PortfolioPage from "./pages/PortfolioPage";
 import ResearchPage from "./pages/ResearchPage";
 import SettingsPage from "./pages/SettingsPage";
 import StrategiesPage from "./pages/StrategiesPage";
-import { STUDIO_SECTIONS, type StudioSection } from "./types";
+import type {
+  StudioNavigateOptions,
+  StudioRoute,
+  StudioSection,
+} from "./types";
 
 interface ToastState {
   id: number;
@@ -28,34 +37,9 @@ interface ToastState {
   message: string;
 }
 
-const LEGACY_SECTION_ALIASES: Record<string, StudioSection> = {
-  trade: "execution",
-  orders: "execution",
-  assets: "portfolio",
-  market: "markets",
-  strategy: "strategies",
-  experiment: "experiments",
-};
-
-function isStudioSection(value: string | null): value is StudioSection {
-  return Boolean(value && (STUDIO_SECTIONS as readonly string[]).includes(value));
-}
-
-function resolveSection(value: string | null): StudioSection | null {
-  if (!value) return null;
-  if (isStudioSection(value)) return value;
-  return LEGACY_SECTION_ALIASES[value] ?? null;
-}
-
-function initialSection(): StudioSection {
-  if (typeof window === "undefined") return "overview";
-  const params = new URLSearchParams(window.location.search);
-  const requested = resolveSection(params.get("section") ?? params.get("tab"));
-  return requested ?? "overview";
-}
-
-function sectionUrl(section: StudioSection): string {
-  return section === "overview" ? "/trade" : `/trade?section=${section}`;
+function initialRoute(): StudioRoute {
+  if (typeof window === "undefined") return { section: "overview" };
+  return parseStudioRoute(window.location.search);
 }
 
 export default function StudioApp({ initialLogin = false }: { initialLogin?: boolean }) {
@@ -197,7 +181,7 @@ function StudioWorkspace({
   onAuthLost: () => void;
   onLogout: () => Promise<void>;
 }) {
-  const [section, setSection] = useState<StudioSection>(initialSection);
+  const [route, setRoute] = useState<StudioRoute>(initialRoute);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     if (typeof window === "undefined") return false;
     try {
@@ -213,12 +197,12 @@ function StudioWorkspace({
   const data = useTradingData(session, onAuthLost);
 
   useEffect(() => {
-    document.title = `${SECTION_LABELS[section]} · NEMT Studio`;
-  }, [section]);
+    document.title = `${SECTION_LABELS[route.section]} · NEMT Studio`;
+  }, [route.section]);
 
   useEffect(() => {
     function onPopState() {
-      setSection(initialSection());
+      setRoute(parseStudioRoute(window.location.search));
     }
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
@@ -226,7 +210,7 @@ function StudioWorkspace({
 
   useEffect(() => {
     mainRef.current?.scrollTo({ top: 0, behavior: "auto" });
-  }, [section]);
+  }, [route]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -256,13 +240,26 @@ function StudioWorkspace({
     toastTimer.current = window.setTimeout(() => setToast(null), 5_500);
   }, []);
 
-  const navigate = useCallback((next: StudioSection) => {
-    setSection(next);
-    setMobileNavOpen(false);
-    if (typeof window !== "undefined") {
-      window.history.pushState(null, "", sectionUrl(next));
-    }
-  }, []);
+  const navigate = useCallback(
+    (section: StudioSection, options?: StudioNavigateOptions) => {
+      const next: StudioRoute = { section };
+      if (section === "execution") {
+        next.tab = options?.tab ?? "runs";
+      }
+      if (options?.id && section === "strategies") {
+        next.id = options.id;
+      }
+      setRoute(next);
+      setMobileNavOpen(false);
+      if (typeof window !== "undefined") {
+        const url = studioRouteUrl(next);
+        if (url !== `${window.location.pathname}${window.location.search}`) {
+          window.history.pushState(null, "", url);
+        }
+      }
+    },
+    []
+  );
 
   function toggleCollapsed() {
     setSidebarCollapsed((current) => {
@@ -276,37 +273,32 @@ function StudioWorkspace({
     });
   }
 
-  const sectionProps = { session, data, notify, navigate };
+  const sectionProps = { session, data, notify, navigate, route };
   const issue = !data.online
     ? {
         tone: "danger" as const,
         title: "网络已断开",
-        body: "行情轮询、账户刷新和交易写操作已暂停，恢复网络后会自动重试。",
+        body: "行情轮询、账户刷新和执行写操作已暂停，恢复网络后会自动重试。",
       }
     : data.coreError
       ? {
           tone: "warn" as const,
-          title: "状态同步异常",
-          body: `${data.coreError}。交易入口会在服务端校验失败时保持禁用。`,
+          title: "NEMT Cloud 状态同步异常",
+          body: `${data.coreError}。只读数据仍保留在最近一次成功同步的快照中。`,
         }
-      : data.feedError
-        ? {
-            tone: "warn" as const,
-            title: "行情连接异常",
-            body: data.feedError,
-          }
-        : null;
+      : null;
 
   return (
     <div
       className={cn("nemt-studio", mobileNavOpen && "is-nav-open")}
       data-collapsed={sidebarCollapsed ? "true" : "false"}
       data-mode={session.mode}
+      data-section={route.section}
     >
       <StudioTopbar
         session={session}
         data={data}
-        section={section}
+        section={route.section}
         collapsed={sidebarCollapsed}
         onToggleSidebar={toggleCollapsed}
         onOpenMobileNav={() => setMobileNavOpen(true)}
@@ -315,11 +307,9 @@ function StudioWorkspace({
       />
 
       <StudioSidebar
-        section={section}
+        section={route.section}
         collapsed={sidebarCollapsed}
         mobileOpen={mobileNavOpen}
-        system={data.system}
-        online={data.online}
         onNavigate={navigate}
         onToggleCollapsed={toggleCollapsed}
         onCloseMobile={() => setMobileNavOpen(false)}
@@ -366,22 +356,27 @@ function StudioWorkspace({
             </InlineAlert>
           ) : null}
 
-          {section === "overview" ? <OverviewPage {...sectionProps} /> : null}
-          {section === "strategies" ? <StrategiesPage {...sectionProps} /> : null}
-          {section === "research" ? <ResearchPage {...sectionProps} /> : null}
-          {section === "experiments" ? <ExperimentsPage {...sectionProps} /> : null}
-          {section === "execution" ? <ExecutionPage {...sectionProps} /> : null}
-          {section === "markets" ? <MarketsPage {...sectionProps} /> : null}
-          {section === "portfolio" ? <PortfolioPage {...sectionProps} /> : null}
-          {section === "settings" ? (
-            <SettingsPage {...sectionProps} onLogout={onLogout} />
+          {route.section === "overview" ? <OverviewPage {...sectionProps} /> : null}
+          {route.section === "strategies" ? <StrategiesPage {...sectionProps} /> : null}
+          {route.section === "research" ? <ResearchPage {...sectionProps} /> : null}
+          {route.section === "experiments" ? <ExperimentsPage {...sectionProps} /> : null}
+          {route.section === "execution" ? <ExecutionPage {...sectionProps} /> : null}
+          {route.section === "markets" ? <MarketsPage {...sectionProps} /> : null}
+          {route.section === "portfolio" ? <PortfolioPage {...sectionProps} /> : null}
+          {route.section === "settings" ? (
+            <SettingsPage
+              {...sectionProps}
+              sidebarCollapsed={sidebarCollapsed}
+              onToggleSidebar={toggleCollapsed}
+              onLogout={onLogout}
+            />
           ) : null}
         </div>
       </main>
 
       <nav className="ns-mobile-nav" aria-label="移动端主导航">
         {MOBILE_PRIMARY_NAV.map((item) => {
-          const active = section === item.id;
+          const active = route.section === item.id;
           return (
             <button
               type="button"

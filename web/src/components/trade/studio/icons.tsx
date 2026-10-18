@@ -5,11 +5,14 @@ export type StudioIconName =
   | "markets"
   | "trade"
   | "strategies"
-  | "research"
-  | "experiments"
   | "orders"
   | "assets"
   | "settings"
+  | "research"
+  | "experiments"
+  | "inbox"
+  | "archive"
+  | "execution"
   | "menu"
   | "close"
   | "refresh"
@@ -61,18 +64,6 @@ const PATHS: Record<StudioIconName, ReactNode> = {
       <path d="M4 7h9M17 7h3M4 17h3M11 17h9" />
       <circle cx="15" cy="7" r="2" />
       <circle cx="9" cy="17" r="2" />
-    </>
-  ),
-  research: (
-    <>
-      <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v17H6.5A2.5 2.5 0 0 0 4 22.5Z" />
-      <path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v17h4.5A2.5 2.5 0 0 1 20 22.5Z" />
-    </>
-  ),
-  experiments: (
-    <>
-      <path d="M9 3h6M10 3v5.2L5.2 17a3 3 0 0 0 2.7 4.5h8.2a3 3 0 0 0 2.7-4.5L14 8.2V3" />
-      <path d="M7.3 14h9.4" />
     </>
   ),
   orders: (
@@ -183,6 +174,39 @@ const PATHS: Record<StudioIconName, ReactNode> = {
       <circle cx="9" cy="6" r="2" fill="var(--ns-surface)" />
       <circle cx="15" cy="12" r="2" fill="var(--ns-surface)" />
       <circle cx="7" cy="18" r="2" fill="var(--ns-surface)" />
+    </>
+  ),
+  research: (
+    <>
+      <path d="M9 3h6M10 3v5.6L5.6 17a2.4 2.4 0 0 0 2.1 3.5h8.6a2.4 2.4 0 0 0 2.1-3.5L14 8.6V3" />
+      <path d="M7.4 14h9.2" />
+    </>
+  ),
+  execution: (
+    <>
+      <path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12Z" />
+    </>
+  ),
+  experiments: (
+    <>
+      <circle cx="5.5" cy="5.5" r="2.2" />
+      <circle cx="18.5" cy="6.5" r="2.2" />
+      <circle cx="12" cy="12" r="2.2" />
+      <circle cx="6.5" cy="18.5" r="2.2" />
+      <circle cx="17.5" cy="17.5" r="2.2" />
+      <path d="M7.3 6.7 10 10.4M16.7 7.5 14 10.4M10.7 13.7 8 16.5M13.4 13.6 16.1 16.1" />
+    </>
+  ),
+  inbox: (
+    <>
+      <path d="M4 13 6.5 5h11L20 13" />
+      <path d="M4 13h4l1.4 2h5.2L16 13h4v6H4Z" />
+    </>
+  ),
+  archive: (
+    <>
+      <rect x="3.5" y="4" width="17" height="4" rx="0.6" />
+      <path d="M5 8v12h14V8M9.5 12h5" />
     </>
   ),
 };
