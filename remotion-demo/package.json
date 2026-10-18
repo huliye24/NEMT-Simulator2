@@ -1,0 +1,17 @@
+{
+  "name": "nemt-remotion-demo",
+  "version": "1.0.0",
+  "description": "NEMT Data Visualization Video Demo",
+  "scripts": {
+    "dev": "remotion preview",
+    "build": "remotion render NEMTDemo out/nemt-demo.mp4",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.536",
+    "remotion": "^4.0.536",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "type": "module"
+}
