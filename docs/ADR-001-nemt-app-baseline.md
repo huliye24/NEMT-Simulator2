@@ -13,7 +13,8 @@ Next.js 16 / React 19 (App Router, Tailwind v4) and already contains the
 NEMT research dashboard, AI Council and an early Binance execution layer.
 `backend/` also contains the research NEMT Engine API and prototype trading
 classes. There is a second, stale full clone at `NEMT-Simulator2/` (pinned as
-a gitlink) and a tracked `web/node_modules` directory from earlier work.
+a gitlink); tracked dependency trees are being retired by the approved repo
+hygiene work (#18).
 
 The app must ship a safe mobile terminal without destabilising the research
 code or silently reusing unvalidated prototypes as production controls.
@@ -58,8 +59,9 @@ code or silently reusing unvalidated prototypes as production controls.
    users; no public database/Redis port is permitted.
 
 6. **Redis exposure is fixed now.**
-   `quant-mvp/docker-compose.yml` binds Redis and Redis Commander to
-   `127.0.0.1` only.
+   Both `quant-mvp/docker-compose.yml` and the root `docker-compose.yml` bind
+   Redis and Redis Commander to `127.0.0.1` only; CI validates the loopback
+   mapping and Redis health.
 
 ## Consequences
 
@@ -71,8 +73,10 @@ code or silently reusing unvalidated prototypes as production controls.
 - Testnet acceptance, User Data Stream reconciliation, partial-fill demo
   matching, MFA/passkey re-authentication, PostgreSQL migration and CI
   deployment remain follow-up work under #10, #13, #14 and #15.
-- The stale nested clone and tracked `node_modules` are called out for a
-  separate, approved cleanup; this ADR does not delete them.
+- Root and `web/` tracked `node_modules` cleanup was completed separately
+  through the approved repository-hygiene PRs (#17, #19). The nested clone
+  remains intentionally untracked; research datasets and MATLAB code are not
+  part of the App cleanup.
 
 ## Security notes
 
@@ -83,3 +87,33 @@ code or silently reusing unvalidated prototypes as production controls.
 - Every mutation is audited with request ID, actor, mode and redacted detail.
 - Unknown order outcomes become `PENDING_RECONCILIATION`; the server queries
   by stable `clientOrderId` instead of blindly resubmitting.
+
+## Addendum — 2026-10-18 baseline hardening (issue #6)
+
+7. **Legacy Docker is not the App local stack.**
+   The root `docker-compose.yml` and `quant-mvp/docker-compose.yml` remain the
+   legacy simulator/quant stack. App DEMO runs directly with
+   `backend/trade_main.py` and `web/`; a containerized App stack is deferred
+   to issue #14. Root Compose Redis and Redis Commander now bind
+   `127.0.0.1` only, matching `quant-mvp`; the App has no public database
+   service (local SQLite only).
+
+8. **CI gates the baseline, not just builds.**
+   `.github/workflows/nemt-app-ci.yml` runs backend pytest plus a DEMO
+   health/readiness smoke, web lint/typecheck/build, a new-source secret
+   guard with baseline configuration checks, a scoped Python format check,
+   Compose config validation, and a Redis loopback/health check. This makes
+   missing LIVE disabling, empty exchange placeholders and Compose port
+   regressions visible in CI.
+
+9. **Persistence versioning is explicit.**
+   SQLite initializes with `schema_migrations` version 1 and applies schema
+   statements idempotently. The production PostgreSQL/Alembic migration,
+   backup drills and distributed recovery remain separately scoped under
+   issue #14; `/database` is not changed by this baseline.
+
+The repository-wide Direction Lock was added under #20/#21. The maintainer
+approved this issue #6 PR's baseline paths (Compose, CI, root documentation,
+backend config/tests) as a scoped exception; `/core`, `/database`, `/auth`,
+`/.git`, trading/risk behavior and credentials were not modified. Evidence:
+`docs/NEMT_APP_BASELINE_ACCEPTANCE.md`.

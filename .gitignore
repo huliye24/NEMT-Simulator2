@@ -3,6 +3,8 @@
 # Environment - 安全第一
 .env
 .env.*
+*.env
+*.env.*
 !.env.example
 !**/.env.example
 

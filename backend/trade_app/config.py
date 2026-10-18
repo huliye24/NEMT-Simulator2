@@ -217,7 +217,9 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
     if market_source == "demo" and mode is not AppMode.DEMO:
         raise ConfigError("NEMT_MARKET_SOURCE=demo is only allowed in DEMO mode")
 
-    allowed_symbols = tuple(s.upper() for s in env_csv("NEMT_ALLOWED_SYMBOLS", "BTCUSDT"))
+    allowed_symbols = tuple(
+        s.upper() for s in env_csv("NEMT_ALLOWED_SYMBOLS", "BTCUSDT")
+    )
     if not allowed_symbols:
         raise ConfigError("NEMT_ALLOWED_SYMBOLS must not be empty")
 
@@ -258,16 +260,21 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
         admin_password = env("NEMT_TESTNET_ADMIN_PASSWORD")
         if trader_password:
             if len(trader_password) < 12:
-                raise ConfigError("NEMT_TESTNET_TRADER_PASSWORD must be at least 12 characters")
+                raise ConfigError(
+                    "NEMT_TESTNET_TRADER_PASSWORD must be at least 12 characters"
+                )
             operator_users[
                 env("NEMT_TESTNET_TRADER_USERNAME", "trader") or "trader"
             ] = (trader_password, ("viewer", "trader"))
         if admin_password:
             if len(admin_password) < 12:
-                raise ConfigError("NEMT_TESTNET_ADMIN_PASSWORD must be at least 12 characters")
-            operator_users[
-                env("NEMT_TESTNET_ADMIN_USERNAME", "admin") or "admin"
-            ] = (admin_password, ("viewer", "trader", "admin"))
+                raise ConfigError(
+                    "NEMT_TESTNET_ADMIN_PASSWORD must be at least 12 characters"
+                )
+            operator_users[env("NEMT_TESTNET_ADMIN_USERNAME", "admin") or "admin"] = (
+                admin_password,
+                ("viewer", "trader", "admin"),
+            )
         if not operator_users:
             print(
                 "WARNING: TESTNET mode has no operator users. Set"
@@ -280,8 +287,12 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
         mode=mode,
         database_path=database_path,
         session_secret=session_secret,
-        session_ttl_seconds=env_int("NEMT_SESSION_TTL_SECONDS", 12 * 60 * 60, minimum=300),
-        confirmation_ttl_seconds=env_int("NEMT_CONFIRMATION_TTL_SECONDS", 90, minimum=15),
+        session_ttl_seconds=env_int(
+            "NEMT_SESSION_TTL_SECONDS", 12 * 60 * 60, minimum=300
+        ),
+        confirmation_ttl_seconds=env_int(
+            "NEMT_CONFIRMATION_TTL_SECONDS", 90, minimum=15
+        ),
         cookie_secure=cookie_secure,
         allowed_symbols=allowed_symbols,
         market_source=market_source,
@@ -291,7 +302,9 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
         live_trading_enabled=env_bool("NEMT_LIVE_TRADING_ENABLED", False),
         binance_api_key=env("NEMT_BINANCE_API_KEY"),
         binance_api_secret=env("NEMT_BINANCE_API_SECRET"),
-        binance_recv_window_ms=env_int("NEMT_BINANCE_RECV_WINDOW_MS", 5000, minimum=1000),
+        binance_recv_window_ms=env_int(
+            "NEMT_BINANCE_RECV_WINDOW_MS", 5000, minimum=1000
+        ),
         min_order_notional=env_decimal("NEMT_MIN_ORDER_NOTIONAL", "5"),
         max_order_notional=env_decimal("NEMT_MAX_ORDER_NOTIONAL", "100"),
         max_daily_notional=env_decimal("NEMT_MAX_DAILY_NOTIONAL", "1000"),

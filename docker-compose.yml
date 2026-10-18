@@ -3,16 +3,16 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 
-# NEMT Simulator - 完整 Docker 编排
+# NEMT Simulator - 旧版模拟器 / 量化组件 Docker 编排
+#
+# 这不是 NEMT App 的本地 DEMO 栈。移动端 PWA 与 App API 按
+# docs/NEMT_APP_RUNBOOK.md 使用 Python + Node 启动；容器化 App 栈由 #14 负责。
+#
 # 使用方法:
-#   docker-compose up -d              # 启动所有服务 (前台运行)
-#   docker-compose up                  # 启动并查看日志
-#   docker-compose up -d --build       # 重新构建并启动
-#   docker-compose down                # 停止服务
-#   docker-compose --profile full up  # 启动完整系统 (含采集器)
-#   docker-compose logs -f [service]   # 查看日志
-
-version: "3.8"
+#   docker compose up -d
+#   docker compose --profile full up
+#   docker compose --profile tools up -d   # Redis Commander 仅本机
+#   docker compose down
 
 services:
   # ============================================
@@ -58,7 +58,7 @@ services:
     image: redis:7-alpine
     container_name: nemt-redis
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"    # 只绑定本机；禁止 Redis 暴露公网
     volumes:
       - redis-data:/data
     command: redis-server --appendonly yes
@@ -123,7 +123,7 @@ services:
     environment:
       - REDIS_HOSTS=local:redis:6379
     ports:
-      - "8081:8081"
+      - "127.0.0.1:8081:8081"    # 仅本机；且需 --profile tools
     depends_on:
       - redis
     networks:
