@@ -14,6 +14,16 @@
 - 完成后提交简短结果并停止；**未经审核不得自动执行下一任务**。
 - 原有方向锁、交易风控、密钥与生产环境限制继续有效，不得因微任务协议而放宽。
 
+## NEMT 三套核心协议（AI 必读）
+
+在开始任何工程、实验或策略工作之前，按任务领域阅读以下文档：
+
+1. [工程开发协议](docs/ENGINEERING_PROTOCOL.md) — AI 开发、测试、提交、权限边界与 15–30 分钟微任务；细则参见 [微任务协议](docs/MICRO_TASK_PROTOCOL.md)。
+2. [科学实验协议](docs/SCIENTIFIC_EXPERIMENT_PROTOCOL.md) — MATLAB/GPU、数据集版本、实验 Manifest、结果与复现性。
+3. [量化策略协议](docs/QUANT_STRATEGY_PROTOCOL.md) — AI 发布候选策略、验证、人工审核、策略生命周期、Paper Trading 与风控。
+
+这些协议与既有 Direction Lock 同时生效；不得据此突破受保护路径或授权范围。跨领域任务需同时遵循相关协议，且必须拆为可独立验收的小任务。
+
 ## 方向锁 (Direction Lock)
 
 **重要**: 在开始任何修改之前，必须先读取 `.cursor/rules/DIRECTION_LOCK.md` 了解当前 AI 工作范围限制。
