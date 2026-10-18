@@ -4,14 +4,14 @@ import { usePathname } from "next/navigation";
 import Header from "./Header";
 
 /**
- * Keeps the research dashboard chrome intact while giving /trade its own
- * full-screen, app-like shell (no desktop header/footer).
+ * Keep the established research chrome on legacy routes.
+ * The Emergentix homepage and the /trade terminal each own their own shell.
  */
 export default function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isTradeApp = pathname?.startsWith("/trade") ?? false;
+  const standalone = pathname === "/" || (pathname?.startsWith("/trade") ?? false);
 
-  if (isTradeApp) {
+  if (standalone) {
     return <>{children}</>;
   }
 
