@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="web/public/nemt-logo.png" alt="NEMT Logo" width="200" />
+  <img src="logo/5b6e32a9bf829cf0058ba7f0128bb3c7_720.jpg" alt="NEMT Logo" width="200" />
 </p>
 
 # NEMT
