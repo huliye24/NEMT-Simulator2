@@ -26,19 +26,52 @@ i∂ψ/∂t + α∂²ψ/∂x² + β|ψ|²ψ = η(x,t)
 浏览器不接触任何交易所密钥；V0.1 **不提供实盘（LIVE）下单路径**。
 
 - 运行手册：[`docs/NEMT_APP_RUNBOOK.md`](docs/NEMT_APP_RUNBOOK.md)
+- 工程基线验收：[`docs/NEMT_APP_BASELINE_ACCEPTANCE.md`](docs/NEMT_APP_BASELINE_ACCEPTANCE.md)
 - Testnet 验收清单：[`docs/NEMT_APP_TESTNET_ACCEPTANCE.md`](docs/NEMT_APP_TESTNET_ACCEPTANCE.md)
 - 工程基线 ADR：[`docs/ADR-001-nemt-app-baseline.md`](docs/ADR-001-nemt-app-baseline.md)
 - 安全清理（已确认的历史密钥风险）：[`docs/SECURITY_CLEANUP_PLAN.md`](docs/SECURITY_CLEANUP_PLAN.md)
 
+### Clean-clone DEMO quick start (no exchange keys)
+
 ```bash
-# API (DEMO, no keys)
-venv/Scripts/pip install -r backend/trade_requirements.txt
+# Terminal 1 — App API, loopback only
+python -m venv venv
+venv/Scripts/pip install -r backend/trade_requirements.txt   # Windows
+# source venv/bin/activate && pip install -r backend/trade_requirements.txt  # Linux/macOS
 venv/Scripts/python backend/trade_main.py
 
-# Web PWA
-cd web && npm install && npm run build && npm start
+# Health / readiness (also used by CI)
+curl http://127.0.0.1:8000/api/v1/health
+curl http://127.0.0.1:8000/api/v1/health/ready
+
+# Terminal 2 — Next.js PWA
+cd web
+npm ci
+npm run build
+npm start
 # open http://localhost:3000/trade
 ```
+
+- Default mode is **DEMO**; `LIVE` has no order path and
+  `NEMT_LIVE_TRADING_ENABLED=false` is the safe default.
+- No Binance API key, secret, Redis or Docker is required for App DEMO. The
+  demo ledger is local SQLite under `backend/.data/`.
+- Optional local config: copy `backend/.env.example` to `backend/.env` and
+  replace placeholders. Never commit `.env` or put exchange keys in the web
+  bundle.
+- CI gates: backend pytest + DEMO health smoke, web lint/typecheck/build,
+  new-source secret/config guard, baseline Python format check, and Compose
+  config + Redis loopback/health checks. See
+  [`docs/NEMT_APP_BASELINE_ACCEPTANCE.md`](docs/NEMT_APP_BASELINE_ACCEPTANCE.md).
+
+### Docker and service boundaries
+
+The root `docker-compose.yml` is the **legacy simulator / quant stack**, not the
+NEMT App local DEMO stack. The App is run directly with Python and Next.js in
+V0.1; a containerized App stack is tracked under issue #14. Redis and Redis
+Commander in both root Compose and `quant-mvp/docker-compose.yml` bind to
+`127.0.0.1` only; do not expose them publicly. App persistence is local SQLite;
+no database service is published.
 
 Android USB 真机：`adb reverse tcp:3000 tcp:3000`，然后用 Chrome 打开
 `http://localhost:3000/trade`。
@@ -51,62 +84,60 @@ Binance Spot Testnet 专用密钥并在服务端显式启用。
 
 ### 安装
 
-#### 方式一：Docker 部署（推荐）
+#### 方式一：旧版模拟器 / 量化栈 Docker（不是 NEMT App DEMO）
 
 **前提条件：**
 - Docker Desktop 4.0+ ([下载](https://www.docker.com/products/docker-desktop))
-- Docker Compose (已包含在 Docker Desktop 中)
+- Docker Compose v2 (`docker compose`)
 
 ```bash
 # 克隆项目
 git clone https://github.com/huliye24/NEMT-Simulator2.git
 cd NEMT-Simulator2
 
-# 启动核心模拟器（仅 Python，无需 IDE）
-docker-compose up -d nemt-core
+# 仅校验编排文件；不需要真实密钥
+docker compose -f docker-compose.yml \
+  --profile quant --profile full --profile tools --profile web config -q
 
-# 查看运行日志
-docker-compose logs -f nemt-core
-
-# 停止服务
-docker-compose down
+# 启动旧版核心模拟器
+docker compose up -d nemt-core
+docker compose logs -f nemt-core
+docker compose down
 ```
 
-**启动完整系统（包含 Web 前端）：**
+**旧版核心 + Web：**
+
 ```bash
-# 启动核心 + Web
-docker-compose --profile web up -d
-
-# 访问前端
-# 打开浏览器: http://localhost:3000
+docker compose --profile web up -d
+# 打开 http://localhost:3000
 ```
 
-**启动量化系统（包含 Redis + 采集器 + 指标计算）：**
+**量化组件（Redis + collector + calculator）：**
+
 ```bash
-# 启动量化组件
-docker-compose --profile full up -d
-
-# 查看服务状态
-docker-compose ps
-
-# 查看 Redis 管理界面 (可选)
-docker-compose --profile tools up -d
-# 访问: http://localhost:8081
+docker compose --profile full up -d
+docker compose ps
 ```
+
+**Redis Commander（可选，仅本机）：**
+
+```bash
+docker compose --profile tools up -d
+# 打开 http://127.0.0.1:8081；端口只绑定 loopback
+```
+
+Redis 和 Redis Commander 在所有 Compose 文件中均使用 `127.0.0.1`，不得
+改为 `0.0.0.0` 或公开端口。App DEMO 不需要 Redis，使用
+`backend/trade_main.py` + `web/` 的本地启动方式即可。CI 会验证 Compose
+配置以及 Redis 的 loopback 绑定和健康状态。
 
 **常用命令：**
+
 ```bash
-# 重新构建并启动
-docker-compose up -d --build
-
-# 查看所有日志
-docker-compose logs -f
-
-# 查看特定服务日志
-docker-compose logs -f nemt-core
-
-# 清理 Docker 资源
-docker-compose down -v
+docker compose up -d --build
+docker compose logs -f
+docker compose logs -f nemt-core
+docker compose down -v
 ```
 
 #### 方式二：本地运行
@@ -134,6 +165,17 @@ python main.py --interval 4h
 ```
 
 ### 项目结构
+
+Canonical NEMT App paths (issue #6 baseline):
+
+- `backend/trade_app/` — App cloud API (orders, risk, auth, audit).
+- `backend/trade_main.py` — App API entry point.
+- `web/` — Next.js 16 / React 19 PWA (`/trade`).
+- `backend/tests/` — App API tests, including baseline safety and health checks.
+- `docs/` — ADR, runbook, acceptance evidence and security plans.
+- `quant-mvp/` — legacy Go collector / Redis / Python quant components.
+- `matlab/`, root `nemt_*.py` — MATLAB/NEMT research code
+  (not rewritten by the App baseline).
 
 ```
 NEMT Simulator/

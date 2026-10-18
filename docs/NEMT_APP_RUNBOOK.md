@@ -1,6 +1,6 @@
 # NEMT App V0.1 — Runbook
 
-Updated: 2026-10-17 · Mode covered: **DEMO** (verified), **TESTNET** (implemented, credentials pending), **LIVE** (write path intentionally absent).
+Updated: 2026-10-18 · Mode covered: **DEMO** (verified), **TESTNET** (implemented, credentials pending), **LIVE** (write path intentionally absent).
 
 ## 1. What is in this delivery
 
@@ -12,6 +12,8 @@ Updated: 2026-10-17 · Mode covered: **DEMO** (verified), **TESTNET** (implement
 | Persistence | `backend/.data/nemt_app.sqlite3` | Orders, fills, sessions, confirmations, audit, demo wallets |
 | Binance adapter | `backend/trade_app/binance_spot.py` | Public market + read-only account + Spot Testnet orders (server only) |
 | ADR | `docs/ADR-001-nemt-app-baseline.md` | Next.js-instead-of-Vite and SQLite/local baseline decisions |
+| Legacy Docker | `docker-compose.yml`, `quant-mvp/docker-compose.yml` | Old simulator/quant stack, not the App DEMO; Redis/Commander loopback only |
+| Baseline evidence | `docs/NEMT_APP_BASELINE_ACCEPTANCE.md` | Issue #6 configuration, Compose and health verification |
 
 The existing research dashboard and NEMT engine API (`backend/main.py`) are untouched.
 
@@ -29,12 +31,21 @@ venv/Scripts/python backend/trade_main.py
 
 # Terminal 2 — PWA
 cd web
-npm install
+npm ci
 npm run build
 npm start                              # http://localhost:3000/trade
 ```
 
-On Linux/macOS use `venv/bin/python` and `venv/bin/pip`.
+On Linux/macOS use `venv/bin/python` and `venv/bin/pip`. API defaults are
+`NEMT_API_HOST=127.0.0.1` and `NEMT_API_PORT=8000`; set them explicitly if
+needed. App DEMO does not require Docker, Redis, or any exchange key.
+
+Health checks (from another terminal):
+
+```bash
+curl http://127.0.0.1:8000/api/v1/health
+curl http://127.0.0.1:8000/api/v1/health/ready
+```
 
 DEMO defaults:
 
@@ -58,6 +69,26 @@ DEMO behavior:
 Optional `backend/.env` (copy from `backend/.env.example`):
 - set a long `NEMT_SESSION_SECRET` to keep sessions across restarts;
 - change DEMO passwords if the phone/browser is reachable by other people.
+
+### 2.1 Docker stack and port boundaries
+
+The root Compose file and `quant-mvp/docker-compose.yml` are the legacy
+simulator/quant stack. They are **not** the App local DEMO; the App is run
+directly with Python and Next.js in V0.1, and a containerized App stack belongs
+to issue #14.
+
+```bash
+# Validate both Compose projects without starting services
+docker compose -f docker-compose.yml \
+  --profile quant --profile full --profile tools --profile web config -q
+docker compose -f quant-mvp/docker-compose.yml \
+  --profile tools --profile backtest config -q
+```
+
+Redis and Redis Commander are bound to `127.0.0.1` only. CI checks Compose
+configuration, starts the root Redis service, verifies its loopback port and
+health, and runs `redis-cli ping`. App DEMO uses local SQLite; no database
+service is published.
 
 ## 3. Phone testing (Android, USB)
 
@@ -185,17 +216,37 @@ The UI's kill switch is an operator convenience; the server is the control.
   non-production environment first.
 - **Reset DEMO:** stop the API and remove the SQLite file only if you accept
   losing demo orders and audit history. This is destructive; back up first.
-- **Ports:** API binds `127.0.0.1:8000`; Next binds `:3000`. Do not expose
-  Redis/PostgreSQL publicly. `quant-mvp` Redis is now bound to `127.0.0.1`.
+- **Ports:** API binds `127.0.0.1:8000`; Next binds `:3000`. Redis and Redis
+  Commander in both Compose projects bind `127.0.0.1` only. Do not expose
+  Redis, Commander or PostgreSQL publicly. App DEMO has no database service;
+  its SQLite file is local.
 
 ## 8. Verification commands
 
 ```bash
-# backend
-cd backend && ../venv/Scripts/python -m pytest        # 20 tests
+# backend tests (subshell keeps the repository root as cwd)
+(cd backend && ../venv/Scripts/python -m pytest)
 # frontend
-cd web && npm run lint && npx tsc --noEmit && npm run build
+(cd web && npm run lint && npx tsc --noEmit && npm run build)
+# baseline Python formatting (matches CI; install the pinned formatter once)
+venv/Scripts/python -m pip install ruff==0.6.9
+venv/Scripts/python -m ruff format --check \
+  backend/trade_app/config.py backend/trade_main.py backend/tests/test_baseline.py
+# DEMO API health/readiness (API must be running)
+curl http://127.0.0.1:8000/api/v1/health
+curl http://127.0.0.1:8000/api/v1/health/ready
+# Compose validation
+docker compose -f docker-compose.yml \
+  --profile quant --profile full --profile tools --profile web config -q
+docker compose -f quant-mvp/docker-compose.yml \
+  --profile tools --profile backtest config -q
 ```
+
+CI gates (`.github/workflows/nemt-app-ci.yml`): backend pytest + DEMO
+health/readiness smoke, web lint/typecheck/build, new-source secret guard and
+baseline config guard, baseline Python format check, and Compose config +
+Redis loopback/health. Evidence is recorded in
+[`docs/NEMT_APP_BASELINE_ACCEPTANCE.md`](NEMT_APP_BASELINE_ACCEPTANCE.md).
 
 Verified on 2026-10-17 with an Android device over `adb reverse`:
 login → real BTCUSDT price → market preview → risk checks → confirmation →
@@ -224,13 +275,20 @@ shows `SERVER UNREACHABLE` and no order success).
   or simulated partial fill yet.
 - MFA/re-authentication for admin actions, multi-user sessions, PostgreSQL,
   Alembic migrations, distributed rate limiting and alerts are not in V0.1.
+  The baseline SQLite schema uses `schema_migrations` version 1 and applies
+  idempotently; a production PostgreSQL/Alembic migration remains issue #14.
+- A containerized App Docker stack is not part of V0.1; the root Compose
+  project remains the legacy simulator/quant stack and is tracked separately.
+  App containerization, deployment, HTTPS reverse proxy, backup drills and
+  hosted staging GitHub Actions remain issue #14 work.
+- Full-backend Ruff formatting is deferred; CI currently gates the baseline
+  config, entry point and baseline tests only. Legacy app modules will be
+  formatted during #14.
 - WebSocket/SSE market push is replaced by 5 s REST polling; freshness is
   explicit and orders are blocked when stale.
 - Historical secrets in Git (COS keys, SSH private key) are tracked. See
   `docs/SECURITY_CLEANUP_PLAN.md`. Rotate credentials and clean history in a
-  separately approved operation.
-- Deployment, HTTPS reverse proxy, backup drills and GitHub Actions for the
-  hosted staging environment remain issue #14 work.
+  separately approved operation; history was not rewritten by this baseline.
 
 ## 10. Deployed DEMO environment (2026-10-17)
 
