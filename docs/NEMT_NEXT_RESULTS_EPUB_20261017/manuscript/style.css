@@ -1,0 +1,14 @@
+@charset "UTF-8";
+:root { color:#18242d; background:#fff; font-family:"Noto Serif CJK SC","Source Han Serif SC","Songti SC",serif; line-height:1.72; }
+body { margin:0; padding:0; }
+h1,h2,h3 { color:#153c52; font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif; break-after:avoid-page; page-break-after:avoid; }
+h1 { font-size:1.75em; border-bottom:.14em solid #9b2c2c; padding-bottom:.32em; }
+h2 { margin-top:1.7em; font-size:1.3em; }
+p,li { widows:2; orphans:2; }
+table { width:100%; border-collapse:collapse; margin:1em 0; font-size:.82em; }
+th,td { border:1px solid #8da0aa; padding:.4em; vertical-align:top; }
+th { background:#e9f0f3; }
+img { display:block; max-width:100%; max-height:72vh; margin:1em auto .4em; break-inside:avoid; }
+code { font-family:"Cascadia Mono","Noto Sans Mono CJK SC",monospace; font-size:.9em; color:#8a2d35; }
+strong { color:#8d2028; }
+hr { border:0; border-top:1px solid #9aaab2; margin:2em 0; }

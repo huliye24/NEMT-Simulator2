@@ -92,6 +92,23 @@ output/_smoke_now/
 btc_data.csv
 heart_shape.png
 
+# 可重建的设计、出版与演示产物
+**/.gradle/
+**/.vivliostyle/
+**/reports/proof-pages/
+**/reports/preview-pages/
+remotion-demo/out/
+*.tar
+output/test_*.png
+
+# 本地原型与候选素材（正式成品应放入 web/public 或 docs/assets）
+docs/android-apk-build/
+docs/rivertype-android/
+docs/rivertype-web/
+logo/*_720.jpg
+logo/*_720.png
+logo/*.svg
+
 # 已发现的历史敏感文件（清理前保持忽略；历史清理需独立批准）
 cos_sync.env
 ssh_key_nemt

@@ -1,0 +1,14 @@
+title: NEMT 下一组三项实验：实验四门控结果
+author: NEMT Simulator Research
+language: zh-Hans
+size: A5
+render:
+  dpi: 200
+  band_overlap: 0.08
+transcribe:
+  engine: manual
+build:
+  theme: nemt-results
+  format: epub
+  output: NEMT_Exp4_Gate_Result_2026-10-17.epub
+collate: {}
