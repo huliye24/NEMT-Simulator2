@@ -1,16 +1,27 @@
 <p align="center">
-  <img src="logo/5b6e32a9bf829cf0058ba7f0128bb3c7_720.jpg" alt="NEMT Logo" width="200" />
+  <img src="docs/assets/brand/nemt-readme-banner.webp" alt="NEMT — 银白与青蓝色的 NEMT 品牌横幅" width="100%" />
 </p>
 
-# NEMT
+<h1 align="center">NEMT</h1>
 
-**Non-Equilibrium Market Theory · 非平衡市场理论**
+<p align="center">
+  <strong>非平衡市场理论 · Non-Equilibrium Market Theory</strong><br />
+  AI 原生金融研究、市场模拟与移动交易基础设施
+</p>
 
-**AI 原生金融研究、市场模拟与移动交易基础设施**
+<p align="center">
+  <a href="#项目简介">项目简介</a> ·
+  <a href="#开发状态">开发状态</a> ·
+  <a href="#系统架构">系统架构</a> ·
+  <a href="#快速开始">快速开始</a> ·
+  <a href="#工程协议">工程协议</a>
+</p>
 
-Research · Experiments · Simulation · Risk-Controlled Trading
-
-[快速开始](#快速开始) · [系统架构](#系统架构) · [开发状态](#开发状态) · [工程协议](#工程协议) · [项目路线](#项目路线)
+<p align="center">
+  <strong>DEMO 已实现</strong> ·
+  <strong>TESTNET 待验收</strong> ·
+  <strong>LIVE 禁用</strong>
+</p>
 
 ---
 
