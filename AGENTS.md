@@ -2,6 +2,18 @@
 
 > **重要**: AI 每次对话开始时，请先阅读此文件和 `.cursor/rules/DIRECTION_LOCK.md`
 
+
+## 强制微任务协议（NEMT Micro-Task Protocol）
+
+**所有 Codex、Claude Code 和其他开发 Agent 必须先阅读 [docs/MICRO_TASK_PROTOCOL.md](docs/MICRO_TASK_PROTOCOL.md)。**
+
+- 单个任务目标耗时 **15–30 分钟**，每次只完成一个可验收的小目标。
+- 一次任务、一个目标、一个验证结果、一个 Git Commit。
+- 预估超过 30 分钟要先拆分；执行时超出范围应停止并报告，不擅自追加功能。
+- 必须明确允许/禁止修改范围、测试、验收标准和停止条件。
+- 完成后提交简短结果并停止；**未经审核不得自动执行下一任务**。
+- 原有方向锁、交易风控、密钥与生产环境限制继续有效，不得因微任务协议而放宽。
+
 ## 方向锁 (Direction Lock)
 
 **重要**: 在开始任何修改之前，必须先读取 `.cursor/rules/DIRECTION_LOCK.md` 了解当前 AI 工作范围限制。
