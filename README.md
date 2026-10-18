@@ -1,330 +1,187 @@
-# NEMT Simulator V2
-## 非平衡市场理论模拟器 (BTC实验版)
+<p align="center">
+  <img src="web/public/nemt-logo.png" alt="NEMT Logo" width="200" />
+</p>
 
-基于Notion理论中枢开发的完整NEMT交易系统实现。
+# NEMT
 
-### 核心数学模型
+**Non-Equilibrium Market Theory · 非平衡市场理论**
 
-改进的非线性薛定谔方程 (NLS):
+**AI 原生金融研究、市场模拟与移动交易基础设施**
 
-```
-i∂ψ/∂t + α∂²ψ/∂x² + β|ψ|²ψ = η(x,t)
-```
+Research · Experiments · Simulation · Risk-Controlled Trading
 
-**参数说明:**
-- ψ (psi): 市场状态复振幅
-- α (alpha): 扩散系数（市场流动性）
-- β (beta): 非线性系数（情绪/杠杆/羊群效应）
-- η (eta): 噪声（外部扰动/随机交易）
+[快速开始](#快速开始) · [系统架构](#系统架构) · [开发状态](#开发状态) · [工程协议](#工程协议) · [项目路线](#项目路线)
 
 ---
 
-## NEMT App V0.1 — 手机优先交易终端
+## 项目简介
 
-`/trade` 是手机可直接使用的 Binance Spot **DEMO/Testnet** 终端：实时公共行情、
-服务端认证/RBAC、一次性确认下单、独立风控、Kill Switch、审计与订单历史。
-浏览器不接触任何交易所密钥；V0.1 **不提供实盘（LIVE）下单路径**。
+NEMT 是一个连接**市场理论研究、金融数据、计算实验、策略验证、模拟交易及移动终端**的开源工程项目。
 
-- 运行手册：[`docs/NEMT_APP_RUNBOOK.md`](docs/NEMT_APP_RUNBOOK.md)
-- Testnet 验收清单：[`docs/NEMT_APP_TESTNET_ACCEPTANCE.md`](docs/NEMT_APP_TESTNET_ACCEPTANCE.md)
-- 工程基线 ADR：[`docs/ADR-001-nemt-app-baseline.md`](docs/ADR-001-nemt-app-baseline.md)
-- 安全清理（已确认的历史密钥风险）：[`docs/SECURITY_CLEANUP_PLAN.md`](docs/SECURITY_CLEANUP_PLAN.md)
+我们采用循证、可复现的长期研发方法：
 
-```bash
-# API (DEMO, no keys)
-venv/Scripts/pip install -r backend/trade_requirements.txt
-venv/Scripts/python backend/trade_main.py
+**理论假设 → 数据采集 → MATLAB / 云计算实验 → 策略验证 → Paper Trading → 交易应用**
 
-# Web PWA
-cd web && npm install && npm run build && npm start
-# open http://localhost:3000/trade
+研究层负责解释、检验和迭代假设；交易层负责在明确权限、风险限制和审计机制下执行操作。**研究结果和 AI 输出不能绕过风控直接发起真实交易。**
+
+## 开发状态
+
+NEMT App V0.1 已交付可演示的移动端 DEMO 基线，但**真实 Binance Spot Testnet 端到端验收尚未完成，LIVE 写入功能仍然禁用**。
+
+| 模块 | 状态 | 说明 |
+| --- | --- | --- |
+| 手机端 Web / PWA | DEMO 已实现 | Next.js 16、React 19、TypeScript |
+| 云端 API | 基线已实现 | FastAPI、登录、RBAC、CSRF、审计 |
+| DEMO 模拟交易 | 已测试 | 订单预览、确认、模拟成交、撤单及余额更新 |
+| 公共行情 | 基线已实现 | Binance 公共行情、数据新鲜度和异常提示 |
+| Binance Spot Testnet | 待正式验收 | 需要服务端专用密钥及真实下单测试证据 |
+| 订单数据流与恢复 | 待完善 | 部分成交、周期对账、断线重连和重启恢复 |
+| LIVE 真实资金交易 | **禁用** | V0.1 不提供可执行的 LIVE 下单路径 |
+| MATLAB / GPU 研究 | 持续建设 | 独立于交易执行，重视实验复现与参数记录 |
+
+进度依据：[NEMT App EPIC #5](https://github.com/huliye24/NEMT-Simulator2/issues/5) · [Testnet 验收清单](docs/NEMT_APP_TESTNET_ACCEPTANCE.md)。
+
+## 系统架构
+
+```text
+                NEMT Research & Experiments
+         理论 · 数据集 · MATLAB · GPU · 模型验证
+                            │
+                     策略候选 / 证据
+                            │
+              回测 · 样本外评估 · Paper Trading
+                            │
+                       人工审核 / 风控
+                            │
+     ┌──────────────────────┴──────────────────────┐
+     │             NEMT Mobile Web / PWA           │
+     │       Next.js · 行情 · 账户 · 订单交互        │
+     └──────────────────────┬──────────────────────┘
+                            │ NEMT API
+     ┌──────────────────────┴──────────────────────┐
+     │               FastAPI Cloud API             │
+     │       身份认证 · 权限 · 风控 · 审计 · 持久化    │
+     └──────────────────────┬──────────────────────┘
+                            │
+                 DEMO / Binance Spot TESTNET
+                 LIVE 写入默认禁止
 ```
 
-Android USB 真机：`adb reverse tcp:3000 tcp:3000`，然后用 Chrome 打开
-`http://localhost:3000/trade`。
+**当前技术基线：** `web/` 已采用 Next.js，而不是部分历史文档中的 Vite 方案；技术决策见 [ADR-001](docs/ADR-001-nemt-app-baseline.md)。
 
-云端 DEMO 已部署：`https://postyouth.club/trade`（nginx HTTPS + Basic Auth；
-访问密码只存放在服务器 `/root/nemt-app-access.txt`）。Testnet 仍需要
-Binance Spot Testnet 专用密钥并在服务端显式启用。
+| 目录 | 职责 |
+| --- | --- |
+| `web/` | 当前网站与手机端交易工作台 |
+| `backend/trade_app/` | 独立 FastAPI 交易服务 |
+| `backend/trade_main.py` | 云端 API 入口 |
+| `backend/tests/` | DEMO 与服务端逻辑测试 |
+| `quant-mvp/` | 行情采集与历史量化模块 |
+| `matlab/` | 数学建模与实验研究 |
+| `docs/` | 架构、实验、工程规范与运维手册 |
+| `scripts/` | 工程与自动化检查工具 |
 
----
+仓库部分历史组件仍在分阶段审查。清理工作见 [Issue #18](https://github.com/huliye24/NEMT-Simulator2/issues/18)。
 
-### 安装
+## 快速开始
 
-#### 方式一：Docker 部署（推荐）
+要求：**Python 3.11+、Node.js 22、npm**。以下过程默认在 **DEMO** 环境运行，不需要 Binance API Key。
 
-**前提条件：**
-- Docker Desktop 4.0+ ([下载](https://www.docker.com/products/docker-desktop))
-- Docker Compose (已包含在 Docker Desktop 中)
+### 1. 获取代码
 
 ```bash
-# 克隆项目
 git clone https://github.com/huliye24/NEMT-Simulator2.git
 cd NEMT-Simulator2
-
-# 启动核心模拟器（仅 Python，无需 IDE）
-docker-compose up -d nemt-core
-
-# 查看运行日志
-docker-compose logs -f nemt-core
-
-# 停止服务
-docker-compose down
 ```
 
-**启动完整系统（包含 Web 前端）：**
-```bash
-# 启动核心 + Web
-docker-compose --profile web up -d
-
-# 访问前端
-# 打开浏览器: http://localhost:3000
-```
-
-**启动量化系统（包含 Redis + 采集器 + 指标计算）：**
-```bash
-# 启动量化组件
-docker-compose --profile full up -d
-
-# 查看服务状态
-docker-compose ps
-
-# 查看 Redis 管理界面 (可选)
-docker-compose --profile tools up -d
-# 访问: http://localhost:8081
-```
-
-**常用命令：**
-```bash
-# 重新构建并启动
-docker-compose up -d --build
-
-# 查看所有日志
-docker-compose logs -f
-
-# 查看特定服务日志
-docker-compose logs -f nemt-core
-
-# 清理 Docker 资源
-docker-compose down -v
-```
-
-#### 方式二：本地运行
+### 2. 启动 FastAPI
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r backend/trade_requirements.txt
+python backend/trade_main.py
 ```
 
-### 使用方法
+建议在独立的 Python 虚拟环境中安装依赖。API 默认监听 `127.0.0.1:8000`，健康检查为 `/api/v1/health`。
+
+### 3. 启动移动 Web 应用
+
+在另一终端执行：
 
 ```bash
-# 获取BTC数据并运行完整模拟
-python main.py
-
-# 仅获取数据
-python main.py --fetch
-
-# 使用演示数据（无需网络）
-python main.py --demo
-
-# 指定K线周期
-python main.py --interval 5m
-python main.py --interval 1h
-python main.py --interval 4h
+cd web
+npm ci
+npm run build
+npm start
 ```
 
-### 项目结构
+访问 **http://localhost:3000/trade**。DEMO 账户、Android 手机联调和启动排障见 [运行手册](docs/NEMT_APP_RUNBOOK.md)。
 
+## 运行模式与安全边界
+
+| 运行模式 | 用途 | 交易能力 |
+| --- | --- | --- |
+| `DEMO` | 本地模拟及界面验证 | 只操作模拟订单与模拟资金 |
+| `TESTNET` | Binance Spot 测试网 | 必须在服务端显式配置测试网专用凭据 |
+| `LIVE` | 真实资金环境 | **V0.1 不提供订单写入能力** |
+
+- **Fail Closed：** 模式、权限、价格新鲜度或风控条件异常时拒绝订单。
+- **密钥留在服务端：** 不将交易所凭据放入浏览器或客户端包。
+- **先审查再交易：** 预览、确认、额度限制、幂等、审计在服务端执行。
+- **研究与执行隔离：** AI 研究或回测结果不自动获得下单权限。
+- **历史凭据风险：** 仓库曾记录需撤销或轮换的凭据信息；新源码 CI 通过不等于历史风险已经解决。详见 [安全清理方案](docs/SECURITY_CLEANUP_PLAN.md)。
+
+实盘准入须单独审批，见 [Issue #15](https://github.com/huliye24/NEMT-Simulator2/issues/15)。
+
+## 工程协议
+
+NEMT 对人工与 AI 贡献者采用相同的工程纪律。开始修改前，须阅读：
+
+- [AGENTS.md](AGENTS.md) 和 [Direction Lock](.cursor/rules/DIRECTION_LOCK.md)：允许范围、受保护目录与审批条件。
+- [微任务协议](docs/MICRO_TASK_PROTOCOL.md) 和 [工程开发协议](docs/ENGINEERING_PROTOCOL.md)：任务以 **15–30 分钟**为计划单位；单一目标、明确测试和回滚。
+- [科学实验协议](docs/SCIENTIFIC_EXPERIMENT_PROTOCOL.md)：数据版本、MATLAB/GPU 参数、实验记录及可复现性。
+- [量化策略协议](docs/QUANT_STRATEGY_PROTOCOL.md)：从理论和实验到策略候选、验证、人工审核和 Paper Trading。
+
+超过 Direction Lock 许可范围的操作必须获得维护者单独、明确的批准，不得以自动化或开发便利为由绕过。
+
+## 测试
+
+后端测试（需预先安装上述 Python 依赖）：
+
+```bash
+cd backend
+python -m pytest
 ```
-NEMT Simulator/
-├── nemt_core.py           # 核心模拟器 (NLS方程数值求解)
-├── nemt_signals.py        # 信号指标模块 (DCI、涡旋、随机共振)
-├── nemt_onchain.py        # 链上数据模块 (MVRV、NUPL等)
-├── nemt_state_machine.py  # 四相位状态机
-├── nemt_execution.py      # 执行框架 (预测→信号→验证→加仓)
-├── nemt_risk.py           # 风险管理模块
-├── data_fetcher.py        # 数据获取
-├── visualizer.py          # 可视化
-├── experiments.py         # 实验模块
-├── main.py               # 主程序
-├── requirements.txt      # Python 依赖
-│
-├── docker-compose.yml     # Docker 编排配置
-├── nemt-core/            # NEMT Core 镜像配置
-│   └── Dockerfile
-├── nemt-web/             # Web 前端镜像配置
-│   └── Dockerfile
-├── docker/               # Docker 共享配置
-│   └── nginx.conf
-└── README.md             # 说明文档
+
+前端质量检查（在项目根目录运行）：
+
+```bash
+cd web
+npm ci
+npm run lint
+npx tsc --noEmit
+npm run build
 ```
 
----
+仓库 CI 包括后端 DEMO 测试、前端 Lint/TypeScript/构建以及新应用源码的基本密钥守卫。**CI 通过不等于真实 Testnet 或生产环境通过验收。**
 
-### 核心模块说明
+## 项目路线
 
-#### 1. nemt_core.py - 核心模拟器
-NLS方程的数值求解，包含：
-- 状态初始化与复振幅转换
-- 时间演化（Euler方法）
-- 频谱分析（FFT）
-- 谱宽计算
-- 共振检测
+| 阶段 | 核心目标 | 状态 |
+| --- | --- | --- |
+| Phase 1 | 手机端 DEMO、基础 API、模拟交易及风控 | 已有交付 |
+| Phase 2 | Spot Testnet 下单、撤单、对账、异常恢复 | 开发及验收中 |
+| Phase 3 | 云端实验、策略验证与 Paper Trading 闭环 | 长期研究 |
+| Phase 4 | 安全、合规与受限实盘就绪评估 | 必须单独审批 |
 
-#### 2. nemt_signals.py - 信号指标模块
-实现第二章、第六章定义的量化指标：
-- **DCI (方向一致性指数)**: 测量市场噪声强度
-  - DCI > 0.70: 低噪声，市场方向明确
-  - DCI < 0.55: 高噪声，市场混乱
-- **涡旋检测**: 四个条件的量化
-  - BBW < 20%分位数（波动率收窄）
-  - 成交量均匀分布（上涨/下跌各40-60%）
-  - OI高位走平（变化<5%且水平>80%分位）
-  - 资金费率零轴摆动（7日均值<0.01%）
-- **随机共振检测**: 三条件量化
-  - 长周期临界点（MVRV、NUPL、LTH等）
-  - 短周期噪声适中（DCI波动率0.08-0.15）
-  - 潜在触发因子（宏观/链上事件）
+## 理念
 
-#### 3. nemt_onchain.py - 链上数据模块
-实现第五章定义的链上指标：
-- **MVRV / MVRV Z-score**: 市值/已实现市值比率及Z值
-- **NUPL**: 未实现净损益指标
-  - < 0: 投降区
-  - 0-0.25: 希望/恐惧
-  - 0.25-0.50: 乐观/焦虑
-  - 0.50-0.75: 信念/否认
-  - > 0.75: 欣快/贪婪
-- **交易所余额**: 余额变化趋势
-- **LTH/STH供应占比**: 长期/短期持有者结构
-- **稳定币指标**: 稳定币市值变化
-- **链上健康度评分**: 综合0-10评分系统
+> **让市场研究能够被验证，让实验结果能够被复现，让交易执行始终受到约束。**
 
-#### 4. nemt_state_machine.py - 四相位状态机
-实现市场四相位自动识别：
-- **相位A (高噪声混乱期)**
-  - 策略: 仅持有底仓，不做短线
-  - 最大仓位: 20%
-  - 关注: DCI回升、涡旋形成
-- **相位B (涡旋蓄力期)**
-  - 策略: 识别边界，预设条件单，不预判方向
-  - 最大仓位: 50%，杠杆≤1x
-  - 关注: 涡旋成熟度、突破确认
-- **相位C (临界爆发前夜)**
-  - 策略: 提高敏感度，敢于追入
-  - 最大仓位: 70%，杠杆≤2x
-  - 关注: 触发事件兑现、量能持续性
-- **相位D (趋势运行期)**
-  - 策略: 持仓为主，回调加仓
-  - 最大仓位: 100%，杠杆≤1x
-  - 关注: DCI高位回落、SNR萎缩
+NEMT 的长期目标不是单一的交易页面，而是从可证伪的科学研究走向可审计金融软件的一套基础设施。
 
-#### 5. nemt_execution.py - 执行框架
-实现第七章定义的完整交易流程：
+## License
 
-**第一步: 预测**
-- 建立方向假设（看涨/看跌/中性）
-- 确定周期级别（日内/波段/趋势）
-- 开启狩猎模式条件判断
-
-**第二步: 信号**
-- 涡旋突破信号
-- 随机共振触发信号
-- 趋势回调信号
-- 宏观链上共振信号
-
-**第三步: 验证**
-- 成交量确认（>1.5倍均值）
-- OI增加确认
-- 时间确认（突破保持）
-- 资金费率确认
-- 链上确认（交易所净流出）
-
-**第四步: 加仓**
-- 回踩确认加仓（回调2-8%）
-- 突破确认加仓（突破2%）
-- 概率提升加仓（P_trend增加≥10%）
-
-#### 6. nemt_risk.py - 风险管理模块
-实现第八章定义的风控系统：
-- **仓位管理**: 相位驱动的动态仓位
-- **止损管理**: ATR适应型止损 + 移动止损
-- **杠杆管理**: 安全杠杆计算
-- **资金曲线管理**: 回撤控制（绿/黄/橙/红四级）
-- **心理风控**: 冷静期规则
-- **波动率警戒**: ATR异常放大警告
+开源许可以根目录 [LICENSE](LICENSE) 为准。使用第三方依赖和参考实现时须遵循各自的许可证。
 
 ---
 
-### 三个核心实验
-
-1. **噪声扫描实验**: 研究不同噪声水平下的谱结构响应
-2. **非线性扫描实验**: 研究情绪/杠杆效应对市场的影响
-3. **真实vs模拟对比**: 比较原始价格与模拟后的差异
-
----
-
-### 新增功能（V2）
-
-- ✅ DCI方向一致性指数计算
-- ✅ 涡旋结构自动检测
-- ✅ 随机共振触发识别
-- ✅ 四相位状态机自动切换
-- ✅ 完整执行框架（预测→信号→验证→加仓）
-- ✅ 链上指标集成（MVRV、NUPL等）
-- ✅ 动态风控系统
-- ✅ TypeScript Web前端支持
-
----
-
-### 输出
-
-- `output/spectrum.png`: 频谱结构图
-- `output/evolution.png`: 时空演化图
-- `output/resonance.png`: 共振分析图
-- `output/noise_experiment.png`: 噪声实验结果
-- `output/nonlinear_experiment.png`: 非线性实验结果
-- `output/comparison.png`: 对比分析图
-- `output/summary.txt`: 文本摘要
-
----
-
-### 核心指标
-
-- **谱宽 (Spectral Width)**: 描述市场结构稳定性的关键指标
-- **DCI (方向一致性指数)**: 测量市场噪声和方向强度
-- **涡旋成熟度**: 量化涡旋形成的四个条件满足程度
-- **随机共振置信度**: 量化随机共振触发的概率
-
----
-
-### Web前端
-
-TypeScript实现位于 `web/` 目录，包含：
-- `nemtCore.ts`: 核心算法（浏览器端）
-- `nemtSignals.ts`: 信号指标
-- `nemtStateMachine.ts`: 状态机
-- `types/nemt.ts`: 完整类型定义
-
----
-
-### 注意事项
-
-这不是一个预测价格的系统，而是一个研究市场在噪声下结构响应的"市场物理学实验室"。
-
-理论文档请参考: [Notion NEMT理论中枢](https://www.notion.so/NEMT-34317dca0dd2801ba79ff2d5af7a5afe)
-
----
-
-### 许可证
-
-本项目采用 [Apache License 2.0](LICENSE) 开源协议。
-
-**重要条款：**
-- 允许商业使用，可以闭源
-- 需要保留版权声明
-- 包含专利授权保护
-- 修改代码必须明确说明
-
-详细条款请参阅 [LICENSE](LICENSE) 文件。
-
+*NEMT — Research First · Evidence Driven · Risk Controlled*
