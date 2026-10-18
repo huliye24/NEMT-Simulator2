@@ -1,0 +1,59 @@
+.page{min-height:100%;padding:24px;color:#171b20;background:#f4f0e7;background-image:linear-gradient(rgba(75,67,55,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(75,67,55,.045) 1px,transparent 1px);background-size:42px 42px}.workspace{display:grid;grid-template-columns:250px minmax(520px,1fr) 300px;min-height:760px;border:1px solid #171b20;background:#fffdf8}.library,.references{min-width:0;padding:18px;background:#f6f2e9}.library{border-right:1px solid #cac6bd}.references{border-left:1px solid #171b20}.search{display:flex;align-items:center;gap:8px;padding:9px;border:1px solid #c7c9c7;background:#fff}.search input{width:100%;min-width:0;border:0;outline:0;background:transparent;font-size:9px}.noteList{display:grid;gap:5px}.noteList>button{display:grid;gap:7px;padding:11px;border:1px solid transparent;background:transparent;text-align:left}.noteList>button:hover,.selectedNote{border-color:#98d8df!important;background:#eaf7f7!important}.noteList small{color:#75808a;font-size:7px;font-style:normal}.noteList strong{font-size:10px}.editor{display:grid;grid-template-rows:auto minmax(0,1fr);min-width:0;min-height:0;background:#fffdf8}.editorModes{display:flex;border:1px solid #bfc3c3}.editorModes button{padding:6px 12px;border:0;background:transparent;font-size:8px}.editorModes .activeMode{background:#171b20;color:#fff}.toolbar{display:flex;align-items:center;gap:3px;padding:8px 24px;border-bottom:1px solid #ddd9d0;background:#f8f5ee}.toolbar button{width:28px;height:26px;border:0;background:transparent;color:#4f5961;font:10px var(--ns-font-mono)}.toolbar button:hover{background:#e6f4f4}.toolbar>span{flex:1}.markdown{width:100%;min-height:620px;padding:34px 9%;resize:none;border:0;outline:0;background:#fffdf8;color:#20252a;font:14px/1.9 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:2}.preview{padding:38px 10%;overflow:auto;font:14px/1.85 Georgia,"Noto Serif SC",serif}.preview h1{margin:0 0 12px;font-size:31px;letter-spacing:-.04em}.preview h2{margin:30px 0 8px;padding-bottom:7px;border-bottom:1px solid #d5d1c8;font-size:18px}.preview h3{font-size:14px}.preview blockquote{margin:0 0 30px;padding:10px 14px;border-left:3px solid #08adc4;background:#f0f6f4;color:#5d6871}.preview code{padding:2px 5px;background:#eeeae1;color:#e04d43}.preview li{margin:5px 0}.curator{position:relative;height:225px;margin:-2px -2px 16px;overflow:hidden;border-bottom:1px solid #171b20}.curatorImage{object-fit:contain;object-position:center top}.curator>span{position:absolute;right:5px;top:4px;color:#f04f45;font:italic 8px var(--ns-font-mono);transform:rotate(4deg)}.section{margin-top:14px;border-top:1px solid #bbb9b3}.section header{display:flex;justify-content:space-between;padding:10px 2px}.section header strong{font-size:10px}.section header span{color:#08a7bd;font:8px var(--ns-font-mono)}.record{position:relative;display:grid;width:100%;gap:4px;padding:9px 24px 9px 2px;border:0;border-top:1px solid #dedad1;background:transparent;text-align:left}.record span{color:#08a7bd;font:7px var(--ns-font-mono)}.record strong{font-size:9px}.record em{position:absolute;right:2px;top:50%;color:#77818a;font-size:7px;font-style:normal}.cloud{margin-top:18px;padding:12px;border:1px solid #171b20;background:#fffdf8}.cloud span{font:7px var(--ns-font-mono)}.cloud strong{float:right;color:#009977;font-size:10px}.cloud p{margin:8px 0 0;color:#66717a;font-size:8px;line-height:1.55}@media(max-width:1200px){.workspace{grid-template-columns:220px minmax(480px,1fr) 270px}}@media(max-width:960px){.workspace{grid-template-columns:210px 1fr}.references{grid-column:1/-1;border-top:1px solid #171b20;border-left:0}.curator{float:left;width:220px;margin-right:18px}}@media(max-width:720px){.page{padding:12px}.workspace{display:block}.library,.references{border:0;border-bottom:1px solid #171b20}.markdown{padding:24px 18px;font-size:12px}.curator{float:none;width:auto}}
+/* The notebook is intentionally two-column: library + distraction-free editor. */
+.workspace{grid-template-columns:250px minmax(0,1fr)}
+@media(max-width:1200px){.workspace{grid-template-columns:220px minmax(0,1fr)}}
+@media(max-width:960px){.workspace{grid-template-columns:210px minmax(0,1fr)}}
+@media(max-width:720px){.workspace{display:block}}
+/* ---------------------------------------------------------------------------
+   Distraction-free notebook: the page header, the panel title and the
+   document-name bar are all gone. What is left is one search field, one icon
+   action, and an editor whose 编辑/预览 switch lives in the formatting toolbar.
+   --------------------------------------------------------------------------- */
+.newDoc{display:inline-flex;flex:none;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #171b20;background:#171b20;color:#fffdf8;cursor:pointer;transition:background .15s,border-color .15s}
+.newDoc:hover{background:#08adc4;border-color:#08adc4}
+.newDoc:focus-visible{outline:2px solid #08adc4;outline-offset:2px}
+
+
+
+
+/* ---------------------------------------------------------------------------
+   Full-bleed workspace: the page cancels the shell's content padding so the
+   notebook runs edge to edge under the top bar, with only the internal
+   dividers (index column / formatting bar) kept. Nothing scrolls except the
+   note list and the textarea.
+   --------------------------------------------------------------------------- */
+@media(min-width:721px){
+  :global(.ns-main-inner):has(.page){height:100%;max-width:none;padding:0}
+  .page{height:100%;margin:0;padding:0}
+  .workspace{height:100%;min-height:calc(100dvh - 61px);border:0}
+}
+.library{display:flex;min-height:0;flex-direction:column;padding:16px 16px 8px}
+.searchBar{display:flex;flex:none;align-items:center;gap:8px;margin-bottom:12px}
+.search{flex:1;min-width:0;padding:9px 11px;gap:9px}
+.search input{font-size:12px}
+.noteList{flex:1;min-height:0;overflow-y:auto;gap:2px;align-content:start}
+/* The document scrolls without any painted scrollbar; the note index gets a
+   see-through rail instead, so it stays clean but you can still grab it and
+   drag when the list grows past the column. */
+.editor .markdown,.editor .preview{scrollbar-width:none;-ms-overflow-style:none}
+.editor .markdown::-webkit-scrollbar,.editor .preview::-webkit-scrollbar{width:0;height:0;display:none}
+.library .noteList::-webkit-scrollbar{width:6px;height:6px}
+.library .noteList::-webkit-scrollbar-track{background:transparent}
+.library .noteList::-webkit-scrollbar-thumb{background:rgba(23,27,32,.16);border-radius:999px}
+.library .noteList::-webkit-scrollbar-thumb:hover{background:rgba(23,27,32,.34)}
+.library .noteList::-webkit-scrollbar-thumb:active{background:rgba(23,27,32,.46)}
+@supports (-moz-appearance:none){.library .noteList{scrollbar-width:thin;scrollbar-color:rgba(23,27,32,.18) transparent}}
+.noteList>button{gap:7px;padding:13px 12px;border-bottom-color:#e3dfd4}
+.noteList strong{font-size:14px;line-height:1.45;letter-spacing:.01em}
+.noteList small{font-size:10px;letter-spacing:.02em;color:#6b757e}
+.noteList>button:hover small{color:#4f7f86}
+.toolbar{flex-wrap:wrap;gap:4px;min-height:44px;padding:8px 18px}
+.editorModes{flex:none;margin-left:8px;border:1px solid #bfc3c3}
+.editorModes button{width:auto;height:26px;padding:0 12px;border:0;background:transparent;color:#3f4a53;font-size:10px;line-height:24px}
+.editorModes .activeMode{background:#171b20;color:#fff}
+.markdown{height:100%;min-height:0;padding:28px 7%;font-size:16px;line-height:2;letter-spacing:.01em}
+.editor textarea.markdown{height:100%;min-height:0;font-size:16px;line-height:2;letter-spacing:.01em}
+.preview{height:100%;min-height:0;padding:28px 8%;font-size:16px;line-height:1.95}
+@media(max-width:1200px){.workspace{grid-template-columns:265px minmax(0,1fr)}}
+@media(max-width:960px){.workspace{grid-template-columns:245px minmax(0,1fr)}}
+@media(max-width:720px){.page{padding:0}.workspace{display:block;height:auto;min-height:0;border:0}.library{display:block;padding:14px 12px;border-bottom:1px solid #cac6bd}.noteList{overflow:visible}.markdown,.editor textarea.markdown{height:56vh}.preview{height:auto}}

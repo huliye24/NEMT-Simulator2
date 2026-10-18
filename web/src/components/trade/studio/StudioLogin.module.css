@@ -1,0 +1,130 @@
+.loginShell {
+  background-color: #f4f0e7;
+  background-image:
+    radial-gradient(circle at 54% 45%, rgba(255, 255, 255, 0.72) 0, rgba(255, 255, 255, 0.22) 38%, transparent 66%),
+    linear-gradient(rgba(88, 80, 66, 0.075) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(88, 80, 66, 0.075) 1px, transparent 1px),
+    linear-gradient(rgba(88, 80, 66, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(88, 80, 66, 0.035) 1px, transparent 1px);
+  background-position: center, -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+  background-size: auto, 48px 48px, 48px 48px, 12px 12px, 12px 12px;
+}
+
+.loginShell :global(.ns-login-header) {
+  background: rgba(244, 240, 231, 0.86);
+  backdrop-filter: blur(10px);
+}
+
+.loginShell :global(.ns-login-card) {
+  background: rgba(255, 253, 248, 0.94);
+  box-shadow:
+    0 18px 55px rgba(61, 52, 39, 0.09),
+    5px 5px 0 rgba(8, 173, 196, 0.06),
+    -4px -4px 0 rgba(242, 77, 67, 0.035);
+}
+
+.loginMain {
+  grid-template-columns: minmax(0, 1.45fr) minmax(360px, 430px);
+  gap: clamp(34px, 5vw, 72px);
+  max-width: 1480px;
+  padding-inline: clamp(24px, 4vw, 64px);
+}
+
+.artwork {
+  min-width: 0;
+}
+
+.artworkFrame {
+  position: relative;
+  aspect-ratio: 16 / 9.5;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid #171b20;
+  background: #f8f9fa;
+}
+
+.artworkFrame::before,
+.artworkFrame::after {
+  position: absolute;
+  z-index: 3;
+  content: "";
+  pointer-events: none;
+}
+
+.artworkFrame::before {
+  inset: 14px;
+  border-top: 2px solid #08adc4;
+  border-right: 2px solid #f24d43;
+}
+
+.artworkFrame::after {
+  right: 24px;
+  bottom: 24px;
+  width: 88px;
+  height: 9px;
+  border-top: 3px solid #0baec3;
+  border-bottom: 3px solid #f24d43;
+  transform: rotate(-4deg);
+}
+
+.artworkImage {
+  object-fit: cover;
+  object-position: center;
+  filter: contrast(1.02) saturate(0.98);
+  transform: scale(1.025);
+}
+
+.artworkWash {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(248, 249, 250, 0.06) 55%, rgba(248, 249, 250, 0.84) 100%),
+    linear-gradient(90deg, rgba(248, 249, 250, 0.2), transparent 28%);
+  pointer-events: none;
+}
+
+.localAccess {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.localAccess p {
+  margin: 0;
+  color: var(--ns-text-muted);
+  font-size: 9px;
+  text-align: center;
+}
+
+@media (max-width: 1024px) {
+  .loginMain {
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 410px);
+    gap: 28px;
+  }
+
+  .artworkFrame {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (max-width: 767px) {
+  .loginMain {
+    display: block;
+    max-width: 520px;
+  }
+
+  .artwork {
+    margin-bottom: 18px;
+  }
+
+  .artworkFrame {
+    aspect-ratio: 16 / 10;
+    min-height: 250px;
+  }
+
+  .artworkImage {
+    object-position: center;
+    transform: scale(1.04);
+  }
+}

@@ -5,11 +5,11 @@ import { tradeApi } from "@/lib/trade/api";
 import {
   ageLabel,
   cn,
-  fmtCompact,
   fmtPct,
   fmtPrice,
 } from "@/lib/trade/format";
 import type { Klines } from "@/lib/trade/types";
+import { createLocalKlines } from "../../localDemoData";
 import type { TradingData } from "../../useTradingData";
 import { SourceTag, Skeleton } from "../common";
 import { StudioIcon } from "../icons";
@@ -46,7 +46,9 @@ export default function MarketPanel({
       if (background) setRefreshing(true);
       else setLoading(true);
       try {
-        const next = await tradeApi.getKlines("BTCUSDT", interval, 120);
+        const next = data.localDemo
+          ? createLocalKlines(interval, 120)
+          : await tradeApi.getKlines("BTCUSDT", interval, 120);
         if (!active || requestRef.current !== requestId) return;
         setKlines(next);
         setError(null);
@@ -72,7 +74,7 @@ export default function MarketPanel({
       active = false;
       window.clearInterval(timer);
     };
-  }, [interval, reloadKey]);
+  }, [data.localDemo, interval, reloadKey]);
 
   const refresh = useCallback(() => setReloadKey((value) => value + 1), []);
 
@@ -138,28 +140,6 @@ export default function MarketPanel({
         </div>
       </div>
 
-      <div className="ns-market-stats">
-        <MarketStat label="24H 最高" value={fmtPrice(ticker?.high_price)} />
-        <MarketStat label="24H 最低" value={fmtPrice(ticker?.low_price)} />
-        <MarketStat label="24H 成交量" value={fmtCompact(ticker?.volume)} suffix="BTC" />
-        <MarketStat label="24H 成交额" value={fmtCompact(ticker?.quote_volume)} suffix="USDT" />
-        <MarketStat
-          label="行情状态"
-          value={
-            !online
-              ? "离线"
-              : feedError
-                ? "异常"
-                : ticker?.stale
-                  ? "延迟"
-                  : ticker
-                    ? "正常"
-                    : "等待"
-          }
-          tone={!online || feedError || ticker?.stale ? "warn" : "normal"}
-        />
-      </div>
-
       {!ticker && !loading ? (
         <div className="ns-market-unavailable" role="status">
           <StudioIcon name="warning" size={16} />
@@ -187,27 +167,5 @@ export default function MarketPanel({
         onRefresh={refresh}
       />
     </section>
-  );
-}
-
-function MarketStat({
-  label,
-  value,
-  suffix,
-  tone = "normal",
-}: {
-  label: string;
-  value: string;
-  suffix?: string;
-  tone?: "normal" | "warn";
-}) {
-  return (
-    <div className="ns-market-stat">
-      <span className="ns-market-stat-label">{label}</span>
-      <span className={cn("ns-market-stat-value", tone === "warn" && "is-warn")}>
-        {value}
-        {suffix ? <em>{suffix}</em> : null}
-      </span>
-    </div>
   );
 }

@@ -1,0 +1,3 @@
+.workspace{display:grid;width:100%;align-items:stretch;gap:18px;grid-template-columns:minmax(370px,430px) minmax(0,1fr);grid-template-rows:auto 76px}
+.market{min-width:0;grid-column:2;grid-row:1/3}.soundtrack{display:contents}
+@media(max-width:1180px){.workspace{display:flex;flex-direction:column}.soundtrack{display:contents}}

@@ -15,7 +15,6 @@ import { MOBILE_PRIMARY_NAV, SECTION_LABELS } from "./navigation";
 import ExecutionPage from "./pages/ExecutionPage";
 import ExperimentsPage from "./pages/ExperimentsPage";
 import MarketsPage from "./pages/MarketsPage";
-import OverviewPage from "./pages/OverviewPage";
 import PortfolioPage from "./pages/PortfolioPage";
 import ResearchPage from "./pages/ResearchPage";
 import SettingsPage from "./pages/SettingsPage";
@@ -29,6 +28,7 @@ interface ToastState {
 }
 
 const LEGACY_SECTION_ALIASES: Record<string, StudioSection> = {
+  overview: "portfolio",
   trade: "execution",
   orders: "execution",
   assets: "portfolio",
@@ -48,14 +48,14 @@ function resolveSection(value: string | null): StudioSection | null {
 }
 
 function initialSection(): StudioSection {
-  if (typeof window === "undefined") return "overview";
+  if (typeof window === "undefined") return "portfolio";
   const params = new URLSearchParams(window.location.search);
   const requested = resolveSection(params.get("section") ?? params.get("tab"));
-  return requested ?? "overview";
+  return requested ?? "portfolio";
 }
 
 function sectionUrl(section: StudioSection): string {
-  return section === "overview" ? "/trade" : `/trade?section=${section}`;
+  return section === "portfolio" ? "/trade" : `/trade?section=${section}`;
 }
 
 export default function StudioApp({ initialLogin = false }: { initialLogin?: boolean }) {
@@ -114,13 +114,13 @@ export default function StudioApp({ initialLogin = false }: { initialLogin?: boo
         <div className="ns-boot-brand">
           <StudioBrandMarkLarge />
           <div>
-            <strong>NEMT</strong>
-            <span>STUDIO</span>
+            <strong>emergentix</strong>
+            <span>涌现流派</span>
           </div>
         </div>
         <div className="ns-boot-status">
           <Spinner size={16} />
-          <span>正在连接 NEMT Cloud…</span>
+          <span>正在连接 Emergentix Cloud…</span>
         </div>
       </div>
     );
@@ -172,13 +172,13 @@ function StudioBrandMarkLarge() {
     <span className="ns-boot-mark" aria-hidden="true">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
         <path
-          d="M5 18V6l14 12V6"
+          d="M18 5H6v14h12M6 12h9"
           stroke="currentColor"
           strokeWidth="2.4"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        <circle cx="19" cy="18" r="1.5" fill="currentColor" />
+        <circle cx="18" cy="19" r="1.5" fill="currentColor" />
       </svg>
     </span>
   );
@@ -198,14 +198,6 @@ function StudioWorkspace({
   onLogout: () => Promise<void>;
 }) {
   const [section, setSection] = useState<StudioSection>(initialSection);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return window.localStorage.getItem("nemt-studio-sidebar-collapsed") === "1";
-    } catch {
-      return false;
-    }
-  });
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [toast, setToast] = useState<ToastState | null>(null);
   const toastTimer = useRef<number | null>(null);
@@ -213,7 +205,7 @@ function StudioWorkspace({
   const data = useTradingData(session, onAuthLost);
 
   useEffect(() => {
-    document.title = `${SECTION_LABELS[section]} · NEMT Studio`;
+    document.title = `${SECTION_LABELS[section]} · emergentix`;
   }, [section]);
 
   useEffect(() => {
@@ -264,18 +256,6 @@ function StudioWorkspace({
     }
   }, []);
 
-  function toggleCollapsed() {
-    setSidebarCollapsed((current) => {
-      const next = !current;
-      try {
-        window.localStorage.setItem("nemt-studio-sidebar-collapsed", next ? "1" : "0");
-      } catch {
-        // Local preference is optional.
-      }
-      return next;
-    });
-  }
-
   const sectionProps = { session, data, notify, navigate };
   const issue = !data.online
     ? {
@@ -300,28 +280,21 @@ function StudioWorkspace({
   return (
     <div
       className={cn("nemt-studio", mobileNavOpen && "is-nav-open")}
-      data-collapsed={sidebarCollapsed ? "true" : "false"}
       data-mode={session.mode}
     >
       <StudioTopbar
-        session={session}
         data={data}
         section={section}
-        collapsed={sidebarCollapsed}
-        onToggleSidebar={toggleCollapsed}
         onOpenMobileNav={() => setMobileNavOpen(true)}
         onNavigate={navigate}
-        onLogout={() => void onLogout()}
       />
 
       <StudioSidebar
         section={section}
-        collapsed={sidebarCollapsed}
         mobileOpen={mobileNavOpen}
         system={data.system}
         online={data.online}
         onNavigate={navigate}
-        onToggleCollapsed={toggleCollapsed}
         onCloseMobile={() => setMobileNavOpen(false)}
       />
       <button
@@ -366,7 +339,6 @@ function StudioWorkspace({
             </InlineAlert>
           ) : null}
 
-          {section === "overview" ? <OverviewPage {...sectionProps} /> : null}
           {section === "strategies" ? <StrategiesPage {...sectionProps} /> : null}
           {section === "research" ? <ResearchPage {...sectionProps} /> : null}
           {section === "experiments" ? <ExperimentsPage {...sectionProps} /> : null}

@@ -221,13 +221,13 @@ export function StudioBrandMark({ size = 30 }: { size?: number }) {
     <span className="ns-brand-mark" style={{ width: size, height: size }} aria-hidden="true">
       <svg width={size * 0.6} height={size * 0.6} viewBox="0 0 24 24" fill="none">
         <path
-          d="M5 18V6l14 12V6"
+          d="M18 5H6v14h12M6 12h9"
           stroke="currentColor"
           strokeWidth="2.6"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        <circle cx="19" cy="18" r="1.6" fill="currentColor" />
+        <circle cx="18" cy="19" r="1.6" fill="currentColor" />
       </svg>
     </span>
   );
@@ -238,8 +238,8 @@ export function StudioBrand({ compact = false }: { compact?: boolean }) {
     <span className="ns-brand">
       <StudioBrandMark size={compact ? 28 : 32} />
       <span className="ns-brand-type">
-        <span className="ns-brand-name">NEMT</span>
-        <span className="ns-brand-product">STUDIO</span>
+        <span className="ns-brand-name">emergentix</span>
+        <span className="ns-brand-product">涌现流派</span>
       </span>
     </span>
   );

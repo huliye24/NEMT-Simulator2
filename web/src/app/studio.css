@@ -40,7 +40,7 @@
   --ns-shadow: 0 1px 2px rgba(21, 25, 30, 0.035);
 
   /* Layout */
-  --ns-sidebar-w: 232px;
+  --ns-sidebar-w: 76px;
   --ns-topbar-h: 60px;
   --ns-rail-w: 344px;
   --ns-content-max: 1880px;
@@ -67,10 +67,6 @@
   -moz-osx-font-smoothing: grayscale;
   font-variant-numeric: tabular-nums;
   isolation: isolate;
-}
-
-.nemt-studio[data-collapsed="true"] {
-  --ns-sidebar-w: 76px;
 }
 
 body:has(.nemt-studio) {
@@ -745,24 +741,6 @@ body:has(.nemt-studio)::after {
   cursor: pointer;
 }
 
-.ns-sidebar-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 27px;
-  height: 27px;
-  border: 1px solid var(--ns-border);
-  border-radius: 6px;
-  background: var(--ns-surface);
-  color: var(--ns-text-muted);
-  cursor: pointer;
-}
-
-.ns-sidebar-toggle:hover {
-  background: var(--ns-hover);
-  color: var(--ns-text);
-}
-
 .ns-topbar-ticker {
   display: flex;
   align-items: center;
@@ -935,7 +913,7 @@ body:has(.nemt-studio)::after {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 16px 11px 10px;
+  padding: 16px 10px 10px;
 }
 
 .ns-nav-group {
@@ -950,28 +928,18 @@ body:has(.nemt-studio)::after {
   border-top: 1px solid var(--ns-border);
 }
 
-.ns-nav-label {
-  margin: 0;
-  padding: 10px 10px 6px;
-  color: #7d8791;
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.13em;
-}
-
 .ns-nav-item {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
   width: 100%;
   min-height: 40px;
-  padding: 6px 9px;
+  padding: 6px 0;
   border: 0;
   border-radius: 7px;
   background: transparent;
   color: var(--ns-text-secondary);
-  text-align: left;
   cursor: pointer;
   transition: background-color 120ms ease, color 120ms ease;
 }
@@ -994,35 +962,6 @@ body:has(.nemt-studio)::after {
   flex: none;
 }
 
-.ns-nav-copy {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  min-width: 0;
-  flex: 1;
-}
-
-.ns-nav-text {
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.ns-nav-english {
-  color: #89939c;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-
-.ns-nav-item.is-active .ns-nav-text {
-  font-weight: 600;
-}
-
-.ns-nav-item.is-active .ns-nav-english {
-  color: #5baab5;
-}
-
 .ns-nav-active-bar {
   position: absolute;
   top: 10px;
@@ -1041,18 +980,17 @@ body:has(.nemt-studio)::after {
 
 .ns-sidebar-status {
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 8px 9px;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 0;
   border-radius: 7px;
   background: var(--ns-surface-subtle);
 }
 
 .ns-sidebar-status-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   flex: none;
-  margin-top: 4px;
   border-radius: 50%;
 }
 
@@ -1060,100 +998,12 @@ body:has(.nemt-studio)::after {
 .ns-sidebar-status-dot.is-offline { background: var(--ns-down); }
 .ns-sidebar-status-dot.is-warn { background: var(--ns-warn); }
 
-.ns-sidebar-status-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.ns-sidebar-status-title {
-  color: var(--ns-text-secondary);
-  font-size: 10.5px;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.ns-sidebar-status-meta {
-  color: var(--ns-text-muted);
-  font-family: var(--ns-font-mono);
-  font-size: 9px;
-  white-space: nowrap;
-}
-
-.ns-sidebar-controls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 4px;
-}
-
-.ns-sidebar-collapse {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  width: 100%;
-  min-height: 30px;
-  padding: 0 9px;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--ns-text-muted);
-  font-size: 10.5px;
-  cursor: pointer;
-}
-
-.ns-sidebar-collapse:hover {
-  background: var(--ns-hover);
-  color: var(--ns-text-secondary);
-}
-
 .ns-sidebar-mobile-head {
   display: none;
 }
 
 .ns-sidebar-mobile-close {
   display: inline-flex;
-}
-
-.nemt-studio[data-collapsed="true"] .ns-sidebar-scroll {
-  padding-inline: 10px;
-}
-
-.nemt-studio[data-collapsed="true"] .ns-nav-label {
-  height: 1px;
-  margin: 8px 4px;
-  padding: 0;
-  overflow: hidden;
-  background: var(--ns-border);
-  color: transparent;
-}
-
-.nemt-studio[data-collapsed="true"] .ns-nav-item {
-  justify-content: center;
-  padding-inline: 0;
-}
-
-.nemt-studio[data-collapsed="true"] .ns-nav-copy,
-.nemt-studio[data-collapsed="true"] .ns-sidebar-status-copy,
-.nemt-studio[data-collapsed="true"] .ns-sidebar-collapse-label {
-  display: none;
-}
-
-.nemt-studio[data-collapsed="true"] .ns-sidebar-status {
-  justify-content: center;
-  padding: 9px 0;
-}
-
-.nemt-studio[data-collapsed="true"] .ns-sidebar-status-dot {
-  margin-top: 0;
-}
-
-.nemt-studio[data-collapsed="true"] .ns-sidebar-collapse {
-  justify-content: center;
-  padding-inline: 0;
 }
 
 .ns-sidebar-backdrop {
@@ -4409,47 +4259,8 @@ body:has(.nemt-studio)::after {
 }
 
 @media (max-width: 1279px) {
-  .nemt-studio,
-  .nemt-studio[data-collapsed="true"] {
-    --ns-sidebar-w: 76px;
+  .nemt-studio {
     --ns-rail-w: 312px;
-  }
-
-  .ns-nav-label {
-    height: 1px;
-    margin: 8px 4px;
-    padding: 0;
-    overflow: hidden;
-    background: var(--ns-border);
-    color: transparent;
-  }
-
-  .ns-nav-item {
-    justify-content: center;
-    padding-inline: 0;
-  }
-
-  .ns-nav-copy,
-  .ns-sidebar-status-copy,
-  .ns-sidebar-collapse-label {
-    display: none;
-  }
-
-  .ns-sidebar-status {
-    justify-content: center;
-    padding: 9px 0;
-  }
-
-  .ns-sidebar-status-dot {
-    margin-top: 0;
-  }
-
-  .ns-sidebar-collapse {
-    display: none;
-  }
-
-  .ns-sidebar-footer {
-    padding: 10px;
   }
 
   .ns-topbar-main {
@@ -4682,13 +4493,11 @@ body:has(.nemt-studio)::after {
 }
 
 @media (max-width: 767px) {
-  .nemt-studio,
-  .nemt-studio[data-collapsed="true"] {
+  .nemt-studio {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto minmax(0, 1fr);
     height: 100dvh;
-    --ns-sidebar-w: 76px;
     --ns-gap: 12px;
   }
 
@@ -4713,8 +4522,7 @@ body:has(.nemt-studio)::after {
   }
 
   .ns-desktop-only,
-  .ns-topbar-ticker,
-  .ns-sidebar-toggle {
+  .ns-topbar-ticker {
     display: none !important;
   }
 
@@ -4821,7 +4629,7 @@ body:has(.nemt-studio)::after {
     left: 0;
     z-index: 120;
     display: flex;
-    width: min(286px, 86vw);
+    width: var(--ns-sidebar-w);
     border-right: 1px solid var(--ns-border);
     transform: translateX(-102%);
     transition: transform 180ms ease;
@@ -4835,52 +4643,15 @@ body:has(.nemt-studio)::after {
   .ns-sidebar-mobile-head {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    justify-content: center;
     flex: none;
     min-height: 58px;
-    padding: 10px 12px;
+    padding: 10px 0;
     border-bottom: 1px solid var(--ns-border);
   }
 
-  .ns-sidebar-mobile-head .ns-brand {
-    gap: 8px;
-  }
-
   .ns-sidebar-scroll {
-    padding: 8px 11px 10px;
-  }
-
-  .nemt-studio .ns-nav-label {
-    height: auto;
-    margin: 0;
-    padding: 10px 10px 6px;
-    overflow: visible;
-    background: transparent;
-    color: #929ba4;
-  }
-
-  .nemt-studio .ns-nav-item {
-    justify-content: flex-start;
-    padding: 6px 9px;
-  }
-
-  .nemt-studio .ns-nav-copy,
-  .nemt-studio .ns-sidebar-status-copy {
-    display: flex;
-  }
-
-  .nemt-studio .ns-sidebar-status {
-    justify-content: flex-start;
-    padding: 8px 9px;
-  }
-
-  .nemt-studio .ns-sidebar-status-dot {
-    margin-top: 4px;
-  }
-
-  .nemt-studio .ns-sidebar-collapse {
-    display: none;
+    padding: 8px 10px 10px;
   }
 
   .ns-sidebar-mobile-close {
@@ -4889,7 +4660,6 @@ body:has(.nemt-studio)::after {
     justify-content: center;
     width: 32px;
     height: 32px;
-    margin-left: auto;
     border: 0;
     border-radius: 6px;
     background: transparent;
@@ -4900,10 +4670,6 @@ body:has(.nemt-studio)::after {
   .ns-sidebar-mobile-close:hover {
     background: var(--ns-hover);
     color: var(--ns-text);
-  }
-
-  .ns-sidebar-controls {
-    display: none;
   }
 
   .ns-sidebar-backdrop {

@@ -3,13 +3,12 @@ import type { ToastKind } from "../workspace-shared";
 import type { TradingData } from "../useTradingData";
 
 export const STUDIO_SECTIONS = [
-  "overview",
+  "portfolio",
   "strategies",
   "research",
   "experiments",
   "execution",
   "markets",
-  "portfolio",
   "settings",
 ] as const;
 

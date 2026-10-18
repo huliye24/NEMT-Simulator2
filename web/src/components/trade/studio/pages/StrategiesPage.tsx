@@ -1,106 +1,87 @@
 "use client";
 
-import { useState } from "react";
-import {
-  STRATEGY_FILTERS,
-  STRATEGY_STAGES,
-  type StrategyFilter,
-  type StrategySummary,
-} from "@/lib/studio/contracts";
-import { cn } from "@/lib/trade/format";
-import { EmptyState, ModuleState, PageHeader } from "../common";
-import { StudioIcon } from "../icons";
+import Image from "next/image";
+import { useMemo, useState } from "react";
+import strategyPoster from "../assets/emergentix-strategy-poster-v1.png";
 import type { StudioPageProps } from "../types";
+import styles from "./StrategiesPage.module.css";
 
-export default function StrategiesPage({ navigate }: StudioPageProps) {
-  const [filter, setFilter] = useState<StrategyFilter>("ALL");
-  const strategies: StrategySummary[] = [];
+type ViewMode = "library" | "verified" | "selected";
+type StrategyKind = "趋势" | "均值回归" | "NEMT" | "套利" | "AI";
+
+interface StrategyItem {
+  id: string; name: string; code: string; kind: StrategyKind; market: string; period: string;
+  backtest: number; sharpe: number; drawdown: number; winRate: number;
+  live?: number; liveDays?: number; risk: "低" | "中" | "高"; selected?: boolean;
+}
+
+const STRATEGIES: StrategyItem[] = [
+  { id: "nemt-m", name: "NEMT Momentum", code: "EMG-01", kind: "NEMT", market: "BTC/USDT", period: "15m", backtest: 38.2, sharpe: 2.14, drawdown: 9.8, winRate: 58.4, live: 8.7, liveDays: 42, risk: "中", selected: true },
+  { id: "mean", name: "Mean Revert 21", code: "MR-21", kind: "均值回归", market: "BTC/USDT", period: "1h", backtest: 24.6, sharpe: 1.82, drawdown: 7.1, winRate: 62.3, live: 5.2, liveDays: 68, risk: "低" },
+  { id: "break", name: "Breakout Atlas", code: "BO-07", kind: "趋势", market: "ETH/USDT", period: "4h", backtest: 41.8, sharpe: 1.76, drawdown: 14.6, winRate: 53.1, live: 11.4, liveDays: 31, risk: "高" },
+  { id: "phase", name: "Phase Transition", code: "NLS-12", kind: "NEMT", market: "BTC/USDT", period: "5m", backtest: 29.4, sharpe: 2.36, drawdown: 8.4, winRate: 57.8, risk: "中" },
+  { id: "basis", name: "Basis Neutral", code: "ARB-04", kind: "套利", market: "多资产", period: "1h", backtest: 18.9, sharpe: 2.72, drawdown: 4.2, winRate: 71.5, live: 3.9, liveDays: 96, risk: "低" },
+  { id: "alpha", name: "Alpha Ensemble", code: "AI-08", kind: "AI", market: "BTC/ETH", period: "15m", backtest: 34.1, sharpe: 1.94, drawdown: 11.3, winRate: 56.9, risk: "中" },
+];
+
+const VIEWS: Array<{ id: ViewMode; label: string; sub: string }> = [
+  { id: "library", label: "历史策略库", sub: "BACKTESTED" },
+  { id: "verified", label: "实测榜", sub: "LIVE PROVEN" },
+  { id: "selected", label: "我的组合", sub: "SELECTED" },
+];
+
+export default function StrategiesPage(_props: StudioPageProps) {
+  const [view, setView] = useState<ViewMode>("library");
+  const [query, setQuery] = useState("");
+  const [kind, setKind] = useState<"全部" | StrategyKind>("全部");
+  const [activeId, setActiveId] = useState(STRATEGIES[0].id);
+  const [selectedIds, setSelectedIds] = useState<string[]>(STRATEGIES.filter((item) => item.selected).map((item) => item.id));
+
+  const items = useMemo(() => STRATEGIES.filter((item) => {
+    if (view === "verified" && item.live === undefined) return false;
+    if (view === "selected" && !selectedIds.includes(item.id)) return false;
+    if (kind !== "全部" && item.kind !== kind) return false;
+    return `${item.name}${item.market}${item.code}`.toLowerCase().includes(query.toLowerCase());
+  }), [view, query, kind, selectedIds]);
+  const active = STRATEGIES.find((item) => item.id === activeId) ?? STRATEGIES[0];
+
+  function toggleSelection(id: string): void {
+    setSelectedIds((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
+  }
 
   return (
-    <div className="ns-page ns-module-page">
-      <PageHeader
-        eyebrow="WORKSPACE / STRATEGIES"
-        title="策略"
-        description="策略研究、验证、审批与部署相互独立。"
-        actions={<ModuleState label="Strategy API · Not Connected" />}
-      />
+    <div className={styles.page}>
+      <div className={styles.left}>
+        <nav className={styles.viewTabs} aria-label="策略库视图">
+          {VIEWS.map((item, index) => <button type="button" key={item.id} className={view === item.id ? styles.activeView : ""} onClick={() => setView(item.id)}><b>0{index + 1}</b><strong>{item.label}</strong><small>{item.sub}</small></button>)}
+        </nav>
 
-      <section className="ns-card ns-module-card" aria-label="Strategy library">
-        <div className="ns-module-toolbar">
-          <div className="ns-filter-tabs" role="group" aria-label="策略状态筛选">
-            {STRATEGY_FILTERS.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                className={cn("ns-filter-tab", filter === item.id && "is-active")}
-                onClick={() => setFilter(item.id)}
-                aria-pressed={filter === item.id}
-              >
-                {item.label}
-              </button>
-            ))}
+        <main className={styles.library}>
+          <div className={styles.toolbar}>
+            <label className={styles.search}><span>⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索策略 / 市场 / 编号" /></label>
+            <div className={styles.kinds}>{(["全部", "趋势", "均值回归", "NEMT", "套利", "AI"] as const).map((item) => <button type="button" key={item} className={kind === item ? styles.activeKind : ""} onClick={() => setKind(item)}>{item}</button>)}</div>
+            <span className={styles.count}>{items.length.toString().padStart(2, "0")} STRATEGIES</span>
           </div>
-          <span className="ns-module-count">0 strategies</span>
-        </div>
 
-        <div className="ns-module-table-wrap">
-          <table className="ns-data-table ns-module-table">
-            <thead>
-              <tr>
-                <th>Strategy</th>
-                <th>Version</th>
-                <th>Market</th>
-                <th>Mode</th>
-                <th>Status</th>
-                <th className="is-numeric">Last Activity</th>
-              </tr>
-            </thead>
-            <tbody>
-              {strategies.length === 0 ? (
-                <tr className="ns-empty-row">
-                  <td colSpan={6}>
-                    <EmptyState
-                      icon="strategies"
-                      title="策略服务未接入"
-                      body="云端策略 API 接入后，策略定义、版本、审批状态与部署模式会显示在这里。当前不会伪造运行中的策略。"
-                      action={
-                        <button type="button" className="ns-btn ns-btn-outline ns-btn-sm" onClick={() => navigate("research")}>
-                          查看研究库
-                          <StudioIcon name="chevronRight" size={12} />
-                        </button>
-                      }
-                    />
-                  </td>
-                </tr>
-              ) : null}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="ns-lifecycle-band">
-          <div className="ns-lifecycle-title">
-            <span>Lifecycle</span>
-            <p>策略资格与交易执行严格分离</p>
+          <div className={styles.tableHead}><span>策略 / 市场</span><span>回测表现</span><span>实测表现</span><span>风险</span><span>选择</span></div>
+          <div className={styles.rows}>
+            {items.map((item, index) => {
+              const isSelected = selectedIds.includes(item.id);
+              return <article key={item.id} className={`${styles.row} ${active.id === item.id ? styles.activeRow : ""}`} onClick={() => setActiveId(item.id)}>
+                <div className={styles.identity}><em>{(index + 1).toString().padStart(2, "0")}</em><div><strong>{item.name}</strong><span>{item.code} · {item.kind} · {item.market} · {item.period}</span></div></div>
+                <div className={styles.metrics}><strong>+{item.backtest}%</strong><span>SHARPE {item.sharpe.toFixed(2)} · DD {item.drawdown}%</span></div>
+                <div className={styles.metrics}>{item.live !== undefined ? <><strong className={styles.live}>+{item.live}%</strong><span>{item.liveDays} DAYS · WR {item.winRate}%</span></> : <><strong className={styles.pending}>待实测</strong><span>BACKTEST ONLY</span></>}</div>
+                <span className={`${styles.risk} ${styles[`risk${item.risk}`]}`}>{item.risk}</span>
+                <button type="button" className={`${styles.selectButton} ${isSelected ? styles.chosen : ""}`} onClick={(event) => { event.stopPropagation(); toggleSelection(item.id); }}>{isSelected ? "已选择 ✓" : "选择 +"}</button>
+              </article>;
+            })}
           </div>
-          <div className="ns-lifecycle-stages" aria-label="策略生命周期">
-            {STRATEGY_STAGES.map((stage, index) => (
-              <span className="ns-lifecycle-stage" key={stage.id}>
-                <span>{stage.label}</span>
-                {index < STRATEGY_STAGES.length - 1 ? (
-                  <StudioIcon name="chevronRight" size={11} />
-                ) : null}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className="ns-module-footnote">
-        <StudioIcon name="info" size={14} />
-        <p>
-          回测成功不等于具备实盘资格。LIVE 部署需要独立的风险审批与执行服务。
-        </p>
+        </main>
       </div>
+
+      <aside className={styles.inspector} aria-label="Emergentix 策略测试海报">
+        <div className={styles.poster}><Image src={strategyPoster} alt="Emergentix 策略测试研究员海报" fill priority sizes="(max-width: 900px) 100vw, 47vw" /></div>
+      </aside>
     </div>
   );
 }

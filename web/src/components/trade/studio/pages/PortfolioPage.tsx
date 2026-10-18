@@ -1,8 +1,8 @@
 "use client";
 
-import AssetsPage from "./AssetsPage";
+import OverviewPage from "./OverviewPage";
 import type { StudioPageProps } from "../types";
 
 export default function PortfolioPage(props: StudioPageProps) {
-  return <AssetsPage {...props} />;
+  return <OverviewPage {...props} />;
 }

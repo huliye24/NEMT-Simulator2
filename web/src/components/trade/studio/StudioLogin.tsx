@@ -1,17 +1,21 @@
 "use client";
 
+import Image from "next/image";
 import { FormEvent, useEffect, useState } from "react";
 import { ApiError, tradeApi } from "@/lib/trade/api";
 import type { Health, Session } from "@/lib/trade/types";
 import { ModePill, Spinner, StatusDot } from "./common";
 import { StudioBrand, StudioIcon } from "./icons";
+import marketStructureArtwork from "./assets/emergentix-login-market-graffiti-v2.png";
+import styles from "./StudioLogin.module.css";
 
 interface StudioLoginProps {
   onLoggedIn: (session: Session) => void;
+  onLocalDemo?: () => void;
   notice?: string | null;
 }
 
-export default function StudioLogin({ onLoggedIn, notice }: StudioLoginProps) {
+export default function StudioLogin({ onLoggedIn, onLocalDemo, notice }: StudioLoginProps) {
   const [health, setHealth] = useState<Health | null>(null);
   const [healthError, setHealthError] = useState<string | null>(null);
   const [username, setUsername] = useState("");
@@ -59,7 +63,7 @@ export default function StudioLogin({ onLoggedIn, notice }: StudioLoginProps) {
   }
 
   return (
-    <div className="nemt-studio ns-login">
+    <div className={`nemt-studio ns-login ${styles.loginShell}`}>
       <header className="ns-login-header">
         <StudioBrand />
         <div className="ns-login-header-meta">
@@ -72,45 +76,18 @@ export default function StudioLogin({ onLoggedIn, notice }: StudioLoginProps) {
         </div>
       </header>
 
-      <main className="ns-login-main">
-        <section className="ns-login-intro" aria-label="关于 NEMT Studio">
-          <p className="ns-login-kicker">NEMT / CLOUD WORKBENCH</p>
-          <h1>
-            行情、风控与执行，
-            <br />
-            共用一条链路。
-          </h1>
-          <p className="ns-login-lead">
-            面向数字资产量化的专业交易工作台。行情、账户、订单与服务端风控在同一个专业界面中协同。
-          </p>
-
-          <div className="ns-login-pillars">
-            <div>
-              <span className="ns-login-pillar-index">01</span>
-              <div>
-                <strong>Data first</strong>
-                <p>实时行情、K 线与账户快照均来自同一云端服务。</p>
-              </div>
-            </div>
-            <div>
-              <span className="ns-login-pillar-index">02</span>
-              <div>
-                <strong>Precision execution</strong>
-                <p>从行情校验、订单预览到二次确认，每一步清晰可追溯。</p>
-              </div>
-            </div>
-            <div>
-              <span className="ns-login-pillar-index">03</span>
-              <div>
-                <strong>Fail closed</strong>
-                <p>预览、二次确认、幂等提交与服务端强制风控。</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="ns-login-intro-foot">
-            <StudioIcon name="lock" size={14} />
-            交易所密钥仅存服务端 · 浏览器不接触凭据
+      <main className={`ns-login-main ${styles.loginMain}`}>
+        <section className={styles.artwork} aria-label="比特币市场结构视觉艺术">
+          <div className={styles.artworkFrame}>
+            <Image
+              src={marketStructureArtwork}
+              alt="比特币市场结构走势与临界点"
+              fill
+              priority
+              sizes="(max-width: 900px) 100vw, 60vw"
+              className={styles.artworkImage}
+            />
+            <div className={styles.artworkWash} />
           </div>
         </section>
 
@@ -121,7 +98,7 @@ export default function StudioLogin({ onLoggedIn, notice }: StudioLoginProps) {
                 <StudioIcon name="shield" size={19} />
               </span>
               <div>
-                <h2>登录 NEMT Studio</h2>
+                <h2>登录 emergentix</h2>
                 <p>使用账户密码，或进入 DEMO 模拟环境。</p>
               </div>
             </div>
@@ -183,6 +160,20 @@ export default function StudioLogin({ onLoggedIn, notice }: StudioLoginProps) {
               </button>
             </form>
 
+            {onLocalDemo ? (
+              <div className={styles.localAccess}>
+                <button
+                  type="button"
+                  className="ns-btn ns-btn-outline ns-btn-lg ns-btn-block"
+                  onClick={onLocalDemo}
+                >
+                  <StudioIcon name="trade" size={15} />
+                  进入本地 DEMO
+                </button>
+                <p>本地界面开发模式 · 不连接云端服务</p>
+              </div>
+            ) : null}
+
             {health?.mode === "DEMO" ? (
               <div className="ns-login-demo">
                 <div className="ns-login-divider">
@@ -215,14 +206,14 @@ export default function StudioLogin({ onLoggedIn, notice }: StudioLoginProps) {
             <div className="ns-login-security">
               <span>
                 <StatusDot tone={health ? "ok" : healthError ? "bad" : "warn"} />
-                {healthError ?? (health ? `NEMT Cloud API v${health.version}` : "正在连接 NEMT Cloud API…")}
+                {healthError ?? (health ? `Emergentix Cloud API v${health.version}` : "正在连接 Emergentix Cloud API…")}
               </span>
               <span>HTTPS · HttpOnly Session</span>
             </div>
           </div>
 
           <p className="ns-login-footnote">
-            NEMT Studio 目前仅提供 DEMO 与受控 TESTNET 能力。LIVE 实盘写入未开放。
+            emergentix 目前仅提供 DEMO 与受控 TESTNET 能力。LIVE 实盘写入未开放。
           </p>
         </section>
       </main>

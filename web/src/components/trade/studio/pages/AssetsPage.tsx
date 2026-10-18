@@ -6,7 +6,11 @@ import { EmptyState, PageHeader, Skeleton, StatusDot } from "../common";
 import { StudioIcon } from "../icons";
 import type { StudioPageProps } from "../types";
 
-export default function AssetsPage({ data, navigate }: StudioPageProps) {
+interface AssetsPageProps extends StudioPageProps {
+  embedded?: boolean;
+}
+
+export default function AssetsPage({ data, navigate, embedded = false }: AssetsPageProps) {
   const { balances, ticker } = data;
   const usdt = findAsset(data, "USDT");
   const btc = findAsset(data, "BTC");
@@ -29,8 +33,8 @@ export default function AssetsPage({ data, navigate }: StudioPageProps) {
   }
 
   return (
-    <div className="ns-page">
-      <PageHeader
+    <div className={embedded ? "ns-page ns-assets-embedded" : "ns-page"}>
+      {!embedded ? <PageHeader
         eyebrow="ACCOUNT / ASSETS"
         title="资产"
         description="现货账户资产与估值。所有余额来自 NEMT Cloud 账户快照，不在此界面缓存交易所密钥。"
@@ -45,9 +49,26 @@ export default function AssetsPage({ data, navigate }: StudioPageProps) {
             {data.syncing ? "同步中…" : "刷新快照"}
           </button>
         }
-      />
+      /> : (
+        <div className="ns-page-header">
+          <div>
+            <span className="ns-page-eyebrow">ACCOUNT / ASSET LEDGER</span>
+            <h2>资产明细</h2>
+            <p>BTC 与 USDT 的可用余额、冻结资金及实时参考估值。</p>
+          </div>
+          <button
+            type="button"
+            className="ns-btn ns-btn-outline ns-btn-sm"
+            onClick={() => void data.refreshAll()}
+            disabled={data.syncing || !data.online}
+          >
+            <StudioIcon name="refresh" size={14} />
+            {data.syncing ? "同步中…" : "刷新快照"}
+          </button>
+        </div>
+      )}
 
-      <div className="ns-asset-summary-grid">
+      {!embedded ? <div className="ns-asset-summary-grid">
         <div className="ns-asset-summary ns-asset-summary-primary">
           <span className="ns-asset-summary-label">总资产估值</span>
           {balances ? (
@@ -86,7 +107,7 @@ export default function AssetsPage({ data, navigate }: StudioPageProps) {
             ≈ {fmtUSDT(btc.free * lastPrice)} USDT
           </span>
         </div>
-      </div>
+      </div> : null}
 
       <div className="ns-assets-layout">
         <section className="ns-card ns-balances-card" aria-label="资产余额明细">

@@ -1,50 +1,35 @@
 "use client";
 
-import { cn, fmtPct, fmtPrice } from "@/lib/trade/format";
-import type { Session, Ticker } from "@/lib/trade/types";
+import { cn, fmtPct, fmtPrice, fmtUSDT } from "@/lib/trade/format";
 import type { TradingData } from "../../useTradingData";
-import { ModePill, Spinner } from "../common";
+import { accountEquity } from "../account/utils";
 import { StudioBrand, StudioIcon } from "../icons";
 import { SECTION_LABELS } from "../navigation";
-import SystemStatusIndicator from "../status/SystemStatusIndicator";
 import type { StudioSection } from "../types";
 
 interface StudioTopbarProps {
-  session: Session;
   data: TradingData;
   section: StudioSection;
-  collapsed: boolean;
-  onToggleSidebar: () => void;
   onOpenMobileNav: () => void;
   onNavigate: (section: StudioSection) => void;
-  onLogout: () => void;
 }
 
-function TickerSummary({ ticker, compact = false }: { ticker: Ticker | null; compact?: boolean }) {
-  const change = Number(ticker?.price_change_percent ?? 0);
-  const positive = change >= 0;
+function BalanceSummary({ data }: { data: TradingData }) {
+  const equity = accountEquity(data);
   return (
-    <div className={cn("ns-ticker-summary", compact && "is-compact")}>
-      <span className="ns-ticker-pair">
-        BTC<span className="ns-ticker-pair-quote">/USDT</span>
-      </span>
-      <span className="ns-ticker-price">{fmtPrice(ticker?.last_price)}</span>
-      <span className={cn("ns-ticker-change", positive ? "is-up" : "is-down")}>
-        {fmtPct(ticker?.price_change_percent)}
-      </span>
+    <div className="ns-ticker-summary">
+      <span className="ns-ticker-pair">账户余额</span>
+      <span className="ns-ticker-price">{data.balances ? fmtUSDT(equity) : "—"}</span>
+      <span className="ns-ticker-pair-quote">USDT</span>
     </div>
   );
 }
 
 export default function StudioTopbar({
-  session,
   data,
   section,
-  collapsed,
-  onToggleSidebar,
   onOpenMobileNav,
   onNavigate,
-  onLogout,
 }: StudioTopbarProps) {
   return (
     <header className="ns-topbar">
@@ -61,75 +46,17 @@ export default function StudioTopbar({
           <button
             type="button"
             className="ns-topbar-brand"
-            onClick={() => onNavigate("overview")}
-            aria-label="返回总览"
+            onClick={() => onNavigate("portfolio")}
+            aria-label="返回投资组合"
           >
             <StudioBrand />
           </button>
-          <button
-            type="button"
-            className="ns-sidebar-toggle ns-desktop-only"
-            onClick={onToggleSidebar}
-            aria-label={collapsed ? "展开侧边栏" : "收起侧边栏"}
-            title={collapsed ? "展开侧边栏" : "收起侧边栏"}
-          >
-            <StudioIcon name={collapsed ? "chevronRight" : "chevronLeft"} size={16} />
-          </button>
-        </div>
-
-        <div className="ns-topbar-ticker">
-          <TickerSummary ticker={data.ticker} />
         </div>
 
         <div className="ns-topbar-right">
-          <button
-            type="button"
-            className="ns-icon-btn ns-topbar-refresh ns-desktop-only"
-            onClick={() => void data.refreshAll()}
-            disabled={data.syncing || !data.online}
-            aria-label="刷新全部数据"
-            title="刷新全部数据"
-          >
-            {data.syncing ? <Spinner size={15} /> : <StudioIcon name="refresh" size={16} />}
-          </button>
-
-          <SystemStatusIndicator data={data} session={session} />
-
-          <ModePill mode={session.mode} />
-
-          <span className="ns-topbar-separator ns-desktop-only" aria-hidden="true" />
-
-          <button
-            type="button"
-            className="ns-user"
-            onClick={() => onNavigate("settings")}
-            aria-label={`账户 ${session.user.username}，打开设置`}
-            title="账户设置"
-          >
-            <span className="ns-user-avatar" aria-hidden="true">
-              {session.user.username.slice(0, 1).toUpperCase()}
-            </span>
-            <span className="ns-user-copy ns-desktop-only">
-              <span className="ns-user-name">{session.user.username}</span>
-              <span className="ns-user-role">
-                {session.user.roles.includes("admin")
-                  ? "Administrator"
-                  : session.user.roles.includes("trader")
-                    ? "Trader"
-                    : "Viewer"}
-              </span>
-            </span>
-          </button>
-
-          <button
-            type="button"
-            className="ns-icon-btn ns-logout-btn ns-desktop-only"
-            onClick={onLogout}
-            aria-label="退出登录"
-            title="退出登录"
-          >
-            <StudioIcon name="logout" size={17} />
-          </button>
+          <div className="ns-topbar-ticker" aria-label="实时账户余额">
+            <BalanceSummary data={data} />
+          </div>
         </div>
       </div>
 

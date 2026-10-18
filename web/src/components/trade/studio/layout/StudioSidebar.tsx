@@ -2,38 +2,40 @@
 
 import { cn } from "@/lib/trade/format";
 import type { SystemStatus } from "@/lib/trade/types";
-import { StudioBrand, StudioIcon } from "../icons";
+import { StudioIcon } from "../icons";
 import { STUDIO_NAV_GROUPS } from "../navigation";
 import type { StudioSection } from "../types";
 
 interface StudioSidebarProps {
   section: StudioSection;
-  collapsed: boolean;
   mobileOpen: boolean;
   system: SystemStatus | null;
   online: boolean;
   onNavigate: (section: StudioSection) => void;
-  onToggleCollapsed: () => void;
   onCloseMobile: () => void;
 }
 
+/**
+ * Icon-only navigation rail.
+ *
+ * The rail is intentionally fixed-width: every destination keeps a single
+ * recognizable glyph, and the label lives in the accessible name plus the
+ * native tooltip instead of taking permanent horizontal space.
+ */
 export default function StudioSidebar({
   section,
-  collapsed,
   mobileOpen,
   system,
   online,
   onNavigate,
-  onToggleCollapsed,
   onCloseMobile,
 }: StudioSidebarProps) {
+  const statusLabel = `Emergentix Cloud ${online ? "已连接" : "离线"}`;
+  const statusMeta = `API v${system?.version ?? "—"} · ${system?.mode ?? "DEMO"}`;
+
   return (
-    <aside
-      className={cn("ns-sidebar", collapsed && "is-collapsed", mobileOpen && "is-mobile-open")}
-      aria-label="主导航"
-    >
+    <aside className={cn("ns-sidebar", mobileOpen && "is-mobile-open")} aria-label="主导航">
       <div className="ns-sidebar-mobile-head">
-        <StudioBrand compact />
         <button
           type="button"
           className="ns-sidebar-mobile-close"
@@ -47,9 +49,9 @@ export default function StudioSidebar({
       <div className="ns-sidebar-scroll">
         {STUDIO_NAV_GROUPS.map((group) => (
           <nav className="ns-nav-group" key={group.label} aria-label={group.label}>
-            <p className="ns-nav-label">{group.label}</p>
             {group.items.map((item) => {
               const active = section === item.id;
+              const label = `${item.label} · ${item.labelEn}`;
               return (
                 <button
                   type="button"
@@ -57,14 +59,11 @@ export default function StudioSidebar({
                   className={cn("ns-nav-item", active && "is-active")}
                   onClick={() => onNavigate(item.id)}
                   aria-current={active ? "page" : undefined}
-                  title={`${item.label} · ${item.labelEn}`}
+                  aria-label={label}
+                  title={label}
                 >
                   <span className="ns-nav-icon">
                     <StudioIcon name={item.icon} size={18} />
-                  </span>
-                  <span className="ns-nav-copy">
-                    <span className="ns-nav-text">{item.label}</span>
-                    <span className="ns-nav-english">{item.labelEn}</span>
                   </span>
                   {active ? <span className="ns-nav-active-bar" aria-hidden="true" /> : null}
                 </button>
@@ -75,32 +74,13 @@ export default function StudioSidebar({
       </div>
 
       <div className="ns-sidebar-footer">
-        <div className="ns-sidebar-status" title={`NEMT Cloud API ${system?.version ?? ""}`}>
+        <div
+          className="ns-sidebar-status"
+          title={`${statusLabel} · ${statusMeta}`}
+          aria-label={`${statusLabel} · ${statusMeta}`}
+          role="status"
+        >
           <span className={cn("ns-sidebar-status-dot", online ? "is-online" : "is-offline")} />
-          <span className="ns-sidebar-status-copy">
-            <span className="ns-sidebar-status-title">
-              {online ? "NEMT Cloud 已连接" : "NEMT Cloud 离线"}
-            </span>
-            <span className="ns-sidebar-status-meta">
-              API v{system?.version ?? "—"} · {system?.mode ?? "DEMO"}
-            </span>
-          </span>
-        </div>
-
-        <div className="ns-sidebar-controls">
-          <button
-            type="button"
-            className="ns-sidebar-collapse"
-            onClick={onToggleCollapsed}
-            aria-label={collapsed ? "展开侧边栏" : "收起侧边栏"}
-            title={collapsed ? "展开侧边栏" : "收起侧边栏"}
-          >
-            <StudioIcon
-              name={collapsed ? "chevronRight" : "chevronLeft"}
-              size={17}
-            />
-            <span className="ns-sidebar-collapse-label">收起导航</span>
-          </button>
         </div>
       </div>
     </aside>

@@ -9,6 +9,12 @@ import type {
   SystemStatus,
   Ticker,
 } from "@/lib/trade/types";
+import {
+  createLocalBalances,
+  createLocalOrders,
+  createLocalSystem,
+  createLocalTicker,
+} from "./localDemoData";
 
 export interface TradingData {
   system: SystemStatus | null;
@@ -20,6 +26,7 @@ export interface TradingData {
   feedError: string | null;
   coreError: string | null;
   lastTickAt: number | null;
+  localDemo: boolean;
   refreshAll: () => Promise<void>;
   refreshOrders: () => Promise<void>;
 }
@@ -46,12 +53,21 @@ function getServerOnlineSnapshot(): boolean {
 
 export function useTradingData(
   session: Session,
-  onAuthLost: () => void
+  onAuthLost: () => void,
+  remoteEnabled = true
 ): TradingData {
-  const [system, setSystem] = useState<SystemStatus | null>(null);
-  const [ticker, setTicker] = useState<Ticker | null>(null);
-  const [balances, setBalances] = useState<Balances | null>(null);
-  const [orders, setOrders] = useState<OrdersResponse | null>(null);
+  const [system, setSystem] = useState<SystemStatus | null>(() =>
+    remoteEnabled ? null : createLocalSystem(session)
+  );
+  const [ticker, setTicker] = useState<Ticker | null>(() =>
+    remoteEnabled ? null : createLocalTicker()
+  );
+  const [balances, setBalances] = useState<Balances | null>(() =>
+    remoteEnabled ? null : createLocalBalances()
+  );
+  const [orders, setOrders] = useState<OrdersResponse | null>(() =>
+    remoteEnabled ? null : createLocalOrders()
+  );
   const online = useSyncExternalStore(
     subscribeOnline,
     getOnlineSnapshot,
@@ -60,7 +76,7 @@ export function useTradingData(
   const [syncing, setSyncing] = useState(false);
   const [feedError, setFeedError] = useState<string | null>(null);
   const [coreError, setCoreError] = useState<string | null>(null);
-  const [lastTickAt, setLastTickAt] = useState<number | null>(null);
+  const [lastTickAt, setLastTickAt] = useState<number | null>(remoteEnabled ? null : Date.now());
   const authLostRef = useRef(onAuthLost);
 
   useEffect(() => {
@@ -79,15 +95,17 @@ export function useTradingData(
   }, []);
 
   const refreshOrders = useCallback(async () => {
+    if (!remoteEnabled) return;
     try {
       const next = await tradeApi.listOrders(undefined, 100);
       setOrders(next);
     } catch (error) {
       handleError(error, "core");
     }
-  }, [handleError]);
+  }, [handleError, remoteEnabled]);
 
   const refreshAll = useCallback(async () => {
+    if (!remoteEnabled) return;
     setSyncing(true);
     const results = await Promise.allSettled([
       tradeApi.getTicker(),
@@ -111,9 +129,11 @@ export function useTradingData(
     else handleError(ordersResult.reason, "core");
     if (results.every((item) => item.status === "fulfilled")) setCoreError(null);
     setSyncing(false);
-  }, [handleError]);
+  }, [handleError, remoteEnabled]);
 
   useEffect(() => {
+    if (!remoteEnabled) return;
+
     let cancelled = false;
     let tickerBusy = false;
     let coreBusy = false;
@@ -183,7 +203,7 @@ export function useTradingData(
       window.removeEventListener("online", onConnectivityRestored);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [session, handleError]);
+  }, [session, handleError, remoteEnabled]);
 
   return {
     system,
@@ -195,6 +215,7 @@ export function useTradingData(
     feedError,
     coreError,
     lastTickAt,
+    localDemo: !remoteEnabled,
     refreshAll,
     refreshOrders,
   };
