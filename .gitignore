@@ -104,13 +104,12 @@ remotion-demo/out/
 *.tar
 output/test_*.png
 
-# 本地原型与候选素材（正式成品应放入 web/public 或 docs/assets）
+# 本地原型与候选素材（运行时图标放入 web/public 或 docs/assets）
 docs/android-apk-build/
 docs/rivertype-android/
 docs/rivertype-web/
-logo/*_720.jpg
-logo/*_720.png
-logo/*.svg
+
+# Logo source assets are versioned under logo/.
 
 # 已发现的历史敏感文件（清理前保持忽略；历史清理需独立批准）
 cos_sync.env
