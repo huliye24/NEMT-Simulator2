@@ -6,7 +6,7 @@
   "description": "Non-Equilibrium Market Theory Simulator - Desktop Application",
   "main": "dist/desktop/main/index.js",
   "author": "NEMT Lab",
-  "license": "Apache-2.0",
+  "license": "GPL-3.0-or-later",
   "private": true,
   "scripts": {
     "dev": "concurrently \"npm run dev:web\" \"npm run dev:desktop\"",

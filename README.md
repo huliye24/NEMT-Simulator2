@@ -1,6 +1,12 @@
 # NEMT Simulator V2
 ## 非平衡市场理论模拟器 (BTC实验版)
 
+> **License:** NEMT Simulator is free software licensed under the
+> [GNU General Public License v3.0 or later](LICENSE). You may use, study,
+> modify, and redistribute it under the GPL. Bundled or separately integrated
+> third-party projects retain their own copyright and license notices; see
+> [`docs/THIRD_PARTY_LICENSES.md`](docs/THIRD_PARTY_LICENSES.md).
+
 基于Notion理论中枢开发的完整NEMT交易系统实现。
 
 ### 核心数学模型
