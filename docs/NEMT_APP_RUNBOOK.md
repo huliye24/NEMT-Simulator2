@@ -1,6 +1,6 @@
 # NEMT App V0.1 — Runbook
 
-Updated: 2026-10-17 · Mode covered: **DEMO** (verified), **TESTNET** (implemented, credentials pending), **LIVE** (write path intentionally absent).
+Updated: 2026-10-21 · Mode covered: **DEMO** (verified), **TESTNET** (implemented, credentials pending), **LIVE** (order path implemented and gated; see `docs/NEMT_LIVE_TRADING_RUNBOOK.md`).
 
 ## 1. What is in this delivery
 
@@ -88,7 +88,7 @@ installation (or keep using `adb reverse`).
 |---|---|---|---|---|
 | DEMO | Binance public or simulated fallback | Local simulated ledger | Local simulation only | yes |
 | TESTNET | Binance Spot Testnet | Testnet read-only/trade key | Server-gated Testnet orders | requires explicit flags |
-| LIVE | Binance public (read-only) | Read-only key | **No write path in V0.1** | disabled |
+| LIVE | Binance production | Key with read + spot trade (never withdraw) | Real orders, server-gated by `NEMT_LIVE_TRADING_ENABLED` | disabled |
 
 Switching modes is a server configuration change. A browser parameter or UI
 switch cannot grant trading authority.
@@ -120,10 +120,26 @@ switch cannot grant trading authority.
 
 ### LIVE
 
-`NEMT_LIVE_TRADING_ENABLED=true` is deliberately ignored by V0.1:
-`Settings.live_trading_available` is always `False`, and the risk engine
-rejects LIVE order creation. Enabling real money requires the separate issue
-#15 approval, review and a new release.
+The real-money order path now exists but is gated. It becomes usable only when
+**all** of these hold, otherwise orders are rejected with a `mode` risk check:
+
+- `NEMT_APP_MODE=LIVE`
+- `NEMT_LIVE_TRADING_ENABLED=true`
+- server-side `NEMT_BINANCE_API_KEY` / `NEMT_BINANCE_API_SECRET`
+- at least one operator account (`NEMT_LIVE_TRADER_PASSWORD` /
+  `NEMT_LIVE_ADMIN_PASSWORD`, minimum 12 characters). `load_settings` raises
+  `ConfigError` for LIVE without one, so a deployment can never come up with
+  only the leftover DEMO logins.
+- `NEMT_COOKIE_SECURE=true` (enforced)
+
+On startup in LIVE the legacy `demo` / `viewer` / `admin` accounts are disabled
+unless one of them was deliberately re-used as the operator account, and their
+operator password is upserted over any leftover DEMO hash.
+
+`NEMT_LIVE_TRADING_ENABLED=true` in any other mode is inert and logged as a
+warning. The full switch procedure, safety checklist and rollback live in
+`docs/NEMT_LIVE_TRADING_RUNBOOK.md`. Do not enable real money on a host whose
+`/api/v1/auth/demo` endpoint is still publicly reachable.
 
 ## 5. API surface
 
