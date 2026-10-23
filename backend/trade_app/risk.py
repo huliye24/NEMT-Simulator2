@@ -171,11 +171,23 @@ class RiskService:
                     False,
                     "TESTNET 交易未启用或服务端凭据未配置，新订单被拒绝",
                 )
+        elif self.settings.live_trading_ready:
+            add(
+                "mode",
+                True,
+                "LIVE 模式：订单将发送到 Binance 真实交易所，动用真实资金",
+            )
+        elif not self.settings.live_trading_enabled:
+            add(
+                "mode",
+                False,
+                "LIVE 交易未启用（NEMT_LIVE_TRADING_ENABLED），新订单被拒绝",
+            )
         else:
             add(
                 "mode",
                 False,
-                "V0.1 不提供 LIVE 下单路径；实盘需要 issue #15 独立审批门禁",
+                "LIVE 缺少服务端币安凭据，新订单被拒绝",
             )
 
         flags = self.flag_state()

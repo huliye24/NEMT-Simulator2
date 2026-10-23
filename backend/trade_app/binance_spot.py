@@ -123,13 +123,19 @@ class BinanceSpotAdapter:
 
     @property
     def writes_allowed(self) -> bool:
-        """Only TESTNET orders are reachable in V0.1."""
+        """TESTNET orders need the Testnet flag; LIVE orders need the LIVE one.
 
-        return (
-            self.settings.mode is AppMode.TESTNET
-            and self.settings.allow_testnet_trading
-            and self.configured
-        )
+        Both require server-side credentials. Nothing here can be switched on
+        from the browser: the flags come from the server environment only.
+        """
+
+        if not self.configured:
+            return False
+        if self.settings.mode is AppMode.TESTNET:
+            return self.settings.allow_testnet_trading
+        if self.settings.mode is AppMode.LIVE:
+            return self.settings.live_trading_enabled
+        return False
 
     async def close(self) -> None:
         if self._owns_client:
@@ -291,7 +297,7 @@ class BinanceSpotAdapter:
         time_in_force: str = "GTC",
     ) -> BinanceOrderResult:
         if not self.writes_allowed:
-            raise BinanceError("Testnet order writes are disabled")
+            raise BinanceError("Exchange order writes are disabled by server configuration")
         params: dict[str, Any] = {
             "symbol": symbol,
             "side": side,
@@ -337,7 +343,7 @@ class BinanceSpotAdapter:
         client_order_id: str,
     ) -> BinanceOrderResult:
         if not self.writes_allowed:
-            raise BinanceError("Testnet order writes are disabled")
+            raise BinanceError("Exchange order writes are disabled by server configuration")
         payload = await self._request(
             "DELETE",
             "/api/v3/order",

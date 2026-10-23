@@ -9,17 +9,23 @@ import httpx
 import pytest
 from fastapi.testclient import TestClient
 
+from trade_app.accounts import AccountSnapshot, Balance
 from trade_app.binance_spot import BinanceError, BinanceSpotAdapter
 from trade_app.config import AppMode, ConfigError, Settings, load_settings
+from trade_app.db import Database
 from trade_app.main import create_app
 from trade_app.market import (
     MarketService,
     MarketUnavailable,
+    SymbolRules,
+    Ticker,
     parse_exchange_rules,
     parse_kline,
     parse_kline_event,
     parse_ticker,
 )
+from trade_app.risk import RiskService
+from trade_app.schemas import OrderType, Side
 
 DEMO_PASSWORDS = {
     "viewer": "nemt-viewer",
@@ -356,17 +362,203 @@ def test_environment_isolation_fails_closed(tmp_path: Path):
     )
     assert testnet.trading_enabled is False
 
+    # LIVE without a real operator account must fail closed: leftover DEMO
+    # logins would otherwise inherit the real-money order path.
+    with pytest.raises(ConfigError):
+        load_settings(
+            {
+                "NEMT_APP_MODE": "LIVE",
+                "NEMT_SESSION_SECRET": "x" * 48,
+                "NEMT_COOKIE_SECURE": "true",
+                "NEMT_LIVE_TRADING_ENABLED": "true",
+                "NEMT_DATABASE_PATH": str(tmp_path / "live.sqlite3"),
+            }
+        )
+
     live = load_settings(
         {
             "NEMT_APP_MODE": "LIVE",
             "NEMT_SESSION_SECRET": "x" * 48,
             "NEMT_COOKIE_SECURE": "true",
-            "NEMT_LIVE_TRADING_ENABLED": "true",
+            "NEMT_LIVE_TRADING_ENABLED": "false",
+            "NEMT_LIVE_ADMIN_PASSWORD": "live-admin-password-123",
             "NEMT_DATABASE_PATH": str(tmp_path / "live.sqlite3"),
         }
     )
     assert live.trading_enabled is False
     assert live.live_trading_available is False
+    assert live.live_trading_ready is False
+
+
+def test_live_order_path_needs_flag_credentials_and_operator(tmp_path: Path):
+    base = {
+        "NEMT_APP_MODE": "LIVE",
+        "NEMT_SESSION_SECRET": "x" * 48,
+        "NEMT_COOKIE_SECURE": "true",
+        "NEMT_DATABASE_PATH": str(tmp_path / "live.sqlite3"),
+        "NEMT_LIVE_ADMIN_PASSWORD": "live-admin-password-123",
+    }
+
+    flag_off = load_settings({**base, "NEMT_LIVE_TRADING_ENABLED": "false"})
+    assert flag_off.live_trading_available is False
+    assert flag_off.trading_enabled is False
+
+    # Flag on but no server-side credentials: still refuses to trade.
+    no_creds = load_settings({**base, "NEMT_LIVE_TRADING_ENABLED": "true"})
+    assert no_creds.live_trading_available is True
+    assert no_creds.trading_enabled is False
+
+    armed = load_settings(
+        {
+            **base,
+            "NEMT_LIVE_TRADING_ENABLED": "true",
+            "NEMT_BINANCE_API_KEY": "k" * 64,
+            "NEMT_BINANCE_API_SECRET": "s" * 64,
+        }
+    )
+    assert armed.trading_enabled is True
+    assert armed.live_trading_ready is True
+
+    adapter = BinanceSpotAdapter(
+        armed,
+        client=httpx.AsyncClient(transport=httpx.MockTransport(lambda _: httpx.Response(200, json={}))),
+    )
+    assert adapter.writes_allowed is True
+    assert adapter.base_url == "https://api.binance.com"
+
+    # The same credentials in DEMO must never reach the exchange.
+    demo = make_settings(
+        tmp_path,
+        binance_api_key="k" * 64,
+        binance_api_secret="s" * 64,
+        live_trading_enabled=True,
+    )
+    demo_adapter = BinanceSpotAdapter(
+        demo,
+        client=httpx.AsyncClient(transport=httpx.MockTransport(lambda _: httpx.Response(200, json={}))),
+    )
+    assert demo_adapter.writes_allowed is False
+
+
+def test_live_disables_legacy_demo_accounts(tmp_path: Path):
+    database = tmp_path / "switch.sqlite3"
+    demo_settings = make_settings(tmp_path, database_path=database)
+    create_app(demo_settings)  # seeds demo/viewer/admin
+
+    live_settings = make_settings(
+        tmp_path,
+        mode=AppMode.LIVE,
+        database_path=database,
+        market_source="demo",  # isolated auth test; no venue calls
+        operator_users={"ops": ("live-operator-pass-123", ("viewer", "trader", "admin"))},
+        live_trading_enabled=True,
+        binance_api_key="k" * 64,
+        binance_api_secret="s" * 64,
+    )
+    app = create_app(live_settings)
+    with TestClient(app) as client:
+        # Demo logins are gone in LIVE.
+        assert client.post("/api/v1/auth/demo", json={"account": "demo"}).status_code == 404
+        # ... and the old DEMO passwords no longer authenticate.
+        for username, password in DEMO_PASSWORDS.items():
+            response = client.post(
+                "/api/v1/auth/login",
+                json={"username": username, "password": password},
+            )
+            assert response.status_code == 401, f"{username} still logged in as {response.text}"
+
+        ok = client.post(
+            "/api/v1/auth/login",
+            json={"username": "ops", "password": "live-operator-pass-123"},
+        )
+        assert ok.status_code == 200, ok.text
+        assert ok.json()["mode"] == "LIVE"
+
+
+def test_risk_engine_approves_live_only_when_armed(tmp_path: Path):
+    rules = SymbolRules(
+        symbol="BTCUSDT",
+        base_asset="BTC",
+        quote_asset="USDT",
+        tick_size=Decimal("0.01"),
+        step_size=Decimal("0.00001"),
+        min_qty=Decimal("0.00001"),
+        max_qty=Decimal("100"),
+        min_notional=Decimal("5"),
+        source="test",
+    )
+    ticker = Ticker(
+        symbol="BTCUSDT",
+        last_price=Decimal("80000"),
+        price_change=Decimal("0"),
+        price_change_percent=Decimal("0"),
+        high_price=Decimal("80000"),
+        low_price=Decimal("80000"),
+        volume=Decimal("1"),
+        quote_volume=Decimal("80000"),
+        event_time=None,
+        fetched_at="2026-01-01T00:00:00+00:00",
+        source="binance",
+        stale=False,
+    )
+    account = AccountSnapshot(
+        status="CONNECTED",
+        connected=True,
+        source="binance",
+        fetched_at="2026-01-01T00:00:00+00:00",
+        stale=False,
+        note=None,
+        balances=(
+            Balance(asset="USDT", free=Decimal("1000"), locked=Decimal("0")),
+            Balance(asset="BTC", free=Decimal("0.001"), locked=Decimal("0")),
+        ),
+    )
+
+    def assess(settings: Settings):
+        db = Database(settings.database_path)
+        db.initialize(settings)
+        return RiskService(db, settings).assess(
+            username="ops",
+            symbol="BTCUSDT",
+            side=Side.BUY,
+            order_type=OrderType.MARKET,
+            quantity=Decimal("0.0002"),  # 16 USDT at 80k, inside the 5-100 band
+            price=None,
+            rules=rules,
+            ticker=ticker,
+            account=account,
+            open_order_count=0,
+            orders_last_minute=0,
+            daily_notional=Decimal("0"),
+        )
+
+    armed = make_settings(
+        tmp_path,
+        mode=AppMode.LIVE,
+        operator_users={"ops": ("live-operator-pass-123", ("viewer", "trader", "admin"))},
+        live_trading_enabled=True,
+        binance_api_key="k" * 64,
+        binance_api_secret="s" * 64,
+        database_path=tmp_path / "armed.sqlite3",
+    )
+    approved = assess(armed)
+    assert approved.approved is True, approved.reasons
+    assert any(check.code == "mode" and check.passed for check in approved.checks)
+    assert "真实资金" in " ".join(check.message for check in approved.checks)
+
+    disarmed = make_settings(
+        tmp_path,
+        mode=AppMode.LIVE,
+        operator_users={"ops": ("live-operator-pass-123", ("viewer", "trader", "admin"))},
+        live_trading_enabled=False,
+        binance_api_key="k" * 64,
+        binance_api_secret="s" * 64,
+        database_path=tmp_path / "disarmed.sqlite3",
+    )
+    rejected = assess(disarmed)
+    assert rejected.approved is False
+    assert any(check.code == "mode" and not check.passed for check in rejected.checks)
+    assert "NEMT_LIVE_TRADING_ENABLED" in " ".join(rejected.reasons)
 
 
 # ---------------------------------------------------------------------------

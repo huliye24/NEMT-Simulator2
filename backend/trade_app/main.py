@@ -26,16 +26,23 @@ from fastapi.responses import JSONResponse
 from .accounts import AccountService
 from .admin import AdminService
 from .auth import AuthService, SessionContext
+from .auto_trader import AutoTrader
 from .binance_spot import BinanceSpotAdapter
 from .config import AppMode, Settings, load_settings
 from .db import Database, iso
 from .errors import ApiException
 from .market import MarketService, MarketUnavailable
 from .orders import OrderService
+from .paper import PaperService
 from .risk import RiskService
 from .schemas import (
     AuditEventOut,
     AuditEventsOut,
+    AutoTradeEventOut,
+    AutoTradeRunOut,
+    AutoTradeStatusOut,
+    AutoTradeToggleOut,
+    AutoTradeToggleRequest,
     BalanceOut,
     BalancesOut,
     CancelOpenOrdersOut,
@@ -53,12 +60,27 @@ from .schemas import (
     OrderPreviewOut,
     OrderPreviewRequest,
     OrdersOut,
+    PaperAccountOut,
+    PaperCloseOut,
+    PaperCloseRequest,
+    PaperEquityOut,
+    PaperEquityPointOut,
+    PaperFillOut,
+    PaperFillsOut,
+    PaperOpenRequest,
+    PaperPositionOut,
+    PaperPositionsOut,
+    PaperResetOut,
     PauseRequest,
     SessionOut,
+    SignalCardOut,
+    SignalsOut,
+    StrategyBoardOut,
     SystemStatusOut,
     TickerOut,
     UserOut,
 )
+from .signals import NemtSignalService
 
 logger = logging.getLogger("nemt.trade_api")
 
@@ -77,6 +99,9 @@ class AppServices:
     orders: OrderService
     admin: AdminService
     adapter: BinanceSpotAdapter | None
+    paper: PaperService | None = None
+    signals: NemtSignalService | None = None
+    auto_trader: AutoTrader | None = None
 
 
 def _services(request: Request) -> AppServices:
@@ -196,6 +221,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     orders = OrderService(db, config, market, risk, accounts, adapter)
     admin = AdminService(db, config, risk, orders)
     auth = AuthService(db, config)
+    paper = PaperService(db, config, market)
+    signals = NemtSignalService(config, market)
+    auto_trader = AutoTrader(db, config, paper, signals)
     services = AppServices(
         settings=config,
         db=db,
@@ -206,14 +234,19 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         orders=orders,
         admin=admin,
         adapter=adapter,
+        paper=paper,
+        signals=signals,
+        auto_trader=auto_trader,
     )
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):
         logger.info("NEMT App API starting in %s mode", config.mode.value)
+        auto_trader.start()
         try:
             yield
         finally:
+            await auto_trader.stop()
             await market.close()
             if adapter is not None:
                 await adapter.close()
@@ -661,5 +694,235 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return AuditEventsOut(
             events=[AuditEventOut(**event) for event in events], count=len(events)
         )
+
+    # ------------------------------------------------------------------
+    # Paper trading (纸上交易). Simulated money, real quotes; no exchange
+    # credentials are involved and no order can leave this process.
+    # ------------------------------------------------------------------
+
+    @app.get(
+        f"{prefix}/paper/account",
+        response_model=PaperAccountOut,
+        tags=["paper"],
+    )
+    async def paper_account(
+        session: SessionContext = Depends(require_role("viewer")),
+    ) -> PaperAccountOut:
+        return PaperAccountOut(**await paper.account(session.user.username))
+
+    @app.get(
+        f"{prefix}/paper/positions",
+        response_model=PaperPositionsOut,
+        tags=["paper"],
+    )
+    async def paper_positions(
+        session: SessionContext = Depends(require_role("viewer")),
+    ) -> PaperPositionsOut:
+        username = session.user.username
+        positions = await paper.positions(username)
+        account = await paper.account(username)
+        return PaperPositionsOut(
+            account=PaperAccountOut(**account),
+            positions=[PaperPositionOut(**item) for item in positions],
+        )
+
+    @app.post(
+        f"{prefix}/paper/positions",
+        response_model=PaperPositionsOut,
+        responses={422: {"model": ErrorResponse}},
+        tags=["paper"],
+    )
+    async def paper_open(
+        payload: PaperOpenRequest,
+        request: Request,
+        session: SessionContext = Depends(require_csrf),
+    ) -> PaperPositionsOut:
+        if not session.user.has_role("trader"):
+            raise ApiException(403, "forbidden", "需要 trader 权限")
+        username = session.user.username
+        await paper.open_position(
+            username,
+            symbol=payload.symbol,
+            market=payload.market,
+            side=payload.side,
+            notional=payload.notional,
+            leverage=payload.leverage,
+            strategy=payload.strategy,
+        )
+        positions = await paper.positions(username)
+        account = await paper.account(username)
+        logger.info(
+            "paper open user=%s %s %s %s notional=%s lev=%s request_id=%s",
+            username,
+            payload.market,
+            payload.side,
+            payload.symbol,
+            payload.notional,
+            payload.leverage,
+            request.state.request_id,
+        )
+        return PaperPositionsOut(
+            account=PaperAccountOut(**account),
+            positions=[PaperPositionOut(**item) for item in positions],
+        )
+
+    @app.post(
+        f"{prefix}/paper/positions/{{position_id}}/close",
+        response_model=PaperCloseOut,
+        responses={404: {"model": ErrorResponse}, 422: {"model": ErrorResponse}},
+        tags=["paper"],
+    )
+    async def paper_close(
+        position_id: str,
+        payload: PaperCloseRequest,
+        session: SessionContext = Depends(require_csrf),
+    ) -> PaperCloseOut:
+        if not session.user.has_role("trader"):
+            raise ApiException(403, "forbidden", "需要 trader 权限")
+        username = session.user.username
+        result = await paper.close_position(
+            username, position_id, fraction=payload.fraction
+        )
+        account = await paper.account(username)
+        return PaperCloseOut(**result, account=PaperAccountOut(**account))
+
+    @app.get(
+        f"{prefix}/paper/fills",
+        response_model=PaperFillsOut,
+        tags=["paper"],
+    )
+    async def paper_fills(
+        limit: int = Query(default=100, ge=1, le=500),
+        session: SessionContext = Depends(require_role("viewer")),
+    ) -> PaperFillsOut:
+        items = paper.fills(session.user.username, limit)
+        return PaperFillsOut(
+            fills=[PaperFillOut(**item) for item in items], count=len(items)
+        )
+
+    @app.get(
+        f"{prefix}/paper/equity",
+        response_model=PaperEquityOut,
+        tags=["paper"],
+    )
+    async def paper_equity(
+        limit: int = Query(default=200, ge=2, le=1000),
+        session: SessionContext = Depends(require_role("viewer")),
+    ) -> PaperEquityOut:
+        points = paper.equity_curve(session.user.username, limit)
+        return PaperEquityOut(
+            points=[PaperEquityPointOut(**item) for item in points],
+            count=len(points),
+        )
+
+    @app.post(
+        f"{prefix}/paper/reset",
+        response_model=PaperResetOut,
+        tags=["paper"],
+    )
+    async def paper_reset(
+        session: SessionContext = Depends(require_csrf),
+    ) -> PaperResetOut:
+        if not session.user.has_role("trader"):
+            raise ApiException(403, "forbidden", "需要 trader 权限")
+        return PaperResetOut(account=PaperAccountOut(**await paper.reset(session.user.username)))
+
+    # ------------------------------------------------------------------
+    # NEMT signal board (相位/动量). Read-only: it never places an order;
+    # the UI turns a card into a *paper* position if the operator chooses.
+    # ------------------------------------------------------------------
+
+    @app.get(
+        f"{prefix}/signals/nemt",
+        response_model=SignalsOut,
+        tags=["signals"],
+    )
+    async def nemt_signals(
+        interval: str = Query(default="15m", max_length=5),
+        symbols: str | None = Query(default=None, max_length=120),
+        session: SessionContext = Depends(require_role("viewer")),
+    ) -> SignalsOut:
+        wanted = (
+            tuple(item.strip().upper() for item in symbols.split(",") if item.strip())
+            if symbols
+            else config.paper_symbols
+        )
+        state = await paper.account(session.user.username) if paper else None
+        equity = state["equity"] if state else config.paper_initial_equity
+        cards = await signals.board(wanted, interval, equity=equity)
+        if not cards:
+            raise ApiException(503, "market_unavailable", "暂时取不到任何 NEMT 信号")
+        return SignalsOut(
+            interval=interval,
+            equity=equity,
+            risk_per_trade_pct=config.nemt_risk_per_trade_pct,
+            thresholds={
+                "critical_entropy": config.nemt_critical_entropy,
+                "critical_psi": config.nemt_critical_psi,
+                "stable_psi": config.nemt_stable_psi,
+                "low_entropy": config.nemt_low_entropy,
+            },
+            cards=[SignalCardOut(**card.as_dict()) for card in cards],
+            count=len(cards),
+        )
+
+    # ------------------------------------------------------------------
+    # Strategy board: the auto trader's view of the book. The execution page
+    # renders this instead of a static fixture, so every number is real.
+    # ------------------------------------------------------------------
+
+    @app.get(
+        f"{prefix}/strategy/board",
+        response_model=StrategyBoardOut,
+        tags=["strategy"],
+    )
+    async def strategy_board(
+        session: SessionContext = Depends(require_role("viewer")),
+    ) -> StrategyBoardOut:
+        # DEMO shares one paper book (the auto trader's account) so the operator
+        # sees the strategy's positions rather than an empty personal wallet.
+        username = (
+            config.auto_trade_username
+            if config.is_demo
+            else session.user.username
+        )
+        payload = await auto_trader.board(username)
+        return StrategyBoardOut(**payload)
+
+    @app.post(
+        f"{prefix}/strategy/auto-trade",
+        response_model=AutoTradeToggleOut,
+        tags=["strategy"],
+    )
+    async def toggle_auto_trade(
+        payload: AutoTradeToggleRequest,
+        request: Request,
+        session: SessionContext = Depends(require_csrf),
+    ) -> AutoTradeToggleOut:
+        if not session.user.has_role("trader"):
+            raise ApiException(403, "forbidden", "需要 trader 权限")
+        enabled = auto_trader.set_enabled(
+            payload.enabled, actor=session.user.username
+        )
+        logger.info(
+            "auto trade toggled to %s by %s request_id=%s",
+            enabled,
+            session.user.username,
+            request.state.request_id,
+        )
+        return AutoTradeToggleOut(enabled=enabled, last_run_at=auto_trader._last_run_at)
+
+    @app.post(
+        f"{prefix}/strategy/run-once",
+        response_model=AutoTradeRunOut,
+        tags=["strategy"],
+    )
+    async def run_auto_trade_once(
+        session: SessionContext = Depends(require_csrf),
+    ) -> AutoTradeRunOut:
+        if not session.user.has_role("trader"):
+            raise ApiException(403, "forbidden", "需要 trader 权限")
+        decisions = await auto_trader.run_once()
+        return AutoTradeRunOut(decisions=decisions, count=len(decisions))
 
     return app

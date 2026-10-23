@@ -291,3 +291,248 @@ class SystemStatusOut(BaseModel):
     account: dict[str, Any]
     risk: FlagStateOut
     limits: dict[str, Any]
+
+
+# ---------------------------------------------------------------------------
+# Paper trading (纸上交易). Simulated money, real quotes.
+# ---------------------------------------------------------------------------
+
+
+class PaperOpenRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    symbol: str = Field(default="BTCUSDT", min_length=6, max_length=20)
+    market: Literal["SPOT", "PERP"] = "PERP"
+    side: Literal["LONG", "SHORT"] = "LONG"
+    notional: PositiveDecimal = Field(description="名义价值（USDT），不是保证金")
+    leverage: int = Field(default=1, ge=1, le=50)
+    strategy: str = Field(default="NEMT", min_length=1, max_length=32)
+
+
+class PaperCloseRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    fraction: PositiveDecimal = Decimal("1")
+
+
+class PaperPositionOut(BaseModel):
+    id: str
+    strategy: str
+    symbol: str
+    market: Literal["SPOT", "PERP"]
+    side: Literal["LONG", "SHORT"]
+    qty: Decimal
+    entry_price: Decimal
+    mark_price: Decimal
+    leverage: int
+    margin: Decimal
+    notional: Decimal
+    unrealized: Decimal
+    realized: Decimal
+    fees: Decimal
+    funding: Decimal
+    liquidation_price: Decimal | None = None
+    margin_ratio: Decimal
+    price_change_pct: Decimal
+    opened_at: str
+    updated_at: str
+
+
+class PaperAccountOut(BaseModel):
+    username: str
+    initial_equity: Decimal
+    equity: Decimal
+    cash: Decimal
+    spot_value: Decimal
+    perp_value: Decimal
+    unrealized: Decimal
+    realized: Decimal
+    fees: Decimal
+    funding: Decimal
+    net_pnl: Decimal
+    return_pct: Decimal
+    open_positions: int
+    mode: str
+
+
+class PaperPositionsOut(BaseModel):
+    account: PaperAccountOut
+    positions: list[PaperPositionOut]
+
+
+class PaperFillOut(BaseModel):
+    id: str
+    position_id: str
+    symbol: str
+    market: str
+    side: str
+    action: str
+    qty: Decimal
+    price: Decimal
+    fee: Decimal
+    realized_pnl: Decimal
+    created_at: str
+
+
+class PaperFillsOut(BaseModel):
+    fills: list[PaperFillOut]
+    count: int
+
+
+class PaperEquityPointOut(BaseModel):
+    at: str
+    equity: Decimal
+    cash: Decimal
+    unrealized: Decimal
+    realized: Decimal
+
+
+class PaperEquityOut(BaseModel):
+    points: list[PaperEquityPointOut]
+    count: int
+
+
+class PaperCloseOut(BaseModel):
+    position_id: str
+    closed: bool
+    qty: Decimal
+    exit_price: Decimal
+    gross_pnl: Decimal
+    fee: Decimal
+    margin_released: Decimal
+    leverage: int
+    account: PaperAccountOut
+
+
+class PaperResetOut(BaseModel):
+    account: PaperAccountOut
+
+
+# ---------------------------------------------------------------------------
+# NEMT signal board (相位/动量). Read-only view of the strategy engine.
+# ---------------------------------------------------------------------------
+
+
+class SignalCardOut(BaseModel):
+    symbol: str
+    interval: str
+    mark_price: Decimal
+    direction: Literal["LONG", "SHORT", "WAIT", "EXIT", "HOLD"]
+    strength: int
+    action_label: str
+    reasons: list[str]
+    entry: Decimal | None = None
+    stop_loss: Decimal | None = None
+    take_profit: Decimal | None = None
+    stop_pct: Decimal = Decimal("0")
+    risk_usdt: Decimal | None = None
+    suggested_notional: Decimal | None = None
+    suggested_leverage: int = 1
+    # NEMT state
+    psi: Decimal
+    phi: Decimal
+    entropy: Decimal
+    phase: Literal["stable", "critical", "critical_up", "critical_down", "decay"]
+    phase_label: str
+    wave_amplitude: Decimal = Decimal("0")
+    wave_frequency: Decimal = Decimal("0")
+
+
+class SignalsOut(BaseModel):
+    interval: str
+    equity: Decimal
+    risk_per_trade_pct: Decimal
+    thresholds: dict[str, Decimal]
+    cards: list[SignalCardOut]
+    count: int
+
+
+# ---------------------------------------------------------------------------
+# Strategy board (what the execution page renders)
+# ---------------------------------------------------------------------------
+
+
+class StrategyLegFillOut(BaseModel):
+    at: int
+    action: str
+    qty: float
+    price: float
+    fee: float
+
+
+class StrategyLegOut(BaseModel):
+    symbol: str
+    market: str
+    side: str
+    leverage: int
+    unit: str
+    mark: str
+    margin: str
+    stop: str = ""
+    take: str = ""
+    fills: list[StrategyLegFillOut]
+
+
+class StrategyOut(BaseModel):
+    id: str
+    name: str
+    code: str
+    version: str
+    timeframe: str
+    state: str
+    signal: str
+    risk: str
+    legs: list[StrategyLegOut]
+
+
+class StrategyAccountOut(BaseModel):
+    equity: str
+    cash: str
+    unrealized: str
+    realized: str
+    return_pct: str
+    initial_equity: str
+
+
+class AutoTradeEventOut(BaseModel):
+    id: int
+    ts: str
+    symbol: str | None = None
+    action: str
+    reason: str
+    position_id: str | None = None
+
+
+class AutoTradeStatusOut(BaseModel):
+    enabled: bool
+    username: str
+    interval_seconds: int
+    timeframe: str
+    max_positions: int
+    cooldown_minutes: int
+    last_run_at: str | None = None
+    last_error: str | None = None
+
+
+class StrategyBoardOut(BaseModel):
+    strategy: StrategyOut
+    account: StrategyAccountOut
+    signals: list[SignalCardOut]
+    events: list[AutoTradeEventOut]
+    auto_trade: AutoTradeStatusOut
+
+
+class AutoTradeToggleRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    enabled: bool
+
+
+class AutoTradeToggleOut(BaseModel):
+    enabled: bool
+    last_run_at: str | None = None
+
+
+class AutoTradeRunOut(BaseModel):
+    decisions: list[dict[str, Any]]
+    count: int

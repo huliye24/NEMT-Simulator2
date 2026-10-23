@@ -13,10 +13,11 @@ from __future__ import annotations
 import asyncio
 import dataclasses
 import math
+import os
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from typing import Any
 
 import httpx
@@ -310,11 +311,17 @@ class MarketService:
         self._ticker_cache: dict[str, tuple[float, Ticker]] = {}
         self._kline_cache: dict[tuple[str, str, int], tuple[float, KlineSeries]] = {}
         self._rules_cache: dict[str, tuple[float, SymbolRules]] = {}
+        self._funding_cache: dict[str, tuple[float, Decimal]] = {}
         self._locks: dict[str, asyncio.Lock] = {}
         self._market_base = (
             "https://testnet.binance.vision"
             if settings.mode is AppMode.TESTNET
-            else "https://api.binance.com"
+            else os.environ.get("NEMT_BINANCE_MARKET_URL", "https://api.binance.com").rstrip("/")
+        )
+        self._futures_base = (
+            "https://testnet.binancefuture.com"
+            if settings.mode is AppMode.TESTNET
+            else "https://fapi.binance.com"
         )
 
     def _get_client(self) -> httpx.AsyncClient:
@@ -337,9 +344,39 @@ class MarketService:
 
     def _ensure_allowed(self, symbol: str) -> str:
         normalized = symbol.strip().upper()
-        if normalized not in self.settings.allowed_symbols:
+        if normalized not in self.settings.market_symbols:
             raise MarketUnavailable(f"Symbol {normalized} is not allowed")
         return normalized
+
+    async def funding_rate(self, symbol: str) -> Decimal:
+        """Current perpetual funding rate (8h), from the public futures venue.
+
+        Paper trading only; never used to sign an order. Falls back to a small
+        positive rate when the futures endpoint is unreachable so a paper
+        position still accrues something instead of silently ignoring funding.
+        """
+
+        symbol = self._ensure_allowed(symbol)
+        now = time.monotonic()
+        cached = self._funding_cache.get(symbol)
+        if cached and now - cached[0] < 300:
+            return cached[1]
+        if self.settings.market_source == "demo":
+            return self._remember_funding(symbol, Decimal("0.0001"))
+        try:
+            response = await self._get_client().get(
+                f"{self._futures_base}/fapi/v1/premiumIndex",
+                params={"symbol": symbol},
+            )
+            response.raise_for_status()
+            rate = Decimal(str(response.json().get("lastFundingRate", "0.0001")))
+        except (httpx.HTTPError, ValueError, KeyError, InvalidOperation):
+            rate = Decimal("0.0001")
+        return self._remember_funding(symbol, rate)
+
+    def _remember_funding(self, symbol: str, rate: Decimal) -> Decimal:
+        self._funding_cache[symbol] = (time.monotonic(), rate)
+        return rate
 
     async def ticker(self, symbol: str) -> Ticker:
         symbol = self._ensure_allowed(symbol)

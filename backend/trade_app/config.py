@@ -84,6 +84,36 @@ class Settings:
 
     demo_initial_usdt: Decimal = Decimal("10000")
     demo_initial_btc: Decimal = Decimal("0.002")
+
+    # --- Paper trading (纸上交易: real quotes, simulated money) --------------
+    paper_initial_equity: Decimal = Decimal("2000")
+    paper_symbols: tuple[str, ...] = ("BTCUSDT", "ETHUSDT", "SOLUSDT")
+    paper_taker_fee_spot: Decimal = Decimal("0.001")
+    paper_taker_fee_perp: Decimal = Decimal("0.0005")
+    paper_slippage_bps: Decimal = Decimal("5")
+    paper_maintenance_margin_rate: Decimal = Decimal("0.004")
+    paper_funding_interval_hours: int = 8
+    paper_max_leverage: int = 10
+    paper_min_notional: Decimal = Decimal("5")
+
+    # --- NEMT signal engine (相位/动量), mirrors nemtCalculator.ts -----------
+    nemt_critical_entropy: Decimal = Decimal("0.7")
+    nemt_critical_psi: Decimal = Decimal("0.5")
+    nemt_stable_psi: Decimal = Decimal("0.3")
+    nemt_ema_alpha: Decimal = Decimal("0.3")
+    nemt_low_entropy: Decimal = Decimal("0.15")
+    nemt_atr_period: int = 14
+    nemt_bars: int = 120
+    nemt_risk_per_trade_pct: Decimal = Decimal("1")
+
+    # --- Auto trading loop: NEMT signal -> paper position, no human click ----
+    auto_trade_enabled: bool = True
+    auto_trade_username: str = "demo"
+    auto_trade_interval_seconds: int = 60
+    auto_trade_interval: str = "15m"
+    auto_trade_max_positions: int = 3
+    auto_trade_cooldown_minutes: int = 15
+
     demo_passwords: Mapping[str, str] = field(default_factory=dict, repr=False)
     # username -> (password, roles). Passwords stay repr=False and are only
     # hashed into the local user table; they are never returned by the API.
@@ -103,18 +133,56 @@ class Settings:
         return self.mode is AppMode.DEMO
 
     @property
-    def testnet_credentials_configured(self) -> bool:
+    def market_symbols(self) -> tuple[str, ...]:
+        """Symbols the market service may quote.
+
+        Paper trading needs ETH/SOL even when live order routing is limited to
+        the ``allowed_symbols`` allowlist, so quoting is a superset. Order
+        routing still uses ``allowed_symbols`` only.
+        """
+
+        merged: dict[str, None] = {}
+        for symbol in (*self.allowed_symbols, *self.paper_symbols):
+            merged[str(symbol).upper()] = None
+        return tuple(merged)
+
+    @property
+    def binance_credentials_configured(self) -> bool:
         return bool(self.binance_api_key and self.binance_api_secret)
 
     @property
-    def live_trading_available(self) -> bool:
-        """V0.1 never exposes a working LIVE order path.
+    def testnet_credentials_configured(self) -> bool:
+        return self.binance_credentials_configured
 
-        Real-money trading requires the separate approval gate in issue #15.
-        This stays False even if someone flips the environment variable.
+    @property
+    def live_trading_available(self) -> bool:
+        """Whether the operator opened the real-money order path.
+
+        This is now driven by ``NEMT_LIVE_TRADING_ENABLED`` instead of being
+        hard-wired off. The path is only usable when *all* of these hold:
+
+        * ``NEMT_APP_MODE=LIVE``
+        * ``NEMT_LIVE_TRADING_ENABLED=true``
+        * server-side Binance credentials are present
+        * at least one non-DEMO operator account was configured (load_settings
+          refuses to build LIVE settings without one)
+        * the per-order/day/month risk limits in this file
+
+        Enabling it moves real money. The demo accounts are disabled on
+        startup in LIVE mode so a public visitor cannot inherit trading rights.
         """
 
-        return False
+        return self.live_trading_enabled
+
+    @property
+    def live_trading_ready(self) -> bool:
+        """LIVE is selected, switched on, and has credentials to sign with."""
+
+        return (
+            self.mode is AppMode.LIVE
+            and self.live_trading_enabled
+            and self.binance_credentials_configured
+        )
 
     @property
     def trading_enabled(self) -> bool:
@@ -122,7 +190,7 @@ class Settings:
             return True
         if self.mode is AppMode.TESTNET:
             return self.allow_testnet_trading and self.testnet_credentials_configured
-        return False
+        return self.live_trading_ready
 
     def public_status(self) -> dict[str, object]:
         """Non-secret capability summary for /system/status and the UI."""
@@ -132,7 +200,9 @@ class Settings:
             "trading_enabled": self.trading_enabled,
             "live_trading_enabled": self.live_trading_enabled,
             "live_trading_available": self.live_trading_available,
+            "live_trading_ready": self.live_trading_ready,
             "testnet_credentials_configured": self.testnet_credentials_configured,
+            "binance_credentials_configured": self.binance_credentials_configured,
             "allowed_symbols": list(self.allowed_symbols),
             "market_source": self.market_source,
             "limits": {
@@ -253,22 +323,35 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
         }
 
     operator_users: dict[str, tuple[str, tuple[str, ...]]] = {}
-    if mode is AppMode.TESTNET:
-        trader_password = env("NEMT_TESTNET_TRADER_PASSWORD")
-        admin_password = env("NEMT_TESTNET_ADMIN_PASSWORD")
+    if mode in (AppMode.TESTNET, AppMode.LIVE):
+        prefix = "TESTNET" if mode is AppMode.TESTNET else "LIVE"
+        trader_password = env(f"NEMT_{prefix}_TRADER_PASSWORD")
+        admin_password = env(f"NEMT_{prefix}_ADMIN_PASSWORD")
         if trader_password:
             if len(trader_password) < 12:
-                raise ConfigError("NEMT_TESTNET_TRADER_PASSWORD must be at least 12 characters")
+                raise ConfigError(
+                    f"NEMT_{prefix}_TRADER_PASSWORD must be at least 12 characters"
+                )
             operator_users[
-                env("NEMT_TESTNET_TRADER_USERNAME", "trader") or "trader"
+                env(f"NEMT_{prefix}_TRADER_USERNAME", "trader") or "trader"
             ] = (trader_password, ("viewer", "trader"))
         if admin_password:
             if len(admin_password) < 12:
-                raise ConfigError("NEMT_TESTNET_ADMIN_PASSWORD must be at least 12 characters")
+                raise ConfigError(
+                    f"NEMT_{prefix}_ADMIN_PASSWORD must be at least 12 characters"
+                )
             operator_users[
-                env("NEMT_TESTNET_ADMIN_USERNAME", "admin") or "admin"
+                env(f"NEMT_{prefix}_ADMIN_USERNAME", "admin") or "admin"
             ] = (admin_password, ("viewer", "trader", "admin"))
         if not operator_users:
+            if mode is AppMode.LIVE:
+                # Fail closed: LIVE without a real operator account would leave
+                # only the leftover DEMO logins able to reach the order path.
+                raise ConfigError(
+                    "LIVE mode requires an operator account: set"
+                    " NEMT_LIVE_TRADER_PASSWORD and/or NEMT_LIVE_ADMIN_PASSWORD"
+                    " (minimum 12 characters). Demo accounts are disabled in LIVE."
+                )
             print(
                 "WARNING: TESTNET mode has no operator users. Set"
                 " NEMT_TESTNET_TRADER_PASSWORD and/or NEMT_TESTNET_ADMIN_PASSWORD"
@@ -301,6 +384,35 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
         trading_fee_rate=env_decimal("NEMT_TRADING_FEE_RATE", "0.001"),
         demo_initial_usdt=env_decimal("NEMT_DEMO_INITIAL_USDT", "10000"),
         demo_initial_btc=env_decimal("NEMT_DEMO_INITIAL_BTC", "0.002"),
+        paper_initial_equity=env_decimal("NEMT_PAPER_INITIAL_EQUITY", "2000"),
+        paper_symbols=tuple(
+            s.upper() for s in env_csv("NEMT_PAPER_SYMBOLS", "BTCUSDT,ETHUSDT,SOLUSDT")
+        ),
+        paper_taker_fee_spot=env_decimal("NEMT_PAPER_TAKER_FEE_SPOT", "0.001"),
+        paper_taker_fee_perp=env_decimal("NEMT_PAPER_TAKER_FEE_PERP", "0.0005"),
+        paper_slippage_bps=env_decimal("NEMT_PAPER_SLIPPAGE_BPS", "5"),
+        paper_maintenance_margin_rate=env_decimal(
+            "NEMT_PAPER_MAINTENANCE_MARGIN_RATE", "0.004"
+        ),
+        paper_funding_interval_hours=env_int("NEMT_PAPER_FUNDING_INTERVAL_HOURS", 8),
+        paper_max_leverage=env_int("NEMT_PAPER_MAX_LEVERAGE", 10),
+        paper_min_notional=env_decimal("NEMT_PAPER_MIN_NOTIONAL", "5"),
+        nemt_critical_entropy=env_decimal("NEMT_NEMT_CRITICAL_ENTROPY", "0.7"),
+        nemt_critical_psi=env_decimal("NEMT_NEMT_CRITICAL_PSI", "0.5"),
+        nemt_stable_psi=env_decimal("NEMT_NEMT_STABLE_PSI", "0.3"),
+        nemt_ema_alpha=env_decimal("NEMT_NEMT_EMA_ALPHA", "0.3"),
+        nemt_low_entropy=env_decimal("NEMT_NEMT_LOW_ENTROPY", "0.15"),
+        nemt_atr_period=env_int("NEMT_NEMT_ATR_PERIOD", 14),
+        nemt_bars=env_int("NEMT_NEMT_BARS", 120, minimum=30),
+        nemt_risk_per_trade_pct=env_decimal("NEMT_NEMT_RISK_PER_TRADE_PCT", "1"),
+        auto_trade_enabled=env_bool("NEMT_AUTO_TRADE_ENABLED", True),
+        auto_trade_username=env("NEMT_AUTO_TRADE_USERNAME", "demo") or "demo",
+        auto_trade_interval_seconds=env_int(
+            "NEMT_AUTO_TRADE_INTERVAL_SECONDS", 60, minimum=10
+        ),
+        auto_trade_interval=env("NEMT_AUTO_TRADE_INTERVAL", "15m") or "15m",
+        auto_trade_max_positions=env_int("NEMT_AUTO_TRADE_MAX_POSITIONS", 3),
+        auto_trade_cooldown_minutes=env_int("NEMT_AUTO_TRADE_COOLDOWN_MINUTES", 15),
         demo_passwords=demo_passwords,
         operator_users=operator_users,
         allowed_origins=env_csv(
@@ -311,8 +423,17 @@ def load_settings(environ: Mapping[str, str] | None = None) -> Settings:
 
     if settings.live_trading_enabled and mode is AppMode.LIVE:
         print(
-            "WARNING: NEMT_LIVE_TRADING_ENABLED is ignored by V0.1. "
-            "LIVE order creation requires the separate issue #15 approval gate.",
+            "WARNING: NEMT_LIVE_TRADING_ENABLED is on. Orders are submitted to"
+            " the Binance production venue and spend real money."
+            f" operator accounts={sorted(settings.operator_users)};"
+            f" max order={settings.max_order_notional} USDT;"
+            f" max daily={settings.max_daily_notional} USDT.",
+            file=sys.stderr,
+        )
+    elif settings.live_trading_enabled:
+        print(
+            "WARNING: NEMT_LIVE_TRADING_ENABLED is set but NEMT_APP_MODE is not"
+            " LIVE; no real-money order path is active.",
             file=sys.stderr,
         )
 

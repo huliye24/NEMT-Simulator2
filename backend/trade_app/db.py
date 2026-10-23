@@ -16,7 +16,7 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any, Iterator
 
-from .config import Settings
+from .config import AppMode, Settings
 from .security import hash_password
 
 SCHEMA_VERSION = 1
@@ -139,6 +139,105 @@ CREATE TABLE IF NOT EXISTS account_snapshots (
     fetched_at TEXT NOT NULL,
     source TEXT NOT NULL
 );
+
+-- ---------------------------------------------------------------------------
+-- Paper trading (纸上交易): real quotes, simulated money. Completely separate
+-- from the live order tables above; nothing here can reach an exchange.
+-- ---------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS paper_accounts (
+    username TEXT PRIMARY KEY,
+    initial_equity TEXT NOT NULL,
+    cash TEXT NOT NULL,
+    realized_pnl TEXT NOT NULL DEFAULT '0',
+    fees_paid TEXT NOT NULL DEFAULT '0',
+    funding_paid TEXT NOT NULL DEFAULT '0',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS paper_positions (
+    id TEXT PRIMARY KEY,
+    username TEXT NOT NULL,
+    strategy TEXT NOT NULL DEFAULT 'NEMT',
+    symbol TEXT NOT NULL,
+    market TEXT NOT NULL,
+    side TEXT NOT NULL,
+    qty TEXT NOT NULL,
+    entry_price TEXT NOT NULL,
+    leverage INTEGER NOT NULL DEFAULT 1,
+    margin TEXT NOT NULL DEFAULT '0',
+    realized_pnl TEXT NOT NULL DEFAULT '0',
+    fees TEXT NOT NULL DEFAULT '0',
+    funding TEXT NOT NULL DEFAULT '0',
+    last_funding_at TEXT,
+    status TEXT NOT NULL DEFAULT 'OPEN',
+    opened_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    closed_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_paper_positions_user
+    ON paper_positions(username, status);
+
+CREATE TABLE IF NOT EXISTS paper_fills (
+    id TEXT PRIMARY KEY,
+    position_id TEXT NOT NULL,
+    username TEXT NOT NULL,
+    symbol TEXT NOT NULL,
+    market TEXT NOT NULL,
+    side TEXT NOT NULL,
+    action TEXT NOT NULL,
+    qty TEXT NOT NULL,
+    price TEXT NOT NULL,
+    fee TEXT NOT NULL DEFAULT '0',
+    realized_pnl TEXT NOT NULL DEFAULT '0',
+    created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_paper_fills_user
+    ON paper_fills(username, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS paper_equity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    at TEXT NOT NULL,
+    equity TEXT NOT NULL,
+    cash TEXT NOT NULL,
+    unrealized TEXT NOT NULL,
+    realized TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_paper_equity_user
+    ON paper_equity(username, at DESC);
+
+-- ---------------------------------------------------------------------------
+-- Auto trading loop (NEMT signal -> paper position). Human approval is not part
+-- of this path; every decision is journalled here for the UI.
+-- ---------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS auto_trade_flags (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    updated_by TEXT
+);
+
+CREATE TABLE IF NOT EXISTS auto_trade_state (
+    symbol TEXT PRIMARY KEY,
+    last_phase TEXT,
+    last_signal TEXT,
+    last_action TEXT,
+    last_action_at TEXT
+);
+
+CREATE TABLE IF NOT EXISTS auto_trade_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ts TEXT NOT NULL,
+    symbol TEXT,
+    action TEXT NOT NULL,
+    reason TEXT NOT NULL,
+    position_id TEXT,
+    detail_json TEXT NOT NULL DEFAULT '{}'
+);
+CREATE INDEX IF NOT EXISTS idx_auto_trade_events_ts ON auto_trade_events(ts DESC);
 """
 
 
@@ -218,12 +317,36 @@ class Database:
         finally:
             connection.close()
 
+    def _migrate_columns(self, connection: sqlite3.Connection) -> None:
+        """Additive column migrations for tables that already exist on disk.
+
+        SQLite has no "ADD COLUMN IF NOT EXISTS", and the deployed database keeps
+        its paper positions, so new columns are added only when missing.
+        """
+
+        wanted = {
+            "paper_positions": (
+                ("stop_price", "TEXT"),
+                ("take_price", "TEXT"),
+                ("opened_reason", "TEXT"),
+            ),
+        }
+        for table, columns in wanted.items():
+            existing = {
+                str(row[1])
+                for row in connection.execute(f"PRAGMA table_info({table})").fetchall()
+            }
+            for name, ddl in columns:
+                if name not in existing:
+                    connection.execute(f"ALTER TABLE {table} ADD COLUMN {name} {ddl}")
+
     def initialize(self, settings: Settings) -> None:
         # executescript() manages its own transaction, so schema creation is
         # kept outside the explicit BEGIN/COMMIT used for seeding.
         connection = self.connect()
         try:
             connection.executescript(SCHEMA_SQL)
+            self._migrate_columns(connection)
             connection.execute("BEGIN IMMEDIATE")
             try:
                 row = connection.execute(
@@ -246,12 +369,20 @@ class Database:
                 if settings.is_demo:
                     self._seed_demo(connection, settings)
                 for username, (password, roles) in settings.operator_users.items():
+                    # Upsert, never INSERT OR IGNORE: a leftover DEMO row with
+                    # the same username must not keep its weak DEMO password.
                     connection.execute(
-                        "INSERT OR IGNORE INTO users"
+                        "INSERT INTO users"
                         " (username, password_hash, roles, enabled, created_at)"
-                        " VALUES (?, ?, ?, 1, ?)",
+                        " VALUES (?, ?, ?, 1, ?)"
+                        " ON CONFLICT(username) DO UPDATE SET"
+                        " password_hash = excluded.password_hash,"
+                        " roles = excluded.roles,"
+                        " enabled = 1",
                         (username, hash_password(password), ",".join(roles), iso()),
                     )
+                if settings.mode is AppMode.LIVE:
+                    self._disable_legacy_demo_accounts(connection, settings)
                 connection.execute("COMMIT")
             except Exception:
                 connection.execute("ROLLBACK")
@@ -259,6 +390,26 @@ class Database:
         finally:
             connection.close()
 
+
+    def _disable_legacy_demo_accounts(
+        self, connection: sqlite3.Connection, settings: Settings
+    ) -> None:
+        """LIVE must not inherit DEMO logins from an earlier deployment.
+
+        The DEMO seed accounts stay in the database when the mode is switched.
+        Anyone who knows ``nemt-demo`` would otherwise keep a trading session on
+        a real-money deployment, so they are disabled unless the operator
+        deliberately named one of them as the new operator account.
+        """
+
+        legacy = sorted({"demo", "viewer", "admin"} - set(settings.operator_users))
+        if not legacy:
+            return
+        placeholders = ",".join("?" for _ in legacy)
+        connection.execute(
+            f"UPDATE users SET enabled = 0 WHERE username IN ({placeholders})",
+            tuple(legacy),
+        )
 
     def _seed_demo(self, connection: sqlite3.Connection, settings: Settings) -> None:
         now = iso()
