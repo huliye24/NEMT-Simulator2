@@ -150,7 +150,8 @@ def test_nemt_states_have_no_lookahead():
 
 
 @pytest.mark.parametrize("name", ["sma_baseline", "bollinger_squeeze_breakout",
-                                  "nemt_critical_state", "buy_and_hold"])
+                                  "nemt_critical_state", "buy_and_hold",
+                                  "donchian_breakout", "turtle_breakout"])
 def test_strategy_signal_prefix_equivalence(name):
     full = make_synthetic_series(n=300, seed=4)
     states = compute_nemt_states(full, NEMTConfig())
@@ -160,6 +161,110 @@ def test_strategy_signal_prefix_equivalence(name):
     prefix = full.slice(end_ms=full.candles[k].timestamp + 1)
     sig_pre = run_strategy(build_strategy(name), prefix, states[: k + 1])
     assert sig_pre == sig_full[: k + 1], f"{name} 的信号依赖了未来数据"
+
+
+def test_donchian_enters_only_after_prior_channel_breakout():
+    rows = []
+    for i in range(30):
+        close = 100.0 if i < 20 else 100.0 + (i - 19) * 2.0
+        rows.append(Candle(
+            1_600_000_000_000 + i * 3_600_000,
+            close, close + 0.5, close - 0.5, close, 100.0, "TEST", "1h"
+        ))
+    series = validate_and_build(rows, "TEST", "1h", drop_unclosed_last=False)
+    signals = run_strategy(
+        build_strategy("donchian_breakout", channel_period=5, trend_period=5),
+        series,
+        [],
+    )
+    assert signals[19] == 0.0
+    assert signals[20] == 1.0
+
+
+def test_turtle_emits_short_and_reverses_on_opposite_entry_breakout():
+    closes = [100.0] * 10 + [96.0, 94.0, 92.0, 98.0, 101.0]
+    rows = [
+        Candle(1_600_000_000_000 + i * 3_600_000,
+               close, close + 0.5, close - 0.5, close, 100.0, "TEST", "1h")
+        for i, close in enumerate(closes)
+    ]
+    series = validate_and_build(rows, "TEST", "1h", drop_unclosed_last=False)
+    signals = run_strategy(
+        build_strategy("turtle_breakout", entry_period=5, exit_period=2),
+        series,
+        [],
+    )
+    assert signals[10] == -1.0
+    # 目标方向表达最终仓位；反向突破时允许 -1 直接切换到 +1。
+    # 成交层应在下一根 open 先平空再开多。
+    assert signals[-1] == 1.0
+
+
+def test_strategy_rejects_invalid_target():
+    class InvalidStrategy:
+        name = "invalid"
+
+        def prepare(self, series, states):
+            return None
+
+        def signal(self, ctx):
+            return 0.5
+
+    series = _flat_series(10)
+    with pytest.raises(ValueError, match="非法目标"):
+        run_strategy(InvalidStrategy(), series, [])
+
+
+def test_short_flat_price_loses_both_side_fees():
+    series = _flat_series(20)
+    signals = [0.0] * 5 + [-1.0] * 10 + [0.0] * 5
+    result = run_backtest(
+        series, signals, BacktestConfig(fee_bps=10.0, slippage_bps=0.0)
+    )
+    trade = result.trades[0]
+    assert trade.side == "SHORT"
+    assert trade.gross_pnl == 0.0
+    assert trade.net_pnl < 0
+    assert abs(trade.net_pnl + trade.entry_fee + trade.exit_fee) < 1e-6
+
+
+def test_short_profits_when_price_falls():
+    rows = [
+        Candle(1_600_000_000_000 + i * 3_600_000,
+               100.0 - i, 100.5 - i, 99.5 - i, 100.0 - i,
+               100.0, "TEST", "1h")
+        for i in range(20)
+    ]
+    series = validate_and_build(rows, "TEST", "1h", drop_unclosed_last=False)
+    signals = [0.0] * 3 + [-1.0] * 12 + [0.0] * 5
+    result = run_backtest(
+        series, signals, BacktestConfig(fee_bps=0.0, slippage_bps=0.0)
+    )
+    assert result.trades[0].side == "SHORT"
+    assert result.trades[0].net_pnl > 0
+
+
+def test_short_slippage_is_adverse_on_both_sides():
+    series = _flat_series(20)
+    signals = [0.0] * 3 + [-1.0] * 10 + [0.0] * 7
+    result = run_backtest(
+        series, signals, BacktestConfig(fee_bps=0.0, slippage_bps=100.0)
+    )
+    trade = result.trades[0]
+    assert trade.entry_price < 100.0, "空头卖出滑点必须压低入场价"
+    assert trade.exit_price > 100.0, "空头买回滑点必须抬高退出价"
+    assert trade.net_pnl < 0
+
+
+def test_reversal_closes_short_then_opens_long_at_same_open():
+    series = _flat_series(20)
+    signals = [0.0] * 3 + [-1.0] * 5 + [1.0] * 8 + [0.0] * 4
+    result = run_backtest(
+        series, signals, BacktestConfig(fee_bps=0.0, slippage_bps=0.0)
+    )
+    assert [trade.side for trade in result.trades] == ["SHORT", "LONG"]
+    assert result.trades[0].exit_index == result.trades[1].entry_index
+    assert result.trades[0].exit_price == result.trades[1].entry_price
 
 
 # ---------------------------------------------------------------- 成交时机

@@ -63,6 +63,7 @@ class Trade:
     entry_spectral_width: Optional[float] = None
     entry_vortex_score: Optional[float] = None
     entry_resonance_score: Optional[float] = None
+    side: str = "LONG"
 
     def as_dict(self) -> dict:
         return asdict(self)
@@ -242,6 +243,11 @@ def run_backtest(
         raise ValueError(
             f"signals 长度 ({len(signals)}) 与 K 线数 ({len(series)}) 不一致"
         )
+    invalid = [signal for signal in signals if signal not in (-1.0, 0.0, 1.0)]
+    if invalid:
+        raise ValueError(
+            f"signals 只允许 -1.0、0.0、1.0，收到 {invalid[0]!r}"
+        )
 
     rng = random.Random(cfg.seed)
     opens = series.opens
@@ -250,6 +256,7 @@ def run_backtest(
 
     cash = cfg.initial_capital
     qty = 0.0
+    direction = 0
     entry_index = -1
     entry_price = 0.0
     entry_fee_total = 0.0
@@ -259,7 +266,7 @@ def run_backtest(
     equity: List[float] = []
     in_pos_flags: List[bool] = []
 
-    pending: Optional[str] = None      # "BUY" | "SELL"
+    pending_target: Optional[int] = None
     pending_reason: str = ""
 
     def slip(price: float, side: str) -> float:
@@ -271,77 +278,104 @@ def run_backtest(
         return price * (1.0 - s)
 
     for i in range(n):
-        # --- 1) 执行上一根收盘产生的订单，在当前 open 成交 ---
-        if pending == "BUY" and qty == 0.0 and cash > 0:
-            px = slip(opens[i], "BUY")
-            budget = cash * cfg.position_fraction
-            if budget > 0 and px > 0:
-                buy_qty = budget / (px * (1.0 + cfg.fee_bps / 10_000.0))
-                cost = buy_qty * px
-                fee = cost * cfg.fee_bps / 10_000.0
-                if cost + fee <= cash + 1e-9:
-                    cash -= (cost + fee)
-                    qty = buy_qty
-                    entry_index = i
-                    entry_price = px
-                    entry_fee_total = fee
-                    entry_reason = pending_reason
-        elif pending == "SELL" and qty > 0:
-            px = slip(opens[i], "SELL")
-            proceeds = qty * px
-            fee = proceeds * cfg.fee_bps / 10_000.0
-            cash += (proceeds - fee)
-            gross = (px - entry_price) * qty
-            net = gross - entry_fee_total - fee
-            st = states[entry_index] if (states and 0 <= entry_index < len(states)) else None
-            trades.append(Trade(
-                trade_id=len(trades) + 1,
-                entry_index=entry_index,
-                entry_timestamp=series.candles[entry_index].timestamp,
-                entry_price=entry_price,
-                entry_fee=entry_fee_total,
-                entry_reason=entry_reason,
-                exit_index=i,
-                exit_timestamp=series.candles[i].timestamp,
-                exit_price=px,
-                exit_fee=fee,
-                exit_reason=pending_reason,
-                quantity=qty,
-                gross_pnl=gross,
-                net_pnl=net,
-                return_pct=((px - entry_price) / entry_price) if entry_price > 0 else 0.0,
-                holding_bars=i - entry_index,
-                entry_phase=(st.market_phase if st else ""),
-                entry_dci=(st.dci if st else None),
-                entry_spectral_width=(st.spectral_width if st else None),
-                entry_vortex_score=(st.vortex_score if st else None),
-                entry_resonance_score=(st.resonance_score if st else None),
-            ))
-            qty = 0.0
-            entry_index = -1
-        pending = None
+        # --- 1) 执行上一根收盘产生的目标，在当前 open 先平后开 ---
+        if pending_target is not None and pending_target != direction:
+            if direction != 0 and qty > 0:
+                close_side = "SELL" if direction == 1 else "BUY"
+                px = slip(opens[i], close_side)
+                notional = qty * px
+                fee = notional * cfg.fee_bps / 10_000.0
+                gross = direction * (px - entry_price) * qty
+                if direction == 1:
+                    cash += notional - fee
+                else:
+                    cash += gross - fee
+                net = gross - entry_fee_total - fee
+                st = states[entry_index] if (states and 0 <= entry_index < len(states)) else None
+                trades.append(Trade(
+                    trade_id=len(trades) + 1,
+                    entry_index=entry_index,
+                    entry_timestamp=series.candles[entry_index].timestamp,
+                    entry_price=entry_price,
+                    entry_fee=entry_fee_total,
+                    entry_reason=entry_reason,
+                    exit_index=i,
+                    exit_timestamp=series.candles[i].timestamp,
+                    exit_price=px,
+                    exit_fee=fee,
+                    exit_reason=pending_reason,
+                    quantity=qty,
+                    gross_pnl=gross,
+                    net_pnl=net,
+                    return_pct=(direction * (px - entry_price) / entry_price)
+                    if entry_price > 0 else 0.0,
+                    holding_bars=i - entry_index,
+                    entry_phase=(st.market_phase if st else ""),
+                    entry_dci=(st.dci if st else None),
+                    entry_spectral_width=(st.spectral_width if st else None),
+                    entry_vortex_score=(st.vortex_score if st else None),
+                    entry_resonance_score=(st.resonance_score if st else None),
+                    side="LONG" if direction == 1 else "SHORT",
+                ))
+                qty = 0.0
+                direction = 0
+                entry_index = -1
+
+            if pending_target != 0 and cash > 0:
+                open_side = "BUY" if pending_target == 1 else "SELL"
+                px = slip(opens[i], open_side)
+                budget = cash * cfg.position_fraction
+                if budget > 0 and px > 0:
+                    fee_rate = cfg.fee_bps / 10_000.0
+                    if pending_target == 1:
+                        open_qty = budget / (px * (1.0 + fee_rate))
+                        cost = open_qty * px
+                        fee = cost * fee_rate
+                        if cost + fee <= cash + 1e-9:
+                            cash -= cost + fee
+                        else:
+                            open_qty = 0.0
+                    else:
+                        open_qty = budget / px
+                        fee = open_qty * px * fee_rate
+                        cash -= fee
+                    if open_qty > 0:
+                        qty = open_qty
+                        direction = pending_target
+                        entry_index = i
+                        entry_price = px
+                        entry_fee_total = fee
+                        entry_reason = pending_reason
+        pending_target = None
 
         # --- 2) mark-to-market ---
-        equity.append(cash + qty * closes[i])
-        in_pos_flags.append(qty > 0)
+        if direction == 1:
+            marked_equity = cash + qty * closes[i]
+        elif direction == -1:
+            marked_equity = cash + (entry_price - closes[i]) * qty
+        else:
+            marked_equity = cash
+        equity.append(marked_equity)
+        in_pos_flags.append(direction != 0)
 
         # --- 3) 依据本根收盘信号，产生下一根的订单 ---
-        target = signals[i]
-        if target > 0 and qty == 0.0:
-            pending = "BUY"
-            pending_reason = "signal"
-        elif target <= 0 and qty > 0:
-            pending = "SELL"
+        target = int(signals[i])
+        if target != direction:
+            pending_target = target
             pending_reason = "signal"
 
     # --- 结束：未平仓头寸按最后一根收盘价结算 ---
-    if qty > 0:
+    if direction != 0 and qty > 0:
         i = n - 1
-        px = slip(closes[i], "SELL")
-        proceeds = qty * px
-        fee = proceeds * cfg.fee_bps / 10_000.0
-        cash += (proceeds - fee)
-        gross = (px - entry_price) * qty
+        close_side = "SELL" if direction == 1 else "BUY"
+        px = slip(closes[i], close_side)
+        notional = qty * px
+        fee = notional * cfg.fee_bps / 10_000.0
+        gross = direction * (px - entry_price) * qty
+        if direction == 1:
+            cash += notional - fee
+        else:
+            cash += gross - fee
         net = gross - entry_fee_total - fee
         st = states[entry_index] if (states and 0 <= entry_index < len(states)) else None
         trades.append(Trade(
@@ -359,15 +393,18 @@ def run_backtest(
             quantity=qty,
             gross_pnl=gross,
             net_pnl=net,
-            return_pct=((px - entry_price) / entry_price) if entry_price > 0 else 0.0,
+            return_pct=(direction * (px - entry_price) / entry_price)
+            if entry_price > 0 else 0.0,
             holding_bars=i - entry_index,
             entry_phase=(st.market_phase if st else ""),
             entry_dci=(st.dci if st else None),
             entry_spectral_width=(st.spectral_width if st else None),
             entry_vortex_score=(st.vortex_score if st else None),
             entry_resonance_score=(st.resonance_score if st else None),
+            side="LONG" if direction == 1 else "SHORT",
         ))
         qty = 0.0
+        direction = 0
         if equity:
             equity[-1] = cash
 

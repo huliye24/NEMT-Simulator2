@@ -26,6 +26,7 @@ from .variables import NEMTState
 # ---------------------------------------------------------------- 信号
 
 
+SHORT = -1.0
 FLAT = 0.0
 LONG = 1.0
 
@@ -56,7 +57,7 @@ class StrategyContext:
 
 
 class Strategy:
-    """策略基类。子类实现 `signal(ctx) -> float`（0 = 空仓, 1 = 满仓）。"""
+    """策略基类。子类实现目标方向：-1 空头、0 空仓、1 多头。"""
 
     name: str = "base"
 
@@ -254,6 +255,101 @@ class NEMTCriticalState(Strategy):
         return LONG
 
 
+class DonchianBreakout(Strategy):
+    """Jesse Donchian 示例的因果信号适配。
+
+    当前 K 线只与此前 ``channel_period`` 根比较，明确排除当前 K 线，
+    避免把当前高低价混入突破阈值。保持上游的 long-only 与 SMA 趋势过滤；
+    仓位大小和保护性止损属于执行/风险层，不在信号适配器中伪造。
+    """
+
+    name = "donchian_breakout"
+
+    def __init__(self, channel_period: int = 20, trend_period: int = 200,
+                 **params):
+        if channel_period < 2:
+            raise ValueError("channel_period 必须 >= 2")
+        if trend_period < 2:
+            raise ValueError("trend_period 必须 >= 2")
+        super().__init__(channel_period=channel_period,
+                         trend_period=trend_period, **params)
+        self._in_position = False
+
+    def prepare(self, series: CandleSeries, states: List[NEMTState]) -> None:
+        self._in_position = False
+
+    def signal(self, ctx: StrategyContext) -> float:
+        channel_period = int(self.params["channel_period"])
+        trend_period = int(self.params["trend_period"])
+        i = ctx.index
+        if i < max(channel_period, trend_period):
+            return FLAT
+
+        prior_highs = ctx.series.highs[i - channel_period:i]
+        prior_lows = ctx.series.lows[i - channel_period:i]
+        trend_closes = ctx.series.closes[i - trend_period + 1:i + 1]
+        close = ctx.close()
+        trend_mean = sum(trend_closes) / len(trend_closes)
+
+        if not self._in_position and close > max(prior_highs) and close > trend_mean:
+            self._in_position = True
+        elif self._in_position and close < min(prior_lows):
+            self._in_position = False
+        return LONG if self._in_position else FLAT
+
+
+class TurtleBreakout(Strategy):
+    """Original Turtle channel rules的信号层适配。
+
+    支持 System 1（20/10）与 System 2（55/20）式参数，也输出空头目标。
+    ATR 仓位、2N 止损与 0.5N 金字塔属于执行/风险层，必须等回测器具备
+    目标仓位与分批成交能力后再接入，不能在方向信号中假装已经实现。
+    """
+
+    name = "turtle_breakout"
+
+    def __init__(self, entry_period: int = 20, exit_period: int = 10,
+                 allow_short: bool = True, **params):
+        if entry_period < 2:
+            raise ValueError("entry_period 必须 >= 2")
+        if exit_period < 2 or exit_period >= entry_period:
+            raise ValueError("exit_period 必须 >= 2 且小于 entry_period")
+        super().__init__(entry_period=entry_period, exit_period=exit_period,
+                         allow_short=allow_short, **params)
+        self._direction = FLAT
+
+    def prepare(self, series: CandleSeries, states: List[NEMTState]) -> None:
+        self._direction = FLAT
+
+    def signal(self, ctx: StrategyContext) -> float:
+        entry_period = int(self.params["entry_period"])
+        exit_period = int(self.params["exit_period"])
+        allow_short = bool(self.params["allow_short"])
+        i = ctx.index
+        if i < entry_period:
+            return FLAT
+
+        close = ctx.close()
+        entry_high = max(ctx.series.highs[i - entry_period:i])
+        entry_low = min(ctx.series.lows[i - entry_period:i])
+        exit_high = max(ctx.series.highs[i - exit_period:i])
+        exit_low = min(ctx.series.lows[i - exit_period:i])
+
+        if self._direction == LONG:
+            if close < exit_low:
+                self._direction = FLAT
+        elif self._direction == SHORT:
+            if close > exit_high:
+                self._direction = FLAT
+
+        if self._direction == FLAT:
+            if close > entry_high:
+                self._direction = LONG
+            elif allow_short and close < entry_low:
+                self._direction = SHORT
+        return self._direction
+
+
 # ---------------------------------------------------------------- 注册
 
 
@@ -262,10 +358,13 @@ STRATEGY_REGISTRY: Dict[str, type] = {
     SMABaseline.name: SMABaseline,
     BollingerSqueezeBreakout.name: BollingerSqueezeBreakout,
     NEMTCriticalState.name: NEMTCriticalState,
+    DonchianBreakout.name: DonchianBreakout,
+    TurtleBreakout.name: TurtleBreakout,
 }
 
 ALL_STRATEGIES = ["buy_and_hold", "sma_baseline",
-                  "bollinger_squeeze_breakout", "nemt_critical_state"]
+                  "bollinger_squeeze_breakout", "nemt_critical_state",
+                  "donchian_breakout", "turtle_breakout"]
 
 
 def build_strategy(name: str, **params) -> Strategy:
@@ -282,13 +381,18 @@ def run_strategy(
     """为每根 K 线生成目标信号。
 
     返回长度与 series 相同的信号序列：
-        0.0 = 空仓, 1.0 = 做多
+        -1.0 = 做空, 0.0 = 空仓, 1.0 = 做多
     信号在**第 i 根收盘后**产生，由回测引擎在 i+1 的 open 成交。
     """
     strategy.prepare(series, states)
     out: List[float] = []
     for i in range(len(series)):
         ctx = StrategyContext(series=series, states=states, index=i)
-        v = strategy.signal(ctx)
+        v = float(strategy.signal(ctx))
+        if v not in (SHORT, FLAT, LONG):
+            raise ValueError(
+                f"策略 {strategy.name!r} 在 index={i} 输出非法目标 {v}; "
+                "只允许 -1.0、0.0、1.0"
+            )
         out.append(float(v))
     return out
