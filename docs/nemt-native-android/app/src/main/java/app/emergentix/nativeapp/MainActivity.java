@@ -43,24 +43,108 @@ public final class MainActivity extends Activity {
     private int currentPage = 0;
     private boolean syncing = false;
     private String syncMessage = "等待同步";
+    private TextView minimalBalance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setStatusBarColor(Color.WHITE);
-        getWindow().setNavigationBarColor(Color.WHITE);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
-        LinearLayout root = column();
-        root.setBackgroundColor(PAPER);
-
-        content = new FrameLayout(this);
-        root.addView(content, new LinearLayout.LayoutParams(-1, 0, 1f));
-        root.addView(bottomNavigation(), match(dp(70)));
-        setContentView(root);
         api = new NemtApi(this);
-        showPage(0);
-        refreshData(false);
+        showMinimalHome();
+        syncMinimal(false);
+    }
+
+    private void showMinimalHome() {
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+
+        FrameLayout root = new FrameLayout(this);
+        root.setBackgroundColor(Color.WHITE);
+
+        ImageView character = new ImageView(this);
+        character.setImageResource(R.drawable.emergentix_account_muse);
+        character.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        character.setContentDescription("Emergentix muse");
+        root.addView(character, new FrameLayout.LayoutParams(-1, -1));
+
+        minimalBalance = text("1.09 U", 34, INK, true);
+        minimalBalance.setGravity(Gravity.CENTER);
+        minimalBalance.setPadding(dp(18), dp(10), dp(18), dp(10));
+        minimalBalance.setBackgroundColor(Color.argb(225, 255, 255, 255));
+        minimalBalance.setOnClickListener(view -> syncMinimal(false));
+        FrameLayout.LayoutParams valueParams = new FrameLayout.LayoutParams(-2, -2, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL);
+        valueParams.bottomMargin = dp(38);
+        root.addView(minimalBalance, valueParams);
+
+        setContentView(root);
+    }
+
+    private void syncMinimal(boolean afterLogin) {
+        if (syncing) return;
+        syncing = true;
+        network.execute(() -> {
+            try {
+                NemtApi.AccountSnapshot snapshot = api.balances();
+                double usdt = 0d;
+                for (NemtApi.Balance balance : snapshot.balances) {
+                    if (balance.asset.equals("USDT")) usdt += balance.total;
+                }
+                final double value = usdt;
+                main.post(() -> {
+                    account = snapshot;
+                    syncing = false;
+                    minimalBalance.setText(String.format(Locale.US, "%.2f U", value));
+                });
+            } catch (NemtApi.ApiException exception) {
+                main.post(() -> {
+                    syncing = false;
+                    if (exception.status == 401 && !afterLogin) {
+                        api.clearSession();
+                        showMinimalLogin();
+                    }
+                });
+            } catch (Exception ignored) {
+                main.post(() -> syncing = false);
+            }
+        });
+    }
+
+    private void showMinimalLogin() {
+        LinearLayout fields = column();
+        fields.setPadding(dp(24), 0, dp(24), 0);
+        EditText username = new EditText(this);
+        username.setHint("账户");
+        username.setSingleLine(true);
+        EditText password = new EditText(this);
+        password.setHint("密码");
+        password.setSingleLine(true);
+        password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        fields.addView(username);
+        fields.addView(password);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(fields)
+                .setNegativeButton("取消", null)
+                .setPositiveButton("连接", null)
+                .create();
+        dialog.setOnShowListener(unused -> dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener(view -> {
+                    String user = username.getText().toString().trim();
+                    String pass = password.getText().toString();
+                    if (user.isEmpty() || pass.isEmpty()) return;
+                    network.execute(() -> {
+                        try {
+                            api.login(user, pass);
+                            main.post(() -> { dialog.dismiss(); syncMinimal(true); });
+                        } catch (Exception ignored) { }
+                    });
+                }));
+        dialog.show();
     }
 
     private View header() {
@@ -90,8 +174,8 @@ public final class MainActivity extends Activity {
         nav.setGravity(Gravity.CENTER);
         nav.setPadding(dp(8), dp(5), dp(8), dp(7));
         nav.setBackgroundColor(Color.WHITE);
-        String[] icons = {"◫", "▥", "≡", "⌁"};
-        String[] labels = {"总览", "持仓", "记录", "市场"};
+        String[] icons = {"◫", "▥", "◇", "○"};
+        String[] labels = {"总览", "资产", "策略", "提醒"};
         for (int i = 0; i < labels.length; i++) {
             final int index = i;
             TextView tab = text(icons[i] + "\n" + labels[i], 12, MUTED, false);
@@ -114,19 +198,14 @@ public final class MainActivity extends Activity {
         View page;
         if (index == 0) page = portfolioPage();
         else if (index == 1) page = positionsPage();
-        else if (index == 2) page = activityPage();
-        else page = marketsPage();
+        else if (index == 2) page = strategiesPage();
+        else page = alertsPage();
         content.addView(page, new FrameLayout.LayoutParams(-1, -1));
     }
 
     private View portfolioPage() {
         LinearLayout page = page("账户总览", "ACCOUNT / OVERVIEW");
-        page.addView(syncControl());
-        LinearLayout hero = card();
-        hero.addView(tracking("账户净值", 10, MUTED));
-        hero.addView(text(account == null ? "—" : money(estimateNetValue()), 38, INK, true));
-        hero.addView(text("USDT  ·  BINANCE SPOT", 12, GREEN, true));
-        page.addView(hero, matchWrap());
+        page.addView(portfolioHero(), match(dp(390)));
         page.addView(sectionTitle("资产分布"));
         if (account == null || account.balances.isEmpty()) {
             page.addView(note("登录后显示币安账户中的非零资产。"));
@@ -136,9 +215,48 @@ public final class MainActivity extends Activity {
                         balance.locked > 0 ? INK : GREEN));
             }
         }
+        page.addView(sectionTitle("表现"));
+        LinearLayout performance = card();
+        performance.addView(tracking("PORTFOLIO PERFORMANCE", 9, CYAN));
+        TextView unavailable = text("净值曲线等待历史快照", 18, INK, true);
+        unavailable.setPadding(0, dp(14), 0, dp(8));
+        performance.addView(unavailable);
+        performance.addView(text("连接后从今天开始记录真实账户净值，不补造历史数据。", 12, MUTED, false));
+        page.addView(performance, matchWrap());
+        page.addView(sectionTitle("运行策略"));
+        page.addView(strategyStatusCard());
         page.addView(sectionTitle("账户状态"));
         page.addView(note(syncMessage + "\n只读模式已开启，手机端不提供下单与策略部署。"));
         return scroll(page);
+    }
+
+    private View portfolioHero() {
+        FrameLayout hero = new FrameLayout(this);
+        hero.setBackgroundColor(Color.WHITE);
+
+        ImageView character = new ImageView(this);
+        character.setImageResource(R.drawable.emergentix_account_muse);
+        character.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        character.setContentDescription("Emergentix account muse");
+        hero.addView(character, new FrameLayout.LayoutParams(-1, -1));
+
+        TextView refresh = chip(syncing ? "同步中…" : "↻  BINANCE", CYAN, Color.argb(235, 232, 249, 251));
+        refresh.setOnClickListener(view -> refreshData(false));
+        FrameLayout.LayoutParams refreshParams = new FrameLayout.LayoutParams(-2, -2, Gravity.TOP | Gravity.END);
+        refreshParams.setMargins(0, dp(14), dp(14), 0);
+        hero.addView(refresh, refreshParams);
+
+        LinearLayout balance = column();
+        balance.setPadding(dp(18), dp(14), dp(18), dp(14));
+        balance.setBackgroundColor(Color.argb(238, 255, 255, 255));
+        balance.addView(tracking("TOTAL BALANCE", 9, MUTED));
+        balance.addView(text(account == null ? "—" : money(estimateNetValue()), 34, INK, true));
+        balance.addView(text("USDT  ·  READ ONLY", 11, GREEN, true));
+        FrameLayout.LayoutParams balanceParams = new FrameLayout.LayoutParams(dp(250), -2, Gravity.BOTTOM | Gravity.START);
+        balanceParams.setMargins(dp(14), 0, 0, dp(14));
+        hero.addView(balance, balanceParams);
+
+        return hero;
     }
 
     private View positionsPage() {
@@ -308,12 +426,54 @@ public final class MainActivity extends Activity {
     }
 
     private View strategiesPage() {
-        LinearLayout page = page("策略仓库", "STRATEGY REPOSITORY / 04");
-        page.addView(strategyCard("01", "NEMT 临界动量", "v1.0", "+38.2%", "Sharpe 2.14", "中"));
-        page.addView(strategyCard("02", "均线交叉", "v1.0", "+24.6%", "Sharpe 1.82", "低"));
-        page.addView(strategyCard("03", "RSI 均值回归", "v1.0", "+18.9%", "Sharpe 1.63", "低"));
-        page.addView(strategyCard("04", "布林突破", "v1.0", "+41.8%", "Sharpe 1.76", "高"));
+        LinearLayout page = page("策略", "AUTOMATION / CONTROL");
+        page.addView(strategyStatusCard());
+        page.addView(sectionTitle("可用策略"));
+        page.addView(strategyChoice("NEMT 临界动量", "等待 Freqtrade 接入", "当前设计基线"));
+        page.addView(strategyChoice("均线趋势", "尚未部署", "低频趋势跟随"));
+        page.addView(strategyChoice("均值回归", "尚未部署", "震荡市场观察"));
+        page.addView(sectionTitle("切换规则"));
+        page.addView(note("只有在网站完成回测并发布的策略才会出现在这里。切换前检查持仓，手机端不能编辑参数或上传代码。"));
         return scroll(page);
+    }
+
+    private View alertsPage() {
+        LinearLayout page = page("提醒", "ACCOUNT / ALERTS");
+        page.addView(activityCard("实时", "账户连接", account != null && account.connected ? "Binance 正常" : "等待登录",
+                account != null && account.connected ? GREEN : MUTED));
+        page.addView(activityCard("安全", "只读保护", "已开启", GREEN));
+        page.addView(activityCard("策略", "运行状态", "待接入", MUTED));
+        page.addView(sectionTitle("以后只提醒重要变化"));
+        page.addView(note("净值明显变化、策略启动或停止、持仓建立或关闭、风险保护触发。普通价格波动不打扰你。"));
+        return scroll(page);
+    }
+
+    private View strategyStatusCard() {
+        LinearLayout card = card();
+        LinearLayout top = row();
+        top.setGravity(Gravity.CENTER_VERTICAL);
+        top.addView(tracking("ACTIVE STRATEGY", 9, CYAN), new LinearLayout.LayoutParams(0, -2, 1f));
+        top.addView(chip("未连接", MUTED, Color.rgb(241, 245, 249)));
+        card.addView(top);
+        TextView title = text("策略引擎待接入", 21, INK, true);
+        title.setPadding(0, dp(14), 0, dp(7));
+        card.addView(title);
+        card.addView(text("账户同步与策略执行分离，避免 App 误操作资金。", 12, MUTED, false));
+        return card;
+    }
+
+    private View strategyChoice(String name, String status, String description) {
+        LinearLayout card = card();
+        LinearLayout top = row();
+        top.setGravity(Gravity.CENTER_VERTICAL);
+        top.addView(text(name, 17, INK, true), new LinearLayout.LayoutParams(0, -2, 1f));
+        top.addView(chip(status, MUTED, Color.rgb(241, 245, 249)));
+        card.addView(top);
+        TextView detail = text(description, 12, MUTED, false);
+        detail.setPadding(0, dp(9), 0, 0);
+        card.addView(detail);
+        pageGap(card);
+        return card;
     }
 
     private View executionPage() {

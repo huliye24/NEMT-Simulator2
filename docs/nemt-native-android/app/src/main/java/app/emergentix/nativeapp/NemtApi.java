@@ -90,7 +90,7 @@ final class NemtApi {
         connection.setReadTimeout(15000);
         connection.setRequestProperty("Accept", "application/json");
         connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("User-Agent", "Emergentix-Account/1.2.0 Android");
+        connection.setRequestProperty("User-Agent", "Emergentix-Account/1.5.0 Android");
         String cookie = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
                 .getString(COOKIE_KEY, "");
         if (!cookie.isEmpty()) connection.setRequestProperty("Cookie", cookie);
