@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 本地 CLI token（运行时生成）
+.nemt/
+
+# 音乐库产物：由 scripts/build_music.py 从 FLAC 生成，不进版本库
+# manifest.json 需要随代码走，所以只忽略音频本体
+/public/music/*.mp3
