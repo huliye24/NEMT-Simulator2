@@ -191,7 +191,9 @@ NEMT 的长期目标不是单一的交易页面，而是从可证伪的科学研
 
 ## License
 
-开源许可以根目录 [LICENSE](LICENSE) 为准。使用第三方依赖和参考实现时须遵循各自的许可证。
+本仓库采用 **GNU General Public License v3.0（GPL-3.0-only）** 作为项目维护者发布和有权重新许可部分的当前仓库许可证。详见根目录 [LICENSE](LICENSE)。
+
+历史上以 Apache-2.0 发布的代码及其他第三方内容仍保留其既有许可证与版权声明；完整历史 Apache-2.0 许可证存档于 [LICENSES/Apache-2.0.txt](LICENSES/Apache-2.0.txt)。本次变更不撤销既有版本已经授予的许可，也不自动改变其他贡献者的授权。详细边界见 [许可证政策](docs/LICENSE_POLICY.md)。
 
 ---
 
