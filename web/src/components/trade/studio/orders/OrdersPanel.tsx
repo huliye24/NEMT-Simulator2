@@ -16,19 +16,26 @@ import type {
   Session,
 } from "@/lib/trade/types";
 import type { TradingData } from "../../useTradingData";
-import type { StudioNotify, StudioSection } from "../types";
+import type { StudioNavigate, StudioNotify } from "../types";
 import { EmptyState, Skeleton, Spinner } from "../common";
 import { StudioIcon } from "../icons";
 
-type OrdersTab = "open" | "history" | "trades";
+export type OrdersTab = "open" | "history" | "trades";
+
+const ALL_ORDERS_TABS: OrdersTab[] = ["open", "history", "trades"];
 
 interface OrdersPanelProps {
   session: Session;
   data: TradingData;
   notify: StudioNotify;
-  navigate: (section: StudioSection) => void;
+  navigate: StudioNavigate;
   compact?: boolean;
   className?: string;
+  /** Embedded use: choose the initial view without changing URL state. */
+  defaultTab?: OrdersTab;
+  visibleTabs?: OrdersTab[];
+  /** Used by the Execution Fills tab, which supplies its own outer tabs. */
+  hideTabs?: boolean;
 }
 
 interface FillRow {
@@ -79,10 +86,13 @@ export default function OrdersPanel({
   navigate,
   compact = false,
   className = "",
+  defaultTab = "open",
+  visibleTabs = ALL_ORDERS_TABS,
+  hideTabs = false,
 }: OrdersPanelProps) {
   const id = useId();
   const { orders, online, coreError } = data;
-  const [tab, setTab] = useState<OrdersTab>("open");
+  const [tab, setTab] = useState<OrdersTab>(defaultTab);
   const [refreshing, setRefreshing] = useState(false);
   const [cancelConfirmId, setCancelConfirmId] = useState<string | null>(null);
   const [cancelingId, setCancelingId] = useState<string | null>(null);
@@ -147,7 +157,9 @@ export default function OrdersPanel({
           refreshing={refreshing}
           onRefresh={() => void refresh()}
           compact={compact}
-          onViewAll={() => navigate("execution")}
+          visibleTabs={visibleTabs}
+          hideTabs={hideTabs}
+          onViewAll={() => navigate("execution", { tab: "orders" })}
         />
         <div className="ns-orders-loading">
           <Skeleton className="ns-skeleton-row" />
@@ -180,7 +192,9 @@ export default function OrdersPanel({
         refreshing={refreshing}
         onRefresh={() => void refresh()}
         compact={compact}
-        onViewAll={() => navigate("execution")}
+        visibleTabs={visibleTabs}
+        hideTabs={hideTabs}
+        onViewAll={() => navigate("execution", { tab: "orders" })}
       />
 
       <div
@@ -435,7 +449,11 @@ export default function OrdersPanel({
       </div>
 
       {compact && tab !== "trades" && visibleOrders.length > maxRows ? (
-        <button type="button" className="ns-orders-more" onClick={() => navigate("execution")}>
+        <button
+          type="button"
+          className="ns-orders-more"
+          onClick={() => navigate("execution", { tab: "orders" })}
+        >
           查看全部 {visibleOrders.length} 笔订单
           <StudioIcon name="chevronRight" size={12} />
         </button>
@@ -458,6 +476,8 @@ function OrdersHead({
   refreshing,
   onRefresh,
   compact,
+  visibleTabs,
+  hideTabs,
   onViewAll,
 }: {
   id: string;
@@ -467,33 +487,40 @@ function OrdersHead({
   refreshing: boolean;
   onRefresh: () => void;
   compact: boolean;
+  visibleTabs: OrdersTab[];
+  hideTabs: boolean;
   onViewAll: () => void;
 }) {
-  const tabs: { key: OrdersTab; label: string; count: number }[] = [
+  const allTabs: { key: OrdersTab; label: string; count: number }[] = [
     { key: "open", label: "当前委托", count: counts.open },
     { key: "history", label: "订单历史", count: counts.history },
     { key: "trades", label: "成交记录", count: counts.trades },
   ];
+  const tabs = allTabs.filter((item) => visibleTabs.includes(item.key));
 
   return (
-    <div className="ns-orders-head">
-      <div className="ns-orders-tabs" role="tablist" aria-label="订单分类">
-        {tabs.map((item) => (
-          <button
-            key={item.key}
-            type="button"
-            id={`${id}-tab-${item.key}`}
-            role="tab"
-            aria-selected={tab === item.key}
-            aria-controls={`${id}-panel`}
-            className={cn("ns-orders-tab", tab === item.key && "is-active")}
-            onClick={() => setTab(item.key)}
-          >
-            {item.label}
-            <span className="ns-orders-count">{item.count}</span>
-          </button>
-        ))}
-      </div>
+    <div className={cn("ns-orders-head", hideTabs && "has-no-tabs")}>
+      {!hideTabs ? (
+        <div className="ns-orders-tabs" role="tablist" aria-label="订单分类">
+          {tabs.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              id={`${id}-tab-${item.key}`}
+              role="tab"
+              aria-selected={tab === item.key}
+              aria-controls={`${id}-panel`}
+              className={cn("ns-orders-tab", tab === item.key && "is-active")}
+              onClick={() => setTab(item.key)}
+            >
+              {item.label}
+              <span className="ns-orders-count">{item.count}</span>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <span className="ns-orders-embedded-label">执行记录</span>
+      )}
       <div className="ns-orders-actions">
         <button
           type="button"

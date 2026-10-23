@@ -1,13 +1,16 @@
 "use client";
 
-import { cn, fmtPct, fmtPrice } from "@/lib/trade/format";
+import { cn, fmtPct, fmtPrice, ageLabel } from "@/lib/trade/format";
 import type { Session, Ticker } from "@/lib/trade/types";
 import type { TradingData } from "../../useTradingData";
-import { ModePill, Spinner } from "../common";
+import { Spinner } from "../common";
 import { StudioBrand, StudioIcon } from "../icons";
 import { SECTION_LABELS } from "../navigation";
-import SystemStatusIndicator from "../status/SystemStatusIndicator";
 import type { StudioSection } from "../types";
+import {
+  SystemStatusMenu,
+  buildSystemStatus,
+} from "./SystemStatus";
 
 interface StudioTopbarProps {
   session: Session;
@@ -20,11 +23,11 @@ interface StudioTopbarProps {
   onLogout: () => void;
 }
 
-function TickerSummary({ ticker, compact = false }: { ticker: Ticker | null; compact?: boolean }) {
+function TickerSummary({ ticker }: { ticker: Ticker | null }) {
   const change = Number(ticker?.price_change_percent ?? 0);
   const positive = change >= 0;
   return (
-    <div className={cn("ns-ticker-summary", compact && "is-compact")}>
+    <div className="ns-ticker-summary">
       <span className="ns-ticker-pair">
         BTC<span className="ns-ticker-pair-quote">/USDT</span>
       </span>
@@ -46,6 +49,8 @@ export default function StudioTopbar({
   onNavigate,
   onLogout,
 }: StudioTopbarProps) {
+  const status = buildSystemStatus(data, session.mode);
+
   return (
     <header className="ns-topbar">
       <div className="ns-topbar-main">
@@ -79,6 +84,10 @@ export default function StudioTopbar({
 
         <div className="ns-topbar-ticker">
           <TickerSummary ticker={data.ticker} />
+          <span className="ns-topbar-separator" aria-hidden="true" />
+          <span className="ns-topbar-freshness">
+            {data.ticker ? ageLabel(data.ticker.fetched_at) : "等待行情"}
+          </span>
         </div>
 
         <div className="ns-topbar-right">
@@ -93,9 +102,11 @@ export default function StudioTopbar({
             {data.syncing ? <Spinner size={15} /> : <StudioIcon name="refresh" size={16} />}
           </button>
 
-          <SystemStatusIndicator data={data} session={session} />
-
-          <ModePill mode={session.mode} />
+          <SystemStatusMenu
+            model={status}
+            onRefresh={() => void data.refreshAll()}
+            syncing={data.syncing}
+          />
 
           <span className="ns-topbar-separator ns-desktop-only" aria-hidden="true" />
 
@@ -153,7 +164,6 @@ export default function StudioTopbar({
             </span>
           </div>
           <span className="ns-mobile-feed">
-            行情
             <StudioIcon name="chevronRight" size={13} />
           </span>
         </button>

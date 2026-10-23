@@ -1,117 +1,135 @@
 "use client";
 
-import { ageLabel, cn, fmtPct, fmtPrice } from "@/lib/trade/format";
-import { PageHeader, SourceTag, StatusDot } from "../common";
+import { ageLabel, fmtPct, fmtPrice } from "@/lib/trade/format";
+import {
+  EditorialPage,
+  EditorialLink,
+  Masthead,
+  PageFootnote,
+  StatusTag,
+} from "../editorial/Editorial";
 import { StudioIcon } from "../icons";
 import MarketPanel from "../market/MarketPanel";
 import type { StudioPageProps } from "../types";
 
 export default function MarketsPage({ data, navigate }: StudioPageProps) {
-  const { ticker, system, online, feedError } = data;
-  const positive = Number(ticker?.price_change_percent ?? 0) >= 0;
+  const { ticker, system } = data;
+  const market = system?.market;
+  const sourceLabel =
+    ticker?.source === "binance"
+      ? "Binance Spot"
+      : ticker?.source === "demo"
+        ? "Demo feed"
+        : "—";
 
   return (
-    <div className="ns-page">
-      <PageHeader
-        eyebrow="MARKET / BTC-USDT"
+    <EditorialPage className="nsx-markets">
+      <Masthead
+        compact
+        kicker="MARKET OBSERVATORY / 05"
         title="市场行情"
-        description="24H 行情快照与多周期 K 线。行情源、更新时间与延迟状态保持可见。"
+        accent="Read the structure, not the noise."
+        lead="BTC/USDT 现货行情、24H 统计、多周期 K 线与数据新鲜度。图表保持金融数据的准确性，不做装饰化处理。"
+        issue={{ label: "SPOT", value: "05", note: "BTC / USDT" }}
         actions={
-          <button
-            type="button"
-            className="ns-btn ns-btn-outline ns-btn-sm"
-            onClick={() => navigate("execution")}
-          >
-            <StudioIcon name="orders" size={14} />
-            查看订单
-          </button>
+          <>
+            <StatusTag tone={ticker?.stale ? "warn" : ticker ? "ok" : "muted"}>
+              {ticker?.stale
+                ? "Stale data"
+                : ticker
+                  ? "Live feed"
+                  : "Awaiting feed"}
+            </StatusTag>
+            <button
+              type="button"
+              className="nsx-btn is-small"
+              onClick={() => void data.refreshAll()}
+              disabled={data.syncing || !data.online}
+            >
+              <StudioIcon name="refresh" size={12} />
+              {data.syncing ? "同步中…" : "刷新"}
+            </button>
+          </>
         }
       />
 
-      <div className="ns-market-workspace">
-        <MarketPanel data={data} variant="expanded" />
+      <div className="nsx-market-layout">
+        <div className="nsx-market-main">
+          <MarketPanel data={data} variant="expanded" />
+        </div>
 
-        <aside className="ns-market-side" aria-label="行情辅助信息">
-          <section className="ns-card ns-watchlist" aria-label="自选行情">
-            <div className="ns-side-card-head">
-              <h2 className="ns-card-title">自选行情</h2>
-              <span className="ns-chip">1</span>
+        <aside className="nsx-market-rail" aria-label="行情数据边界">
+          <div className="nsx-rail-block">
+            <div className="nsx-eyebrow-row">
+              <span>01</span>
+              DATA INTEGRITY
             </div>
-            <div className="ns-watch-row">
-              <span className="ns-watch-asset">
-                <span className="ns-asset-token ns-asset-token-btc">₿</span>
-                <span>
-                  <strong>BTC/USDT</strong>
-                  <em>Bitcoin · Spot</em>
-                </span>
-              </span>
-              <span className="ns-watch-values">
-                <strong className="ns-number">{fmtPrice(ticker?.last_price)}</strong>
-                <span className={cn("ns-number", positive ? "ns-text-up" : "ns-text-down")}>
-                  {fmtPct(ticker?.price_change_percent)}
-                </span>
-              </span>
-            </div>
-            <p className="ns-side-note">
-              当前服务端仅开放 BTC/USDT 现货交易对。
+            <h3>数据来源与新鲜度</h3>
+            <p>
+              价格与 K 线仅来自 NEMT Cloud 行情服务。所有图表数据是真实金融数据，不包含装饰线稿。
             </p>
-          </section>
-
-          <section className="ns-card" aria-label="数据状态">
-            <div className="ns-side-card-head">
-              <h2 className="ns-card-title">数据状态</h2>
-              <StatusDot tone={online && !feedError ? "ok" : online ? "warn" : "bad"} pulse={online && !feedError} />
-            </div>
-            <dl className="ns-detail-list">
+            <dl className="nsx-rail-facts">
               <div>
-                <dt>行情连接</dt>
-                <dd>{online ? (feedError ? "异常" : "正常") : "离线"}</dd>
+                <dt>Source</dt>
+                <dd>{sourceLabel}</dd>
               </div>
               <div>
-                <dt>行情源</dt>
-                <dd><SourceTag source={ticker?.source} stale={ticker?.stale} /></dd>
-              </div>
-              <div>
-                <dt>最后更新</dt>
+                <dt>Last tick</dt>
                 <dd>{ticker ? ageLabel(ticker.fetched_at) : "—"}</dd>
               </div>
               <div>
-                <dt>事件时间</dt>
-                <dd className="ns-number">
-                  {ticker?.event_time
-                    ? new Date(ticker.event_time).toLocaleTimeString("zh-CN", { hour12: false })
-                    : "—"}
+                <dt>Freshness</dt>
+                <dd>
+                  {market
+                    ? market.status === "ok"
+                      ? "正常"
+                      : market.status === "stale"
+                        ? "延迟"
+                        : "不可用"
+                    : ticker
+                      ? ticker.stale
+                        ? "延迟"
+                        : "正常"
+                      : "—"}
                 </dd>
               </div>
               <div>
-                <dt>服务端</dt>
-                <dd>v{system?.version ?? "—"} · {system?.mode ?? "—"}</dd>
+                <dt>24H change</dt>
+                <dd>{ticker ? fmtPct(ticker.price_change_percent) : "—"}</dd>
               </div>
               <div>
-                <dt>数据通道</dt>
-                <dd>REST · 5s / 30s</dd>
+                <dt>Last price</dt>
+                <dd>{ticker ? fmtPrice(ticker.last_price) : "—"}</dd>
               </div>
             </dl>
-            <p className="ns-side-note">
-              行情与 K 线来自 NEMT Cloud；未闭合 K 线不用于服务端信号计算。
-            </p>
-          </section>
+          </div>
 
-          <section className="ns-card ns-market-cta" aria-label="执行说明">
-            <span className="ns-market-cta-icon">
-              <StudioIcon name="shield" size={20} />
-            </span>
-            <div>
-              <h2>执行由策略管理</h2>
-              <p>本页仅用于行情监控。人工下单已关闭，策略执行结果可在订单页查看。</p>
+          <div className="nsx-rail-block">
+            <p className="nsx-aside-title">CHART BOUNDARY</p>
+            <h3>行情不是叙事</h3>
+            <p>
+              K 线区域保持金融图表的原貌，不使用涂鸦、标题遮挡或装饰曲线。艺术语言只出现在页面排版、分隔与状态说明中。
+            </p>
+          </div>
+
+          <div className="nsx-rail-block">
+            <p className="nsx-aside-title">NEXT ACTION</p>
+            <h3>只读观察</h3>
+            <p>
+              行情本身不会触发订单。交易写入与策略执行由服务端限额、授权和独立风控约束。
+            </p>
+            <div style={{ marginTop: 12 }}>
+              <EditorialLink onClick={() => navigate("execution")}>
+                查看执行边界
+              </EditorialLink>
             </div>
-            <button type="button" className="ns-btn ns-btn-outline ns-btn-sm" onClick={() => navigate("execution")}>
-              查看订单
-              <StudioIcon name="chevronRight" size={12} />
-            </button>
-          </section>
+          </div>
         </aside>
       </div>
-    </div>
+
+      <PageFootnote
+        center="Market data is rendered as financial data. Editorial illustration never enters the chart."
+      />
+    </EditorialPage>
   );
 }

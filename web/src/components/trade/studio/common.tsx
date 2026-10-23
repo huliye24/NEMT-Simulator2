@@ -42,13 +42,16 @@ export function ModePill({ mode, compact = false }: { mode: Mode; compact?: bool
 export function StatusDot({
   tone = "ok",
   pulse = false,
+  size,
 }: {
   tone?: "ok" | "warn" | "bad" | "muted" | "brand";
   pulse?: boolean;
+  size?: number;
 }) {
   return (
     <span
       className={`ns-status-dot ns-status-${tone}${pulse ? " ns-status-pulse" : ""}`}
+      style={size ? { width: size, height: size } : undefined}
       aria-hidden="true"
     />
   );
@@ -175,15 +178,6 @@ export function InlineAlert({
       <span className="ns-inline-alert-body">{children}</span>
       {action ? <span className="ns-inline-alert-action">{action}</span> : null}
     </div>
-  );
-}
-
-export function ModuleState({ label }: { label: string }) {
-  return (
-    <span className="ns-module-state">
-      <StatusDot tone="muted" />
-      {label}
-    </span>
   );
 }
 
