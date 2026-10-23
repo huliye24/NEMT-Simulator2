@@ -10,7 +10,14 @@ import type {
   OrderPreview,
   OrderPreviewPayload,
   OrdersResponse,
+  PaperCloseResult,
+  PaperEquity,
+  PaperFills,
+  PaperOpenPayload,
+  PaperPositions,
   Session,
+  SignalsResponse,
+  StrategyBoard,
   SystemStatus,
   Ticker,
 } from "./types";
@@ -204,6 +211,90 @@ export const tradeApi = {
       headers: csrfHeader(csrfToken),
       body: JSON.stringify({ confirm, reason }),
     });
+  },
+
+  // --- Paper trading (纸上交易): simulated money, real quotes -------------
+
+  getPaperPositions(): Promise<PaperPositions> {
+    return request<PaperPositions>("/paper/positions");
+  },
+
+  getPaperFills(limit = 50): Promise<PaperFills> {
+    return request<PaperFills>(`/paper/fills?limit=${limit}`);
+  },
+
+  getPaperEquity(limit = 200): Promise<PaperEquity> {
+    return request<PaperEquity>(`/paper/equity?limit=${limit}`);
+  },
+
+  openPaperPosition(
+    csrfToken: string,
+    payload: PaperOpenPayload
+  ): Promise<PaperPositions> {
+    return request<PaperPositions>("/paper/positions", {
+      method: "POST",
+      headers: csrfHeader(csrfToken),
+      body: JSON.stringify(payload),
+    });
+  },
+
+  closePaperPosition(
+    csrfToken: string,
+    positionId: string,
+    fraction = "1"
+  ): Promise<PaperCloseResult> {
+    return request<PaperCloseResult>(
+      `/paper/positions/${encodeURIComponent(positionId)}/close`,
+      {
+        method: "POST",
+        headers: csrfHeader(csrfToken),
+        body: JSON.stringify({ fraction }),
+      }
+    );
+  },
+
+  resetPaperAccount(csrfToken: string): Promise<{ account: PaperPositions["account"] }> {
+    return request<{ account: PaperPositions["account"] }>("/paper/reset", {
+      method: "POST",
+      headers: csrfHeader(csrfToken),
+    });
+  },
+
+  // --- NEMT signal board (相位/动量) --------------------------------------
+
+  getSignals(interval = "15m"): Promise<SignalsResponse> {
+    return request<SignalsResponse>(
+      `/signals/nemt?interval=${encodeURIComponent(interval)}`
+    );
+  },
+
+  // --- Strategy board (auto trader) ---------------------------------------
+
+  getStrategyBoard(): Promise<StrategyBoard> {
+    return request<StrategyBoard>("/strategy/board");
+  },
+
+  setAutoTrade(
+    csrfToken: string,
+    enabled: boolean
+  ): Promise<{ enabled: boolean; last_run_at: string | null }> {
+    return request<{ enabled: boolean; last_run_at: string | null }>(
+      "/strategy/auto-trade",
+      {
+        method: "POST",
+        headers: csrfHeader(csrfToken),
+        body: JSON.stringify({ enabled }),
+      }
+    );
+  },
+
+  runAutoTradeOnce(
+    csrfToken: string
+  ): Promise<{ decisions: unknown[]; count: number }> {
+    return request<{ decisions: unknown[]; count: number }>(
+      "/strategy/run-once",
+      { method: "POST", headers: csrfHeader(csrfToken) }
+    );
   },
 };
 

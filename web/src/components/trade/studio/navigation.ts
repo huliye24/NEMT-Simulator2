@@ -15,20 +15,21 @@ export interface StudioNavGroup {
 
 export const STUDIO_NAV_GROUPS: StudioNavGroup[] = [
   {
-    label: "WORKSPACE",
+    label: "CORE WORKFLOW",
     items: [
       { id: "portfolio", label: "投资组合", labelEn: "Portfolio", icon: "assets" },
       { id: "markets", label: "市场", labelEn: "Markets", icon: "markets" },
       { id: "strategies", label: "策略", labelEn: "Strategies", icon: "strategies" },
-      { id: "research", label: "研究", labelEn: "Research", icon: "research" },
-      { id: "experiments", label: "实验", labelEn: "Experiments", icon: "experiments" },
-      { id: "execution", label: "执行", labelEn: "Execution", icon: "play" },
+      { id: "execution", label: "模拟盘", labelEn: "Paper Trading", icon: "play" },
     ],
   },
   {
-    label: "ACCOUNT",
+    label: "SECONDARY",
     items: [
-      { id: "settings", label: "设置", labelEn: "Settings", icon: "settings" },
+      { id: "research", label: "研究", labelEn: "Research", icon: "research" },
+      { id: "experiments", label: "实验", labelEn: "Experiments", icon: "experiments" },
+      { id: "settings", label: "个人空间", labelEn: "Space", icon: "user" },
+      { id: "api", label: "设置", labelEn: "Settings", icon: "settings" },
     ],
   },
 ];
@@ -37,16 +38,16 @@ export const MOBILE_PRIMARY_NAV: StudioNavItem[] = [
   { id: "portfolio", label: "组合", labelEn: "Portfolio", icon: "assets" },
   { id: "markets", label: "市场", labelEn: "Markets", icon: "markets" },
   { id: "strategies", label: "策略", labelEn: "Strategies", icon: "strategies" },
-  { id: "execution", label: "执行", labelEn: "Execution", icon: "play" },
-  { id: "settings", label: "设置", labelEn: "Settings", icon: "settings" },
+  { id: "execution", label: "模拟盘", labelEn: "Paper Trading", icon: "play" },
 ];
 
 export const SECTION_LABELS: Record<StudioSection, string> = {
   strategies: "策略",
   research: "研究",
   experiments: "实验",
-  execution: "执行",
+  execution: "模拟盘",
   markets: "市场",
   portfolio: "投资组合",
-  settings: "设置",
+  settings: "个人空间",
+  api: "设置",
 };

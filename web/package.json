@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "epubjs": "^0.3.93",
     "next": "16.3.2",
     "react": "19.2.8",
     "react-dom": "19.2.8"

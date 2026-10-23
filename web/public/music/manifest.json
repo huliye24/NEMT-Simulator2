@@ -1,0 +1,188 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-21T13:30:20+00:00",
+  "bitrate": "320k",
+  "count": 20,
+  "tracks": [
+    {
+      "id": "01",
+      "title": "大雨还在下",
+      "artist": "1个球",
+      "file": "01.mp3",
+      "bytes": 8642441,
+      "durationSec": 216.0,
+      "source": "1个球-大雨还在下.flac"
+    },
+    {
+      "id": "02",
+      "title": "3611",
+      "artist": "陈子晴",
+      "file": "02.mp3",
+      "bytes": 8079127,
+      "durationSec": 195.9,
+      "source": "3611 - 陈子晴.flac"
+    },
+    {
+      "id": "03",
+      "title": "9420",
+      "artist": "麦小兜",
+      "file": "03.mp3",
+      "bytes": 9358296,
+      "durationSec": 229.2,
+      "source": "9420 - 麦小兜.flac"
+    },
+    {
+      "id": "04",
+      "title": "秒针",
+      "artist": "阿梨粤",
+      "file": "04.mp3",
+      "bytes": 4345814,
+      "durationSec": 108.6,
+      "source": "阿梨粤-秒针.flac"
+    },
+    {
+      "id": "05",
+      "title": "追梦人",
+      "artist": "阿木",
+      "file": "05.mp3",
+      "bytes": 10381145,
+      "durationSec": 259.5,
+      "source": "阿木-追梦人.flac"
+    },
+    {
+      "id": "06",
+      "title": "你的答案",
+      "artist": "阿冗",
+      "file": "06.mp3",
+      "bytes": 8798127,
+      "durationSec": 219.9,
+      "source": "阿冗-你的答案1.flac"
+    },
+    {
+      "id": "07",
+      "title": "热爱105°C的你",
+      "artist": "阿肆",
+      "file": "07.mp3",
+      "bytes": 7815932,
+      "durationSec": 195.3,
+      "source": "阿肆-热爱105°C的你.flac"
+    },
+    {
+      "id": "08",
+      "title": "潮汐 (Natural)",
+      "artist": "安苏羽 / 傅梦彤",
+      "file": "08.mp3",
+      "bytes": 6754336,
+      "durationSec": 168.8,
+      "source": "安苏羽&傅梦彤-潮汐(Natural).flac"
+    },
+    {
+      "id": "09",
+      "title": "青花瓷",
+      "artist": "周杰伦",
+      "file": "09.mp3",
+      "bytes": 9490894,
+      "durationSec": 237.2,
+      "source": "周杰伦-青花瓷.flac"
+    },
+    {
+      "id": "10",
+      "title": "稻香",
+      "artist": "周杰伦",
+      "file": "10.mp3",
+      "bytes": 8941276,
+      "durationSec": 223.5,
+      "source": "周杰伦-稻香.flac"
+    },
+    {
+      "id": "11",
+      "title": "夜曲",
+      "artist": "周杰伦",
+      "file": "11.mp3",
+      "bytes": 9076067,
+      "durationSec": 226.8,
+      "source": "周杰伦-夜曲.flac"
+    },
+    {
+      "id": "12",
+      "title": "十年",
+      "artist": "陈奕迅",
+      "file": "12.mp3",
+      "bytes": 8219251,
+      "durationSec": 205.4,
+      "source": "陈奕迅-十年.flac"
+    },
+    {
+      "id": "13",
+      "title": "孤勇者",
+      "artist": "陈奕迅",
+      "file": "13.mp3",
+      "bytes": 10242175,
+      "durationSec": 256.0,
+      "source": "陈奕迅-孤勇者.flac"
+    },
+    {
+      "id": "14",
+      "title": "光辉岁月",
+      "artist": "Beyond",
+      "file": "14.mp3",
+      "bytes": 11904607,
+      "durationSec": 297.5,
+      "source": "Beyond-光辉岁月.flac"
+    },
+    {
+      "id": "15",
+      "title": "千千阙歌",
+      "artist": "陈慧娴",
+      "file": "15.mp3",
+      "bytes": 11967304,
+      "durationSec": 299.1,
+      "source": "陈慧娴-千千阙歌.flac"
+    },
+    {
+      "id": "16",
+      "title": "光年之外",
+      "artist": "G.E.M.邓紫棋",
+      "file": "16.mp3",
+      "bytes": 9422989,
+      "durationSec": 235.5,
+      "source": "G.E.M.邓紫棋-光年之外.flac"
+    },
+    {
+      "id": "17",
+      "title": "江南",
+      "artist": "林俊杰",
+      "file": "17.mp3",
+      "bytes": 10720737,
+      "durationSec": 267.9,
+      "source": "林俊杰-江南.flac"
+    },
+    {
+      "id": "18",
+      "title": "Hotel California",
+      "artist": "Eagles",
+      "file": "18.mp3",
+      "bytes": 15682963,
+      "durationSec": 392.0,
+      "source": "Eagles-Hotel California.flac"
+    },
+    {
+      "id": "19",
+      "title": "Yesterday Once More",
+      "artist": "Carpenters",
+      "file": "19.mp3",
+      "bytes": 9616293,
+      "durationSec": 240.3,
+      "source": "Carpenters-Yesterday Once More.flac"
+    },
+    {
+      "id": "20",
+      "title": "My Love",
+      "artist": "Westlife",
+      "file": "20.mp3",
+      "bytes": 9339381,
+      "durationSec": 233.4,
+      "source": "Westlife-My Love.flac"
+    }
+  ]
+}

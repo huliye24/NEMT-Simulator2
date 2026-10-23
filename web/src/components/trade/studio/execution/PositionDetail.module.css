@@ -1,0 +1,499 @@
+.backdrop {
+  position: fixed;
+  z-index: 95;
+  inset: 0;
+  overflow-y: auto;
+  background: #fffdf8;
+}
+
+.panel {
+  display: flex;
+  width: 100%;
+  min-height: 100%;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px 30px 30px;
+}
+
+.head {
+  position: sticky;
+  z-index: 3;
+  top: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 6px 0 14px;
+  border-bottom: 1px solid #d8d4cc;
+  background: #fffdf8;
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.titleRow strong {
+  color: #171b20;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+
+.side {
+  padding: 3px 8px;
+  border: 1px solid currentColor;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.side[data-side="LONG"] {
+  color: #109d83;
+}
+
+.side[data-side="SHORT"] {
+  color: #df5148;
+}
+
+.side[data-side="NEUTRAL"] {
+  color: #5f6d7a;
+}
+
+.tag {
+  padding: 3px 7px;
+  border: 1px solid #d8d4cc;
+  color: #6d7780;
+  font-size: 9px;
+}
+
+.head small {
+  display: block;
+  margin-top: 7px;
+  color: #77818a;
+  font-family: var(--ns-font-mono);
+  font-size: 9px;
+}
+
+.close {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  place-items: center;
+  border: 1px solid #d8d4cc;
+  background: transparent;
+  color: #4f5a63;
+  cursor: pointer;
+}
+
+.close:hover {
+  border-color: #171b20;
+  color: #171b20;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border: 1px solid #d8d4cc;
+}
+
+.stat {
+  padding: 14px 16px;
+  border-right: 1px solid #e6e2d8;
+}
+
+.stat:last-child {
+  border-right: 0;
+}
+
+.stat span {
+  display: block;
+  color: #7b858f;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+}
+
+.stat strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat small {
+  display: block;
+  margin-top: 3px;
+  color: #77818a;
+  font-size: 9px;
+}
+
+.good {
+  color: #109d83;
+}
+
+.bad {
+  color: #df5148;
+}
+
+.chartCard,
+.ledgerCard {
+  border: 1px solid #171b20;
+  background: #fffdf8;
+}
+
+.chartHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 16px;
+  border-bottom: 1px solid #d8d4cc;
+  background: #f6f2e9;
+}
+
+.chartHead strong {
+  font-size: 12px;
+}
+
+.chartHead span {
+  color: #7b858f;
+  font-family: var(--ns-font-mono);
+  font-size: 8px;
+}
+
+.chartBox {
+  height: min(46vh, 460px);
+  padding: 6px 8px;
+}
+
+.chart {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.chartLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: min(46vh, 460px);
+  color: #77818a;
+  font-size: 10px;
+}
+
+.gridLine {
+  stroke: #e6e2d8;
+  stroke-width: 1;
+}
+
+.axisText {
+  fill: #9aa1a7;
+  font-family: var(--ns-font-mono);
+  font-size: 11px;
+}
+
+.up .wick,
+.up .body {
+  stroke: #109d83;
+  fill: #109d83;
+}
+
+.down .wick,
+.down .body {
+  stroke: #df5148;
+  fill: #df5148;
+}
+
+.up .body,
+.down .body {
+  fill-opacity: 0.85;
+}
+
+.priceTag {
+  fill: #fffdf8;
+  font-family: var(--ns-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  padding: 10px 16px;
+  background: #f6f2e9;
+  color: #7b858f;
+  font-family: var(--ns-font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  text-align: left;
+  letter-spacing: 0.06em;
+}
+
+.table td {
+  padding: 12px 16px;
+  border-top: 1px solid #ece8df;
+  color: #3c464f;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ok {
+  color: #109d83;
+}
+
+.muted {
+  color: #8a9299;
+}
+
+@media (max-width: 900px) {
+  .panel {
+    padding: 14px 16px 22px;
+  }
+
+  .titleRow strong {
+    font-size: 20px;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stat {
+    border-bottom: 1px solid #e6e2d8;
+  }
+
+  .chartBox {
+    height: 34vh;
+  }
+}
+
+
+/* ---------- 持仓批次 + 流水 ---------- */
+.stats {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.lotsCard {
+  border: 1px solid #171b20;
+  background: #fffdf8;
+}
+
+.lots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 16px;
+}
+
+.lot {
+  display: grid;
+  gap: 3px;
+  padding: 10px 14px;
+  border: 1px solid #d8d4cc;
+  background: #f8f5ee;
+}
+
+.lot em {
+  color: #05a9c0;
+  font-family: var(--ns-font-mono);
+  font-size: 8px;
+  font-style: normal;
+  letter-spacing: 0.08em;
+}
+
+.lot strong {
+  color: #171b20;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.lot span {
+  color: #4f5a63;
+  font-family: var(--ns-font-mono);
+  font-size: 10px;
+}
+
+.lot small {
+  color: #8a9299;
+  font-size: 9px;
+}
+
+.lotsEmpty {
+  margin: 0;
+  color: #8a9299;
+  font-size: 10px;
+}
+
+.actionIn {
+  color: #109d83;
+}
+
+.actionOut {
+  color: #b07a12;
+}
+
+
+/* ---------- 交互式 K 线 ---------- */
+.chartTools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.intervals {
+  display: flex;
+  border: 1px solid #d8d4cc;
+}
+
+.intervals button {
+  padding: 3px 9px;
+  border: 0;
+  border-right: 1px solid #e6e2d8;
+  background: transparent;
+  color: #7b858f;
+  font-family: var(--ns-font-mono);
+  font-size: 9px;
+  cursor: pointer;
+}
+
+.intervals button:last-child {
+  border-right: 0;
+}
+
+.intervals button:hover {
+  background: #fffdf8;
+  color: #171b20;
+}
+
+.intervals .intervalOn {
+  background: #171b20;
+  color: #fffdf8;
+}
+
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #8a9299;
+}
+
+.liveDot[data-live="yes"] {
+  background: #109d83;
+  box-shadow: 0 0 0 0 rgba(16, 157, 131, 0.55);
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(16, 157, 131, 0.5); }
+  70% { box-shadow: 0 0 0 7px rgba(16, 157, 131, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 157, 131, 0); }
+}
+
+.liveText {
+  color: #7b858f;
+  font-family: var(--ns-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.05em;
+}
+
+.chartWrap {
+  position: relative;
+  height: min(52vh, 520px);
+  padding: 6px 8px 0;
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+}
+
+.chartWrap .chart {
+  cursor: inherit;
+}
+
+.tooltip {
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  transform: translateX(-50%);
+  border: 1px solid #171b20;
+  background: #fffdf8;
+  box-shadow: 3px 3px 0 rgba(23, 27, 32, 0.12);
+  font-family: var(--ns-font-mono);
+  font-size: 9px;
+  color: #3c464f;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.tooltip strong {
+  color: #171b20;
+  font-size: 9px;
+}
+
+.chartHint {
+  position: absolute;
+  right: 12px;
+  bottom: 6px;
+  color: #b0a89a;
+  font-family: var(--ns-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+
+
+.chartTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+
+.chartHintText {
+  color: #b0a89a;
+  font-family: var(--ns-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+/* 成交量面板与右侧价格标签 */
+.volUp {
+  fill: #109d83;
+  opacity: 0.45;
+}
+
+.volDown {
+  fill: #df5148;
+  opacity: 0.45;
+}
+
+.volLabel {
+  fill: #9aa1a7;
+  font-family: var(--ns-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+}
+
+.axisTag {
+  fill: #fffdf8;
+  font-family: var(--ns-font-mono);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.chartWrap[data-dragging="yes"] {
+  cursor: grabbing;
+}
+
+.chartWrap {
+  cursor: grab;
+}

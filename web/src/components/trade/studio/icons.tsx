@@ -32,7 +32,12 @@ export type StudioIconName =
   | "activity"
   | "play"
   | "pause"
-  | "sliders";
+  | "sliders"
+  | "pencil"
+  | "copy"
+  | "download"
+  | "trash"
+  | "user";
 
 const PATHS: Record<StudioIconName, ReactNode> = {
   overview: (
@@ -85,6 +90,12 @@ const PATHS: Record<StudioIconName, ReactNode> = {
     <>
       <path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H6.5A2.5 2.5 0 0 1 4 17.5Z" />
       <path d="M4 8.5h16M15 13h5v4h-5a2 2 0 0 1 0-4Z" />
+    </>
+  ),
+  user: (
+    <>
+      <path d="M12 12.5a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z" />
+      <path d="M4.4 20.2a7.6 7.6 0 0 1 15.2 0" />
     </>
   ),
   settings: (
@@ -185,6 +196,33 @@ const PATHS: Record<StudioIconName, ReactNode> = {
       <circle cx="7" cy="18" r="2" fill="var(--ns-surface)" />
     </>
   ),
+  pencil: (
+    <>
+      <path d="M4 20h4L19 9a2.5 2.5 0 0 0-3.5-3.5L4.5 16.5 4 20z" />
+      <path d="M14.5 6.5l3 3" />
+    </>
+  ),
+  copy: (
+    <>
+      <rect x="9" y="9" width="11" height="11" rx="1.6" />
+      <path d="M6 15H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1" />
+    </>
+  ),
+  download: (
+    <>
+      <path d="M12 4v11" />
+      <path d="M8 11l4 4 4-4" />
+      <path d="M4 19h16" />
+    </>
+  ),
+  trash: (
+    <>
+      <path d="M4 7h16" />
+      <path d="M9 7V5h6v2" />
+      <path d="M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12" />
+      <path d="M10 11v6M14 11v6" />
+    </>
+  ),
 };
 
 export function StudioIcon({
@@ -218,29 +256,37 @@ export function StudioIcon({
 
 export function StudioBrandMark({ size = 30 }: { size?: number }) {
   return (
-    <span className="ns-brand-mark" style={{ width: size, height: size }} aria-hidden="true">
-      <svg width={size * 0.6} height={size * 0.6} viewBox="0 0 24 24" fill="none">
-        <path
-          d="M18 5H6v14h12M6 12h9"
-          stroke="currentColor"
-          strokeWidth="2.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <circle cx="18" cy="19" r="1.6" fill="currentColor" />
-      </svg>
+    <span
+      className="ns-brand-mark"
+      style={{ width: size, height: size, overflow: "hidden", background: "transparent" }}
+      aria-hidden="true"
+    >
+      {/* The source is the current blue/cyan Emergenzix lockup. The square
+          wrapper clips its leading mark so the retired N glyph never returns. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/brand/emergenix-logo.png"
+        alt=""
+        height={size}
+        width={Math.round((size * 1024) / 236)}
+        style={{ display: "block", flex: "none", maxWidth: "none" }}
+      />
     </span>
   );
 }
 
 export function StudioBrand({ compact = false }: { compact?: boolean }) {
+  const height = compact ? 28 : 34;
   return (
     <span className="ns-brand">
-      <StudioBrandMark size={compact ? 28 : 32} />
-      <span className="ns-brand-type">
-        <span className="ns-brand-name">emergentix</span>
-        <span className="ns-brand-product">涌现流派</span>
-      </span>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        className="ns-brand-logo"
+        src="/brand/emergenix-logo.png"
+        alt="emergenix"
+        height={height}
+        width={Math.round((height * 1024) / 236)}
+      />
     </span>
   );
 }

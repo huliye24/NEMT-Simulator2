@@ -5,13 +5,13 @@
  * - submitting a trade while offline is impossible because the API is not
  *   cached and the UI disables writes when the connection is lost.
  */
-const VERSION = "nemt-trade-v1";
+const VERSION = "nemt-trade-v2";
 const STATIC_ASSETS = [
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/icons/icon-maskable-512.png",
   "/offline.html",
-  "/nemt-mark.svg",
+  "/icons/favicon-32.png",
 ];
 
 self.addEventListener("install", (event) => {
@@ -63,7 +63,7 @@ self.addEventListener("fetch", (event) => {
   if (
     url.pathname.startsWith("/_next/static/") ||
     url.pathname.startsWith("/icons/") ||
-    url.pathname === "/nemt-mark.svg" ||
+    url.pathname === "/icons/favicon-32.png" ||
     url.pathname === "/manifest.webmanifest"
   ) {
     event.respondWith(

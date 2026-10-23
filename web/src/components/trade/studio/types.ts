@@ -10,6 +10,7 @@ export const STUDIO_SECTIONS = [
   "execution",
   "markets",
   "settings",
+  "api",
 ] as const;
 
 export type StudioSection = (typeof STUDIO_SECTIONS)[number];
