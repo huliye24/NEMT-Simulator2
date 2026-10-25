@@ -9,6 +9,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal, Optional
 
+from .expectancy_optimizer import ExpectancyEstimate, optimize_expectancy
+
 PyramidMode = Literal["v4_a_breakeven", "v4_b_atr_trailing", "v4_c_trailing_only"]
 
 
@@ -197,6 +199,12 @@ class AdaptivePyramidDecision:
     reason: str
 
 
+@dataclass(frozen=True)
+class AdaptiveV42Decision:
+    pyramid: AdaptivePyramidDecision
+    expectancy: ExpectancyEstimate
+
+
 def adaptive_pyramid_decision(
     inputs: AdaptivePyramidInputs,
     config: AdaptivePyramidingConfig = AdaptivePyramidingConfig(),
@@ -275,4 +283,45 @@ def adaptive_pyramid_decision(
         adjusted_kelly=adjusted_kelly,
         expected_edge=edge,
         reason=reason,
+    )
+
+
+def adaptive_pyramid_decision_v42(
+    inputs: AdaptivePyramidInputs,
+    completed_trade_returns_r: list[float],
+    config: AdaptivePyramidingConfig = AdaptivePyramidingConfig(),
+) -> AdaptiveV42Decision:
+    """Cap marginal pyramiding with robust Bayesian log-growth allocation."""
+
+    base = adaptive_pyramid_decision(inputs, config)
+    expectancy = optimize_expectancy(
+        completed_trade_returns_r,
+        current_drawdown=inputs.drawdown_fraction,
+    )
+    if base.add_notional <= 0:
+        return AdaptiveV42Decision(base, expectancy)
+    if not expectancy.eligible:
+        return AdaptiveV42Decision(
+            AdaptivePyramidDecision(
+                0.0, base.remaining_risk_budget, base.locked_profit,
+                base.open_stop_risk, base.raw_kelly, base.adjusted_kelly,
+                base.expected_edge, f"robust_{expectancy.reason}",
+            ),
+            expectancy,
+        )
+    stop_pct = abs(inputs.price - inputs.protective_stop) / inputs.price
+    robust_notional = (
+        inputs.equity * expectancy.optimal_allocation_fraction / stop_pct
+        if stop_pct > 0 else 0.0
+    )
+    capped = min(base.add_notional, robust_notional)
+    reason = "eligible_v42" if capped >= config.minimum_add_notional else "below_minimum_add_notional"
+    return AdaptiveV42Decision(
+        AdaptivePyramidDecision(
+            capped if reason == "eligible_v42" else 0.0,
+            base.remaining_risk_budget, base.locked_profit,
+            base.open_stop_risk, base.raw_kelly, base.adjusted_kelly,
+            base.expected_edge, reason,
+        ),
+        expectancy,
     )

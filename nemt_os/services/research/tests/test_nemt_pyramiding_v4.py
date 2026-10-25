@@ -7,6 +7,7 @@ from nemt_os.services.research.nemt_pyramiding_v4 import (
     PyramidingControllerV4,
     PyramidingV4Config,
     adaptive_pyramid_decision,
+    adaptive_pyramid_decision_v42,
 )
 
 
@@ -98,3 +99,16 @@ def test_fractional_kelly_and_notional_cap_bound_addition() -> None:
     config = AdaptivePyramidingConfig(max_total_notional_to_equity=1.5)
     decision = adaptive_pyramid_decision(adaptive_inputs(current_quantity=1.3), config)
     assert decision.add_notional <= 7.0 + 1e-9
+
+
+def test_v42_refuses_pyramiding_without_robust_trade_history() -> None:
+    decision = adaptive_pyramid_decision_v42(adaptive_inputs(), [100.0])
+    assert decision.pyramid.add_notional == 0
+    assert decision.expectancy.reason == "insufficient_observations"
+
+
+def test_v42_allows_low_win_rate_when_robust_expectancy_is_positive() -> None:
+    history = [-1.0] * 90 + [100.0] * 10
+    decision = adaptive_pyramid_decision_v42(adaptive_inputs(), history)
+    assert decision.expectancy.eligible is True
+    assert decision.pyramid.add_notional > 0
