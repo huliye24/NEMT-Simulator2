@@ -7,6 +7,7 @@ import pytest
 from nemt_os.services.research.regime_router_v44 import (
     MonthlyPerformance,
     RegimeSnapshot,
+    classify_regimes_causally,
     compound_return,
     compute_regime_snapshot,
     walk_forward_route,
@@ -50,3 +51,19 @@ def test_walk_forward_decisions_do_not_change_when_future_results_change() -> No
 
 def test_compound_return() -> None:
     assert compound_return([10.0, -10.0]) == pytest.approx(-1.0)
+
+
+def test_causal_regime_labels_ignore_future_features() -> None:
+    snapshots = [
+        RegimeSnapshot(
+            f"2025-{month:02d}", 0.01 * month, 0.1 * month,
+            0.01 * month, 0.4, 0.8 + 0.01 * month, 1, "range",
+        )
+        for month in range(1, 11)
+    ]
+    original = classify_regimes_causally(snapshots, calibration_months=3)
+    changed = snapshots[:-1] + [
+        RegimeSnapshot("2025-10", -0.9, 99.0, 0.99, 2.0, 9.0, -1, "range")
+    ]
+    rerun = classify_regimes_causally(changed, calibration_months=3)
+    assert [item.regime for item in original[:-1]] == [item.regime for item in rerun[:-1]]

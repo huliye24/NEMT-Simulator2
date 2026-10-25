@@ -13,6 +13,7 @@ from zoneinfo import ZoneInfo
 
 from nemt_os.services.research.regime_router_v44 import (
     MonthlyPerformance,
+    classify_regimes_causally,
     compound_return,
     compute_regime_snapshot,
     walk_forward_route,
@@ -93,11 +94,12 @@ def main() -> None:
         end_at=last.astimezone(timezone.utc),
     )
     bars = [Bar.model_validate(item) for item in payloads]
-    snapshots = []
+    raw_snapshots = []
     for month in complete_months:
         boundary = datetime.strptime(month + "-01", "%Y-%m-%d").replace(tzinfo=zone)
         closes = [bar.close for bar in bars if bar.timestamp < boundary.astimezone(timezone.utc)]
-        snapshots.append(compute_regime_snapshot(month=month, closes=closes))
+        raw_snapshots.append(compute_regime_snapshot(month=month, closes=closes))
+    snapshots = classify_regimes_causally(raw_snapshots, calibration_months=8)
 
     decisions = walk_forward_route(
         snapshots=snapshots,

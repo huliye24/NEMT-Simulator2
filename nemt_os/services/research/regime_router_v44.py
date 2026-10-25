@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import math
 import statistics
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime
 from typing import Iterable, Optional, Sequence
 
@@ -108,6 +108,56 @@ def compute_regime_snapshot(
         direction=direction,
         regime=regime,
     )
+
+
+def _quantile(values: Sequence[float], probability: float) -> float:
+    ordered = sorted(values)
+    if not ordered:
+        raise ValueError("quantile needs at least one value")
+    position = (len(ordered) - 1) * probability
+    lower = math.floor(position)
+    upper = math.ceil(position)
+    if lower == upper:
+        return ordered[lower]
+    weight = position - lower
+    return ordered[lower] * (1.0 - weight) + ordered[upper] * weight
+
+
+def classify_regimes_causally(
+    snapshots: Sequence[RegimeSnapshot], *, calibration_months: int = 8,
+) -> list[RegimeSnapshot]:
+    """Assign relative regimes using feature distributions from earlier months only."""
+    ordered = sorted(snapshots, key=lambda item: item.month)
+    classified: list[RegimeSnapshot] = []
+    for index, snapshot in enumerate(ordered):
+        history = ordered[:index]
+        if len(history) < calibration_months:
+            regime = "calibration"
+        else:
+            trend_median = _quantile([item.trend_z for item in history], 0.50)
+            trend_high = _quantile([item.trend_z for item in history], 0.75)
+            efficiency_median = _quantile(
+                [item.directional_efficiency for item in history], 0.50
+            )
+            efficiency_high = _quantile(
+                [item.directional_efficiency for item in history], 0.75
+            )
+            volatility_high = _quantile(
+                [item.volatility_ratio for item in history], 0.75
+            )
+            if (snapshot.volatility_ratio >= volatility_high
+                    and snapshot.directional_efficiency < efficiency_median):
+                regime = "turbulent"
+            elif (snapshot.trend_z >= trend_high
+                  and snapshot.directional_efficiency >= efficiency_high):
+                regime = "strong_trend"
+            elif (snapshot.trend_z >= trend_median
+                  and snapshot.directional_efficiency >= efficiency_median):
+                regime = "weak_trend"
+            else:
+                regime = "range"
+        classified.append(replace(snapshot, regime=regime))
+    return classified
 
 
 def _scaled_distance(

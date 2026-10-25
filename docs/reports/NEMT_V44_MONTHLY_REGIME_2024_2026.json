@@ -1,0 +1,2790 @@
+{
+  "protocol": "nemt-v4.4-regime-router-monthly-001",
+  "causality": "regime features use only candles completed before each month; router uses only earlier monthly outcomes",
+  "months": [
+    {
+      "month": "2024-01",
+      "regime": "calibration",
+      "direction": 1,
+      "features": {
+        "month": "2024-01",
+        "trailing_return": 0.5149040312477853,
+        "trend_z": 2.1545292909703413,
+        "directional_efficiency": 0.12921964759433865,
+        "realized_volatility": 0.388230075339573,
+        "volatility_ratio": 1.0147830078840154,
+        "direction": 1,
+        "regime": "calibration"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2024-01",
+          "variant": "v4a",
+          "return_pct": -1.800335,
+          "max_drawdown_pct": 11.942081,
+          "trades": 9,
+          "expectancy_ratio": -0.124848
+        },
+        "v4b": {
+          "month": "2024-01",
+          "variant": "v4b",
+          "return_pct": -1.345365,
+          "max_drawdown_pct": 11.665422,
+          "trades": 9,
+          "expectancy_ratio": -0.092931
+        },
+        "v4c": {
+          "month": "2024-01",
+          "variant": "v4c",
+          "return_pct": -4.314977,
+          "max_drawdown_pct": 9.728141,
+          "trades": 9,
+          "expectancy_ratio": -0.306298
+        },
+        "v41": {
+          "month": "2024-01",
+          "variant": "v41",
+          "return_pct": -0.009939,
+          "max_drawdown_pct": 8.763512,
+          "trades": 8,
+          "expectancy_ratio": -0.000802
+        },
+        "v42": {
+          "month": "2024-01",
+          "variant": "v42",
+          "return_pct": -0.575701,
+          "max_drawdown_pct": 8.763512,
+          "trades": 8,
+          "expectancy_ratio": -0.046732
+        },
+        "v43": {
+          "month": "2024-01",
+          "variant": "v43",
+          "return_pct": -0.575701,
+          "max_drawdown_pct": 8.763512,
+          "trades": 8,
+          "expectancy_ratio": -0.046732
+        }
+      }
+    },
+    {
+      "month": "2024-02",
+      "regime": "calibration",
+      "direction": 1,
+      "features": {
+        "month": "2024-02",
+        "trailing_return": 0.2517634954493384,
+        "trend_z": 1.0662453979669397,
+        "directional_efficiency": 0.06283502571627121,
+        "realized_volatility": 0.4241188282827939,
+        "volatility_ratio": 1.0844345922291436,
+        "direction": 1,
+        "regime": "calibration"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2024-02",
+          "variant": "v4a",
+          "return_pct": 73.235253,
+          "max_drawdown_pct": 8.617467,
+          "trades": 5,
+          "expectancy_ratio": 7.807604
+        },
+        "v4b": {
+          "month": "2024-02",
+          "variant": "v4b",
+          "return_pct": 73.235253,
+          "max_drawdown_pct": 8.617467,
+          "trades": 5,
+          "expectancy_ratio": 7.807604
+        },
+        "v4c": {
+          "month": "2024-02",
+          "variant": "v4c",
+          "return_pct": 37.763545,
+          "max_drawdown_pct": 6.574249,
+          "trades": 5,
+          "expectancy_ratio": 4.225496
+        },
+        "v41": {
+          "month": "2024-02",
+          "variant": "v41",
+          "return_pct": 43.322024,
+          "max_drawdown_pct": 7.208851,
+          "trades": 5,
+          "expectancy_ratio": 4.268958
+        },
+        "v42": {
+          "month": "2024-02",
+          "variant": "v42",
+          "return_pct": 37.185924,
+          "max_drawdown_pct": 6.965969,
+          "trades": 5,
+          "expectancy_ratio": 3.839685
+        },
+        "v43": {
+          "month": "2024-02",
+          "variant": "v43",
+          "return_pct": 37.185924,
+          "max_drawdown_pct": 6.965969,
+          "trades": 5,
+          "expectancy_ratio": 3.839685
+        }
+      }
+    },
+    {
+      "month": "2024-03",
+      "regime": "calibration",
+      "direction": 1,
+      "features": {
+        "month": "2024-03",
+        "trailing_return": 0.634009397737775,
+        "trend_z": 2.2214107095156805,
+        "directional_efficiency": 0.15223932806593418,
+        "realized_volatility": 0.4451540315398595,
+        "volatility_ratio": 1.056312342253137,
+        "direction": 1,
+        "regime": "calibration"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2024-03",
+          "variant": "v4a",
+          "return_pct": -11.698485,
+          "max_drawdown_pct": 17.614554,
+          "trades": 12,
+          "expectancy_ratio": -0.557676
+        },
+        "v4b": {
+          "month": "2024-03",
+          "variant": "v4b",
+          "return_pct": -11.578288,
+          "max_drawdown_pct": 17.516512,
+          "trades": 12,
+          "expectancy_ratio": -0.55128
+        },
+        "v4c": {
+          "month": "2024-03",
+          "variant": "v4c",
+          "return_pct": -13.582623,
+          "max_drawdown_pct": 17.056517,
+          "trades": 12,
+          "expectancy_ratio": -0.65825
+        },
+        "v41": {
+          "month": "2024-03",
+          "variant": "v41",
+          "return_pct": -12.689794,
+          "max_drawdown_pct": 17.970375,
+          "trades": 12,
+          "expectancy_ratio": -0.595481
+        },
+        "v42": {
+          "month": "2024-03",
+          "variant": "v42",
+          "return_pct": -13.787626,
+          "max_drawdown_pct": 17.25328,
+          "trades": 12,
+          "expectancy_ratio": -0.660412
+        },
+        "v43": {
+          "month": "2024-03",
+          "variant": "v43",
+          "return_pct": -13.787626,
+          "max_drawdown_pct": 17.25328,
+          "trades": 12,
+          "expectancy_ratio": -0.660412
+        }
+      }
+    },
+    {
+      "month": "2024-04",
+      "regime": "calibration",
+      "direction": 1,
+      "features": {
+        "month": "2024-04",
+        "trailing_return": 0.6450704192431325,
+        "trend_z": 1.8433124873528324,
+        "directional_efficiency": 0.1203743588965194,
+        "realized_volatility": 0.5438341054715514,
+        "volatility_ratio": 1.141858643814592,
+        "direction": 1,
+        "regime": "calibration"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2024-04",
+          "variant": "v4a",
+          "return_pct": 8.438022,
+          "max_drawdown_pct": 7.890447,
+          "trades": 9,
+          "expectancy_ratio": 0.466015
+        },
+        "v4b": {
+          "month": "2024-04",
+          "variant": "v4b",
+          "return_pct": 7.069588,
+          "max_drawdown_pct": 7.890447,
+          "trades": 9,
+          "expectancy_ratio": 0.418196
+        },
+        "v4c": {
+          "month": "2024-04",
+          "variant": "v4c",
+          "return_pct": 0.835017,
+          "max_drawdown_pct": 5.680892,
+          "trades": 9,
+          "expectancy_ratio": 0.051974
+        },
+        "v41": {
+          "month": "2024-04",
+          "variant": "v41",
+          "return_pct": 0.205985,
+          "max_drawdown_pct": 5.957569,
+          "trades": 9,
+          "expectancy_ratio": 0.012374
+        },
+        "v42": {
+          "month": "2024-04",
+          "variant": "v42",
+          "return_pct": 0.205985,
+          "max_drawdown_pct": 5.957569,
+          "trades": 9,
+          "expectancy_ratio": 0.012374
+        },
+        "v43": {
+          "month": "2024-04",
+          "variant": "v43",
+          "return_pct": 0.205985,
+          "max_drawdown_pct": 5.957569,
+          "trades": 9,
+          "expectancy_ratio": 0.012374
+        }
+      }
+    },
+    {
+      "month": "2024-05",
+      "regime": "calibration",
+      "direction": 1,
+      "features": {
+        "month": "2024-05",
+        "trailing_return": 0.4021058045114152,
+        "trend_z": 1.201491273714205,
+        "directional_efficiency": 0.06469643242444967,
+        "realized_volatility": 0.5664863608140847,
+        "volatility_ratio": 1.0019799728274201,
+        "direction": 1,
+        "regime": "calibration"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2024-05",
+          "variant": "v4a",
+          "return_pct": -6.953071,
+          "max_drawdown_pct": 14.681778,
+          "trades": 11,
+          "expectancy_ratio": -0.404744
+        },
+        "v4b": {
+          "month": "2024-05",
+          "variant": "v4b",
+          "return_pct": -4.476007,
+          "max_drawdown_pct": 12.410465,
+          "trades": 10,
+          "expectancy_ratio": -0.288415
+        },
+        "v4c": {
+          "month": "2024-05",
+          "variant": "v4c",
+          "return_pct": -6.26718,
+          "max_drawdown_pct": 10.853384,
+          "trades": 10,
+          "expectancy_ratio": -0.426512
+        },
+        "v41": {
+          "month": "2024-05",
+          "variant": "v41",
+          "return_pct": -6.597663,
+          "max_drawdown_pct": 12.585392,
+          "trades": 10,
+          "expectancy_ratio": -0.39068
+        },
+        "v42": {
+          "month": "2024-05",
+          "variant": "v42",
+          "return_pct": -7.576386,
+          "max_drawdown_pct": 12.098533,
+          "trades": 10,
+          "expectancy_ratio": -0.461695
+        },
+        "v43": {
+          "month": "2024-05",
+          "variant": "v43",
+          "return_pct": -7.576386,
+          "max_drawdown_pct": 12.098533,
+          "trades": 10,
+          "expectancy_ratio": -0.461695
+        }
+      }
+    },
+    {
+      "month": "2024-06",
+      "regime": "calibration",
+      "direction": 1,
+      "features": {
+        "month": "2024-06",
+        "trailing_return": 0.08813783769782613,
+        "trend_z": 0.29151850169214205,
+        "directional_efficiency": 0.018362536295013155,
+        "realized_volatility": 0.5835128021319881,
+        "volatility_ratio": 0.7456085120831689,
+        "direction": 1,
+        "regime": "calibration"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2024-06",
+          "variant": "v4a",
+          "return_pct": 3.89512,
+          "max_drawdown_pct": 7.846527,
+          "trades": 7,
+          "expectancy_ratio": 0.446161
+        },
+        "v4b": {
+          "month": "2024-06",
+          "variant": "v4b",
+          "return_pct": 3.336831,
+          "max_drawdown_pct": 7.846527,
+          "trades": 7,
+          "expectancy_ratio": 0.429017
+        },
+        "v4c": {
+          "month": "2024-06",
+          "variant": "v4c",
+          "return_pct": 0.02069,
+          "max_drawdown_pct": 6.17223,
+          "trades": 7,
+          "expectancy_ratio": 0.002752
+        },
+        "v41": {
+          "month": "2024-06",
+          "variant": "v41",
+          "return_pct": 1.890958,
+          "max_drawdown_pct": 6.024161,
+          "trades": 6,
+          "expectancy_ratio": 0.262301
+        },
+        "v42": {
+          "month": "2024-06",
+          "variant": "v42",
+          "return_pct": 1.890958,
+          "max_drawdown_pct": 6.024161,
+          "trades": 6,
+          "expectancy_ratio": 0.262301
+        },
+        "v43": {
+          "month": "2024-06",
+          "variant": "v43",
+          "return_pct": 1.890958,
+          "max_drawdown_pct": 6.024161,
+          "trades": 6,
+          "expectancy_ratio": 0.262301
+        }
+      }
+    },
+    {
+      "month": "2024-07",
+      "regime": "calibration",
+      "direction": -1,
+      "features": {
+        "month": "2024-07",
+        "trailing_return": -0.09553813428608915,
+        "trend_z": 0.4208764857484402,
+        "directional_efficiency": 0.026922872500453325,
+        "realized_volatility": 0.48047378178903644,
+        "volatility_ratio": 0.8294857428099641,
+        "direction": -1,
+        "regime": "calibration"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2024-07",
+          "variant": "v4a",
+          "return_pct": 8.027354,
+          "max_drawdown_pct": 12.574144,
+          "trades": 12,
+          "expectancy_ratio": 0.369827
+        },
+        "v4b": {
+          "month": "2024-07",
+          "variant": "v4b",
+          "return_pct": 8.027354,
+          "max_drawdown_pct": 12.574144,
+          "trades": 12,
+          "expectancy_ratio": 0.369827
+        },
+        "v4c": {
+          "month": "2024-07",
+          "variant": "v4c",
+          "return_pct": 0.189216,
+          "max_drawdown_pct": 10.071744,
+          "trades": 12,
+          "expectancy_ratio": 0.009185
+        },
+        "v41": {
+          "month": "2024-07",
+          "variant": "v41",
+          "return_pct": 2.177063,
+          "max_drawdown_pct": 10.617728,
+          "trades": 11,
+          "expectancy_ratio": 0.110397
+        },
+        "v42": {
+          "month": "2024-07",
+          "variant": "v42",
+          "return_pct": 1.995471,
+          "max_drawdown_pct": 10.617728,
+          "trades": 11,
+          "expectancy_ratio": 0.103171
+        },
+        "v43": {
+          "month": "2024-07",
+          "variant": "v43",
+          "return_pct": 1.995471,
+          "max_drawdown_pct": 10.617728,
+          "trades": 11,
+          "expectancy_ratio": 0.103171
+        }
+      }
+    },
+    {
+      "month": "2024-08",
+      "regime": "calibration",
+      "direction": 1,
+      "features": {
+        "month": "2024-08",
+        "trailing_return": 0.12006989048185024,
+        "trend_z": 0.526989568227807,
+        "directional_efficiency": 0.03150065295823284,
+        "realized_volatility": 0.4333133527412248,
+        "volatility_ratio": 0.9875806884094633,
+        "direction": 1,
+        "regime": "calibration"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2024-08",
+          "variant": "v4a",
+          "return_pct": 5.483468,
+          "max_drawdown_pct": 14.05193,
+          "trades": 12,
+          "expectancy_ratio": 0.260838
+        },
+        "v4b": {
+          "month": "2024-08",
+          "variant": "v4b",
+          "return_pct": 6.009766,
+          "max_drawdown_pct": 14.05193,
+          "trades": 12,
+          "expectancy_ratio": 0.285765
+        },
+        "v4c": {
+          "month": "2024-08",
+          "variant": "v4c",
+          "return_pct": -2.667167,
+          "max_drawdown_pct": 13.714012,
+          "trades": 12,
+          "expectancy_ratio": -0.135833
+        },
+        "v41": {
+          "month": "2024-08",
+          "variant": "v41",
+          "return_pct": 1.640862,
+          "max_drawdown_pct": 16.088051,
+          "trades": 12,
+          "expectancy_ratio": 0.07602
+        },
+        "v42": {
+          "month": "2024-08",
+          "variant": "v42",
+          "return_pct": -3.351846,
+          "max_drawdown_pct": 14.320984,
+          "trades": 12,
+          "expectancy_ratio": -0.16681
+        },
+        "v43": {
+          "month": "2024-08",
+          "variant": "v43",
+          "return_pct": -3.351846,
+          "max_drawdown_pct": 14.320984,
+          "trades": 12,
+          "expectancy_ratio": -0.16681
+        }
+      }
+    },
+    {
+      "month": "2024-09",
+      "regime": "range",
+      "direction": -1,
+      "features": {
+        "month": "2024-09",
+        "trailing_return": -0.13406720097114677,
+        "trend_z": 0.5413200300467053,
+        "directional_efficiency": 0.03518685899385158,
+        "realized_volatility": 0.5355211567558954,
+        "volatility_ratio": 1.0494406347024767,
+        "direction": -1,
+        "regime": "range"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2024-09",
+          "variant": "v4a",
+          "return_pct": -4.374812,
+          "max_drawdown_pct": 6.418693,
+          "trades": 10,
+          "expectancy_ratio": -0.282113
+        },
+        "v4b": {
+          "month": "2024-09",
+          "variant": "v4b",
+          "return_pct": -4.374812,
+          "max_drawdown_pct": 6.418693,
+          "trades": 10,
+          "expectancy_ratio": -0.282113
+        },
+        "v4c": {
+          "month": "2024-09",
+          "variant": "v4c",
+          "return_pct": -5.830353,
+          "max_drawdown_pct": 6.952669,
+          "trades": 10,
+          "expectancy_ratio": -0.378647
+        },
+        "v41": {
+          "month": "2024-09",
+          "variant": "v41",
+          "return_pct": -4.105768,
+          "max_drawdown_pct": 5.437195,
+          "trades": 9,
+          "expectancy_ratio": -0.301615
+        },
+        "v42": {
+          "month": "2024-09",
+          "variant": "v42",
+          "return_pct": -4.105768,
+          "max_drawdown_pct": 5.437195,
+          "trades": 9,
+          "expectancy_ratio": -0.301615
+        },
+        "v43": {
+          "month": "2024-09",
+          "variant": "v43",
+          "return_pct": -4.105768,
+          "max_drawdown_pct": 5.437195,
+          "trades": 9,
+          "expectancy_ratio": -0.301615
+        }
+      }
+    },
+    {
+      "month": "2024-10",
+      "regime": "range",
+      "direction": 1,
+      "features": {
+        "month": "2024-10",
+        "trailing_return": 0.026043260743513263,
+        "trend_z": 0.09402820046770713,
+        "directional_efficiency": 0.006124321219135217,
+        "realized_volatility": 0.5506398203117641,
+        "volatility_ratio": 0.7269231631019233,
+        "direction": 1,
+        "regime": "range"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2024-10",
+          "variant": "v4a",
+          "return_pct": 22.806676,
+          "max_drawdown_pct": 11.03506,
+          "trades": 5,
+          "expectancy_ratio": 3.246085
+        },
+        "v4b": {
+          "month": "2024-10",
+          "variant": "v4b",
+          "return_pct": 22.806676,
+          "max_drawdown_pct": 11.03506,
+          "trades": 5,
+          "expectancy_ratio": 3.246085
+        },
+        "v4c": {
+          "month": "2024-10",
+          "variant": "v4c",
+          "return_pct": 11.527768,
+          "max_drawdown_pct": 8.168469,
+          "trades": 5,
+          "expectancy_ratio": 1.682271
+        },
+        "v41": {
+          "month": "2024-10",
+          "variant": "v41",
+          "return_pct": 12.107397,
+          "max_drawdown_pct": 8.60596,
+          "trades": 5,
+          "expectancy_ratio": 1.657801
+        },
+        "v42": {
+          "month": "2024-10",
+          "variant": "v42",
+          "return_pct": 10.292841,
+          "max_drawdown_pct": 7.886156,
+          "trades": 5,
+          "expectancy_ratio": 1.416917
+        },
+        "v43": {
+          "month": "2024-10",
+          "variant": "v43",
+          "return_pct": 10.292841,
+          "max_drawdown_pct": 7.886156,
+          "trades": 5,
+          "expectancy_ratio": 1.416917
+        }
+      }
+    },
+    {
+      "month": "2024-11",
+      "regime": "range",
+      "direction": 1,
+      "features": {
+        "month": "2024-11",
+        "trailing_return": 0.11359891610967021,
+        "trend_z": 0.42572488744744763,
+        "directional_efficiency": 0.030392026039303053,
+        "realized_volatility": 0.5089750001969076,
+        "volatility_ratio": 0.6025415160393597,
+        "direction": 1,
+        "regime": "range"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2024-11",
+          "variant": "v4a",
+          "return_pct": 26.858079,
+          "max_drawdown_pct": 7.899645,
+          "trades": 6,
+          "expectancy_ratio": 4.150206
+        },
+        "v4b": {
+          "month": "2024-11",
+          "variant": "v4b",
+          "return_pct": 25.370479,
+          "max_drawdown_pct": 7.899645,
+          "trades": 6,
+          "expectancy_ratio": 3.946508
+        },
+        "v4c": {
+          "month": "2024-11",
+          "variant": "v4c",
+          "return_pct": 13.290176,
+          "max_drawdown_pct": 5.63174,
+          "trades": 6,
+          "expectancy_ratio": 2.220581
+        },
+        "v41": {
+          "month": "2024-11",
+          "variant": "v41",
+          "return_pct": 15.159004,
+          "max_drawdown_pct": 7.319571,
+          "trades": 6,
+          "expectancy_ratio": 2.343361
+        },
+        "v42": {
+          "month": "2024-11",
+          "variant": "v42",
+          "return_pct": 12.045589,
+          "max_drawdown_pct": 5.95556,
+          "trades": 6,
+          "expectancy_ratio": 2.026188
+        },
+        "v43": {
+          "month": "2024-11",
+          "variant": "v43",
+          "return_pct": 12.045589,
+          "max_drawdown_pct": 5.95556,
+          "trades": 6,
+          "expectancy_ratio": 2.026188
+        }
+      }
+    },
+    {
+      "month": "2024-12",
+      "regime": "strong_trend",
+      "direction": 1,
+      "features": {
+        "month": "2024-12",
+        "trailing_return": 0.6600891492175838,
+        "trend_z": 2.2134277195230485,
+        "directional_efficiency": 0.14438255905248662,
+        "realized_volatility": 0.46116627394288623,
+        "volatility_ratio": 1.2600278208045834,
+        "direction": 1,
+        "regime": "strong_trend"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2024-12",
+          "variant": "v4a",
+          "return_pct": -7.39225,
+          "max_drawdown_pct": 12.895742,
+          "trades": 11,
+          "expectancy_ratio": -0.420567
+        },
+        "v4b": {
+          "month": "2024-12",
+          "variant": "v4b",
+          "return_pct": -0.554496,
+          "max_drawdown_pct": 12.005594,
+          "trades": 10,
+          "expectancy_ratio": -0.029196
+        },
+        "v4c": {
+          "month": "2024-12",
+          "variant": "v4c",
+          "return_pct": -4.530822,
+          "max_drawdown_pct": 9.671008,
+          "trades": 10,
+          "expectancy_ratio": -0.243999
+        },
+        "v41": {
+          "month": "2024-12",
+          "variant": "v41",
+          "return_pct": -4.534233,
+          "max_drawdown_pct": 9.827668,
+          "trades": 10,
+          "expectancy_ratio": -0.239756
+        },
+        "v42": {
+          "month": "2024-12",
+          "variant": "v42",
+          "return_pct": -4.73685,
+          "max_drawdown_pct": 9.827668,
+          "trades": 10,
+          "expectancy_ratio": -0.251002
+        },
+        "v43": {
+          "month": "2024-12",
+          "variant": "v43",
+          "return_pct": -4.73685,
+          "max_drawdown_pct": 9.827668,
+          "trades": 10,
+          "expectancy_ratio": -0.251002
+        }
+      }
+    },
+    {
+      "month": "2025-01",
+      "regime": "weak_trend",
+      "direction": 1,
+      "features": {
+        "month": "2025-01",
+        "trailing_return": 0.542036793800821,
+        "trend_z": 1.745627364774777,
+        "directional_efficiency": 0.10034581287388276,
+        "realized_volatility": 0.49965008680137424,
+        "volatility_ratio": 1.1555178801659383,
+        "direction": 1,
+        "regime": "weak_trend"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2025-01",
+          "variant": "v4a",
+          "return_pct": 6.386085,
+          "max_drawdown_pct": 8.480396,
+          "trades": 11,
+          "expectancy_ratio": 0.262189
+        },
+        "v4b": {
+          "month": "2025-01",
+          "variant": "v4b",
+          "return_pct": 6.650405,
+          "max_drawdown_pct": 8.480396,
+          "trades": 11,
+          "expectancy_ratio": 0.273004
+        },
+        "v4c": {
+          "month": "2025-01",
+          "variant": "v4c",
+          "return_pct": -0.369016,
+          "max_drawdown_pct": 8.657339,
+          "trades": 11,
+          "expectancy_ratio": -0.015747
+        },
+        "v41": {
+          "month": "2025-01",
+          "variant": "v41",
+          "return_pct": -0.715563,
+          "max_drawdown_pct": 9.917808,
+          "trades": 11,
+          "expectancy_ratio": -0.030595
+        },
+        "v42": {
+          "month": "2025-01",
+          "variant": "v42",
+          "return_pct": -1.172007,
+          "max_drawdown_pct": 8.832605,
+          "trades": 11,
+          "expectancy_ratio": -0.050294
+        },
+        "v43": {
+          "month": "2025-01",
+          "variant": "v43",
+          "return_pct": -1.172007,
+          "max_drawdown_pct": 8.832605,
+          "trades": 11,
+          "expectancy_ratio": -0.050294
+        }
+      }
+    },
+    {
+      "month": "2025-02",
+      "regime": "weak_trend",
+      "direction": 1,
+      "features": {
+        "month": "2025-02",
+        "trailing_return": 0.5198038942449215,
+        "trend_z": 1.5267368178745933,
+        "directional_efficiency": 0.087461100477977,
+        "realized_volatility": 0.5521293463130812,
+        "volatility_ratio": 1.026825479039466,
+        "direction": 1,
+        "regime": "weak_trend"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2025-02",
+          "variant": "v4a",
+          "return_pct": 11.003374,
+          "max_drawdown_pct": 14.031188,
+          "trades": 7,
+          "expectancy_ratio": 0.740783
+        },
+        "v4b": {
+          "month": "2025-02",
+          "variant": "v4b",
+          "return_pct": 11.429002,
+          "max_drawdown_pct": 13.701553,
+          "trades": 7,
+          "expectancy_ratio": 0.766499
+        },
+        "v4c": {
+          "month": "2025-02",
+          "variant": "v4c",
+          "return_pct": 3.233741,
+          "max_drawdown_pct": 13.22445,
+          "trades": 7,
+          "expectancy_ratio": 0.223579
+        },
+        "v41": {
+          "month": "2025-02",
+          "variant": "v41",
+          "return_pct": 5.245581,
+          "max_drawdown_pct": 12.85404,
+          "trades": 7,
+          "expectancy_ratio": 0.355744
+        },
+        "v42": {
+          "month": "2025-02",
+          "variant": "v42",
+          "return_pct": 3.233741,
+          "max_drawdown_pct": 13.22445,
+          "trades": 7,
+          "expectancy_ratio": 0.223579
+        },
+        "v43": {
+          "month": "2025-02",
+          "variant": "v43",
+          "return_pct": 3.233741,
+          "max_drawdown_pct": 13.22445,
+          "trades": 7,
+          "expectancy_ratio": 0.223579
+        }
+      }
+    },
+    {
+      "month": "2025-03",
+      "regime": "range",
+      "direction": -1,
+      "features": {
+        "month": "2025-03",
+        "trailing_return": -0.1307911053406482,
+        "trend_z": 0.5254581976264164,
+        "directional_efficiency": 0.03150114532310533,
+        "realized_volatility": 0.5372144035424031,
+        "volatility_ratio": 0.9573270566626071,
+        "direction": -1,
+        "regime": "range"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2025-03",
+          "variant": "v4a",
+          "return_pct": -2.018806,
+          "max_drawdown_pct": 12.429,
+          "trades": 11,
+          "expectancy_ratio": -0.121107
+        },
+        "v4b": {
+          "month": "2025-03",
+          "variant": "v4b",
+          "return_pct": -2.008,
+          "max_drawdown_pct": 12.419342,
+          "trades": 11,
+          "expectancy_ratio": -0.120445
+        },
+        "v4c": {
+          "month": "2025-03",
+          "variant": "v4c",
+          "return_pct": -5.562212,
+          "max_drawdown_pct": 12.55738,
+          "trades": 11,
+          "expectancy_ratio": -0.341417
+        },
+        "v41": {
+          "month": "2025-03",
+          "variant": "v41",
+          "return_pct": -8.764077,
+          "max_drawdown_pct": 15.77889,
+          "trades": 12,
+          "expectancy_ratio": -0.412191
+        },
+        "v42": {
+          "month": "2025-03",
+          "variant": "v42",
+          "return_pct": -9.15641,
+          "max_drawdown_pct": 15.885349,
+          "trades": 12,
+          "expectancy_ratio": -0.451299
+        },
+        "v43": {
+          "month": "2025-03",
+          "variant": "v43",
+          "return_pct": -9.15641,
+          "max_drawdown_pct": 15.885349,
+          "trades": 12,
+          "expectancy_ratio": -0.451299
+        }
+      }
+    },
+    {
+      "month": "2025-04",
+      "regime": "range",
+      "direction": -1,
+      "features": {
+        "month": "2025-04",
+        "trailing_return": -0.12569928310904332,
+        "trend_z": 0.4892551766713639,
+        "directional_efficiency": 0.030629116071111157,
+        "realized_volatility": 0.5529242650194612,
+        "volatility_ratio": 0.6822578915579587,
+        "direction": -1,
+        "regime": "range"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2025-04",
+          "variant": "v4a",
+          "return_pct": -3.40833,
+          "max_drawdown_pct": 11.386451,
+          "trades": 9,
+          "expectancy_ratio": -0.205489
+        },
+        "v4b": {
+          "month": "2025-04",
+          "variant": "v4b",
+          "return_pct": -2.944429,
+          "max_drawdown_pct": 10.960866,
+          "trades": 9,
+          "expectancy_ratio": -0.176925
+        },
+        "v4c": {
+          "month": "2025-04",
+          "variant": "v4c",
+          "return_pct": -5.696885,
+          "max_drawdown_pct": 10.021645,
+          "trades": 9,
+          "expectancy_ratio": -0.345947
+        },
+        "v41": {
+          "month": "2025-04",
+          "variant": "v41",
+          "return_pct": -6.749886,
+          "max_drawdown_pct": 10.167151,
+          "trades": 9,
+          "expectancy_ratio": -0.405601
+        },
+        "v42": {
+          "month": "2025-04",
+          "variant": "v42",
+          "return_pct": -6.626933,
+          "max_drawdown_pct": 10.080913,
+          "trades": 9,
+          "expectancy_ratio": -0.402466
+        },
+        "v43": {
+          "month": "2025-04",
+          "variant": "v43",
+          "return_pct": -6.626933,
+          "max_drawdown_pct": 10.080913,
+          "trades": 9,
+          "expectancy_ratio": -0.402466
+        }
+      }
+    },
+    {
+      "month": "2025-05",
+      "regime": "range",
+      "direction": -1,
+      "features": {
+        "month": "2025-05",
+        "trailing_return": -0.10950106096775358,
+        "trend_z": 0.4183527836359082,
+        "directional_efficiency": 0.03146353791000876,
+        "realized_volatility": 0.5582654911643651,
+        "volatility_ratio": 0.5989457120950283,
+        "direction": -1,
+        "regime": "range"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2025-05",
+          "variant": "v4a",
+          "return_pct": 2.119098,
+          "max_drawdown_pct": 12.605966,
+          "trades": 8,
+          "expectancy_ratio": 0.142802
+        },
+        "v4b": {
+          "month": "2025-05",
+          "variant": "v4b",
+          "return_pct": 2.119098,
+          "max_drawdown_pct": 12.605966,
+          "trades": 8,
+          "expectancy_ratio": 0.142802
+        },
+        "v4c": {
+          "month": "2025-05",
+          "variant": "v4c",
+          "return_pct": -2.60501,
+          "max_drawdown_pct": 11.251476,
+          "trades": 8,
+          "expectancy_ratio": -0.18289
+        },
+        "v41": {
+          "month": "2025-05",
+          "variant": "v41",
+          "return_pct": -3.865521,
+          "max_drawdown_pct": 11.795386,
+          "trades": 8,
+          "expectancy_ratio": -0.253566
+        },
+        "v42": {
+          "month": "2025-05",
+          "variant": "v42",
+          "return_pct": -3.865521,
+          "max_drawdown_pct": 11.795386,
+          "trades": 8,
+          "expectancy_ratio": -0.253566
+        },
+        "v43": {
+          "month": "2025-05",
+          "variant": "v43",
+          "return_pct": -3.865521,
+          "max_drawdown_pct": 11.795386,
+          "trades": 8,
+          "expectancy_ratio": -0.253566
+        }
+      }
+    },
+    {
+      "month": "2025-06",
+      "regime": "weak_trend",
+      "direction": 1,
+      "features": {
+        "month": "2025-06",
+        "trailing_return": 0.1959108290148277,
+        "trend_z": 0.7025820942820485,
+        "directional_efficiency": 0.04865530073678245,
+        "realized_volatility": 0.5128118966120283,
+        "volatility_ratio": 0.7257948381237531,
+        "direction": 1,
+        "regime": "weak_trend"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2025-06",
+          "variant": "v4a",
+          "return_pct": -5.562156,
+          "max_drawdown_pct": 10.600721,
+          "trades": 7,
+          "expectancy_ratio": -0.400026
+        },
+        "v4b": {
+          "month": "2025-06",
+          "variant": "v4b",
+          "return_pct": -5.444726,
+          "max_drawdown_pct": 10.489556,
+          "trades": 7,
+          "expectancy_ratio": -0.391199
+        },
+        "v4c": {
+          "month": "2025-06",
+          "variant": "v4c",
+          "return_pct": -5.944647,
+          "max_drawdown_pct": 10.785096,
+          "trades": 7,
+          "expectancy_ratio": -0.428895
+        },
+        "v41": {
+          "month": "2025-06",
+          "variant": "v41",
+          "return_pct": -6.439075,
+          "max_drawdown_pct": 11.253435,
+          "trades": 7,
+          "expectancy_ratio": -0.443131
+        },
+        "v42": {
+          "month": "2025-06",
+          "variant": "v42",
+          "return_pct": -6.439075,
+          "max_drawdown_pct": 11.253435,
+          "trades": 7,
+          "expectancy_ratio": -0.443131
+        },
+        "v43": {
+          "month": "2025-06",
+          "variant": "v43",
+          "return_pct": -6.439075,
+          "max_drawdown_pct": 11.253435,
+          "trades": 7,
+          "expectancy_ratio": -0.443131
+        }
+      }
+    },
+    {
+      "month": "2025-07",
+      "regime": "weak_trend",
+      "direction": 1,
+      "features": {
+        "month": "2025-07",
+        "trailing_return": 0.26148408195179096,
+        "trend_z": 1.1077233403085847,
+        "directional_efficiency": 0.07115230079023584,
+        "realized_volatility": 0.422301159101305,
+        "volatility_ratio": 0.8048654699803456,
+        "direction": 1,
+        "regime": "weak_trend"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2025-07",
+          "variant": "v4a",
+          "return_pct": 14.416276,
+          "max_drawdown_pct": 8.076835,
+          "trades": 4,
+          "expectancy_ratio": 1.685552
+        },
+        "v4b": {
+          "month": "2025-07",
+          "variant": "v4b",
+          "return_pct": 14.416276,
+          "max_drawdown_pct": 8.076835,
+          "trades": 4,
+          "expectancy_ratio": 1.685552
+        },
+        "v4c": {
+          "month": "2025-07",
+          "variant": "v4c",
+          "return_pct": 6.062182,
+          "max_drawdown_pct": 6.679207,
+          "trades": 4,
+          "expectancy_ratio": 0.752075
+        },
+        "v41": {
+          "month": "2025-07",
+          "variant": "v41",
+          "return_pct": 5.63213,
+          "max_drawdown_pct": 6.679207,
+          "trades": 4,
+          "expectancy_ratio": 0.657302
+        },
+        "v42": {
+          "month": "2025-07",
+          "variant": "v42",
+          "return_pct": 5.752285,
+          "max_drawdown_pct": 6.679207,
+          "trades": 4,
+          "expectancy_ratio": 0.682631
+        },
+        "v43": {
+          "month": "2025-07",
+          "variant": "v43",
+          "return_pct": 5.752285,
+          "max_drawdown_pct": 6.679207,
+          "trades": 4,
+          "expectancy_ratio": 0.682631
+        }
+      }
+    },
+    {
+      "month": "2025-08",
+      "regime": "weak_trend",
+      "direction": 1,
+      "features": {
+        "month": "2025-08",
+        "trailing_return": 0.2155137064871655,
+        "trend_z": 1.185039559530161,
+        "directional_efficiency": 0.0718686787028259,
+        "realized_volatility": 0.33166393627538693,
+        "volatility_ratio": 0.8733810833712884,
+        "direction": 1,
+        "regime": "weak_trend"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2025-08",
+          "variant": "v4a",
+          "return_pct": -6.390339,
+          "max_drawdown_pct": 11.942966,
+          "trades": 8,
+          "expectancy_ratio": -0.546089
+        },
+        "v4b": {
+          "month": "2025-08",
+          "variant": "v4b",
+          "return_pct": -6.390339,
+          "max_drawdown_pct": 11.942966,
+          "trades": 8,
+          "expectancy_ratio": -0.546089
+        },
+        "v4c": {
+          "month": "2025-08",
+          "variant": "v4c",
+          "return_pct": -6.390339,
+          "max_drawdown_pct": 11.942966,
+          "trades": 8,
+          "expectancy_ratio": -0.546089
+        },
+        "v41": {
+          "month": "2025-08",
+          "variant": "v41",
+          "return_pct": -4.944409,
+          "max_drawdown_pct": 9.869039,
+          "trades": 7,
+          "expectancy_ratio": -0.355457
+        },
+        "v42": {
+          "month": "2025-08",
+          "variant": "v42",
+          "return_pct": -4.944409,
+          "max_drawdown_pct": 9.869039,
+          "trades": 7,
+          "expectancy_ratio": -0.355457
+        },
+        "v43": {
+          "month": "2025-08",
+          "variant": "v43",
+          "return_pct": -4.944409,
+          "max_drawdown_pct": 9.869039,
+          "trades": 7,
+          "expectancy_ratio": -0.355457
+        }
+      }
+    },
+    {
+      "month": "2025-09",
+      "regime": "turbulent",
+      "direction": 1,
+      "features": {
+        "month": "2025-09",
+        "trailing_return": 0.0419374831899153,
+        "trend_z": 0.25800722016420574,
+        "directional_efficiency": 0.015247827413490312,
+        "realized_volatility": 0.3206596472257894,
+        "volatility_ratio": 1.0585669038926393,
+        "direction": 1,
+        "regime": "turbulent"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2025-09",
+          "variant": "v4a",
+          "return_pct": -7.116049,
+          "max_drawdown_pct": 7.116049,
+          "trades": 4,
+          "expectancy_ratio": -1.0
+        },
+        "v4b": {
+          "month": "2025-09",
+          "variant": "v4b",
+          "return_pct": -7.116049,
+          "max_drawdown_pct": 7.116049,
+          "trades": 4,
+          "expectancy_ratio": -1.0
+        },
+        "v4c": {
+          "month": "2025-09",
+          "variant": "v4c",
+          "return_pct": -7.116049,
+          "max_drawdown_pct": 7.116049,
+          "trades": 4,
+          "expectancy_ratio": -1.0
+        },
+        "v41": {
+          "month": "2025-09",
+          "variant": "v41",
+          "return_pct": -7.522695,
+          "max_drawdown_pct": 7.522695,
+          "trades": 4,
+          "expectancy_ratio": -1.0
+        },
+        "v42": {
+          "month": "2025-09",
+          "variant": "v42",
+          "return_pct": -7.522695,
+          "max_drawdown_pct": 7.522695,
+          "trades": 4,
+          "expectancy_ratio": -1.0
+        },
+        "v43": {
+          "month": "2025-09",
+          "variant": "v43",
+          "return_pct": -7.522695,
+          "max_drawdown_pct": 7.522695,
+          "trades": 4,
+          "expectancy_ratio": -1.0
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "regime": "range",
+      "direction": 1,
+      "features": {
+        "month": "2025-10",
+        "trailing_return": 0.04017390834130041,
+        "trend_z": 0.267746758565433,
+        "directional_efficiency": 0.015983516315047252,
+        "realized_volatility": 0.29625384038266395,
+        "volatility_ratio": 0.795474037470486,
+        "direction": 1,
+        "regime": "range"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2025-10",
+          "variant": "v4a",
+          "return_pct": 11.055972,
+          "max_drawdown_pct": 11.119922,
+          "trades": 8,
+          "expectancy_ratio": 0.690082
+        },
+        "v4b": {
+          "month": "2025-10",
+          "variant": "v4b",
+          "return_pct": 11.055972,
+          "max_drawdown_pct": 11.119922,
+          "trades": 8,
+          "expectancy_ratio": 0.690082
+        },
+        "v4c": {
+          "month": "2025-10",
+          "variant": "v4c",
+          "return_pct": 3.225735,
+          "max_drawdown_pct": 8.819746,
+          "trades": 8,
+          "expectancy_ratio": 0.214762
+        },
+        "v41": {
+          "month": "2025-10",
+          "variant": "v41",
+          "return_pct": 5.374813,
+          "max_drawdown_pct": 10.961654,
+          "trades": 8,
+          "expectancy_ratio": 0.388128
+        },
+        "v42": {
+          "month": "2025-10",
+          "variant": "v42",
+          "return_pct": 2.466097,
+          "max_drawdown_pct": 9.416523,
+          "trades": 8,
+          "expectancy_ratio": 0.189936
+        },
+        "v43": {
+          "month": "2025-10",
+          "variant": "v43",
+          "return_pct": 2.466097,
+          "max_drawdown_pct": 9.416523,
+          "trades": 8,
+          "expectancy_ratio": 0.189936
+        }
+      }
+    },
+    {
+      "month": "2025-11",
+      "regime": "turbulent",
+      "direction": -1,
+      "features": {
+        "month": "2025-11",
+        "trailing_return": -0.023376403781931843,
+        "trend_z": 0.13675859908207977,
+        "directional_efficiency": 0.008367850559599902,
+        "realized_volatility": 0.3483168652912468,
+        "volatility_ratio": 1.2516539524678272,
+        "direction": -1,
+        "regime": "turbulent"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2025-11",
+          "variant": "v4a",
+          "return_pct": 33.665774,
+          "max_drawdown_pct": 9.872487,
+          "trades": 6,
+          "expectancy_ratio": 2.204865
+        },
+        "v4b": {
+          "month": "2025-11",
+          "variant": "v4b",
+          "return_pct": 33.665774,
+          "max_drawdown_pct": 9.872487,
+          "trades": 6,
+          "expectancy_ratio": 2.204865
+        },
+        "v4c": {
+          "month": "2025-11",
+          "variant": "v4c",
+          "return_pct": 17.685986,
+          "max_drawdown_pct": 6.567289,
+          "trades": 6,
+          "expectancy_ratio": 1.275073
+        },
+        "v41": {
+          "month": "2025-11",
+          "variant": "v41",
+          "return_pct": 26.475848,
+          "max_drawdown_pct": 7.085836,
+          "trades": 7,
+          "expectancy_ratio": 1.40413
+        },
+        "v42": {
+          "month": "2025-11",
+          "variant": "v42",
+          "return_pct": 13.335437,
+          "max_drawdown_pct": 6.567289,
+          "trades": 7,
+          "expectancy_ratio": 0.807536
+        },
+        "v43": {
+          "month": "2025-11",
+          "variant": "v43",
+          "return_pct": 13.335437,
+          "max_drawdown_pct": 6.567289,
+          "trades": 7,
+          "expectancy_ratio": 0.807536
+        }
+      }
+    },
+    {
+      "month": "2025-12",
+      "regime": "weak_trend",
+      "direction": -1,
+      "features": {
+        "month": "2025-12",
+        "trailing_return": -0.15948087376187292,
+        "trend_z": 0.8650765785999849,
+        "directional_efficiency": 0.05051068752975858,
+        "realized_volatility": 0.4044449048050333,
+        "volatility_ratio": 1.2482596217975823,
+        "direction": -1,
+        "regime": "weak_trend"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2025-12",
+          "variant": "v4a",
+          "return_pct": -10.434947,
+          "max_drawdown_pct": 12.780345,
+          "trades": 9,
+          "expectancy_ratio": -0.639285
+        },
+        "v4b": {
+          "month": "2025-12",
+          "variant": "v4b",
+          "return_pct": -11.92665,
+          "max_drawdown_pct": 14.232987,
+          "trades": 9,
+          "expectancy_ratio": -0.753489
+        },
+        "v4c": {
+          "month": "2025-12",
+          "variant": "v4c",
+          "return_pct": -11.440206,
+          "max_drawdown_pct": 13.405901,
+          "trades": 9,
+          "expectancy_ratio": -0.752355
+        },
+        "v41": {
+          "month": "2025-12",
+          "variant": "v41",
+          "return_pct": -12.672242,
+          "max_drawdown_pct": 14.61059,
+          "trades": 9,
+          "expectancy_ratio": -0.864904
+        },
+        "v42": {
+          "month": "2025-12",
+          "variant": "v42",
+          "return_pct": -12.516207,
+          "max_drawdown_pct": 14.458019,
+          "trades": 9,
+          "expectancy_ratio": -0.864571
+        },
+        "v43": {
+          "month": "2025-12",
+          "variant": "v43",
+          "return_pct": -12.516207,
+          "max_drawdown_pct": 14.458019,
+          "trades": 9,
+          "expectancy_ratio": -0.864571
+        }
+      }
+    },
+    {
+      "month": "2026-01",
+      "regime": "strong_trend",
+      "direction": -1,
+      "features": {
+        "month": "2026-01",
+        "trailing_return": -0.2665048963904658,
+        "trend_z": 1.3557921581148087,
+        "directional_efficiency": 0.08820462999639334,
+        "realized_volatility": 0.4603644518323778,
+        "volatility_ratio": 0.9041412688232708,
+        "direction": -1,
+        "regime": "strong_trend"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2026-01",
+          "variant": "v4a",
+          "return_pct": 14.111839,
+          "max_drawdown_pct": 8.013543,
+          "trades": 5,
+          "expectancy_ratio": 1.167884
+        },
+        "v4b": {
+          "month": "2026-01",
+          "variant": "v4b",
+          "return_pct": 12.93004,
+          "max_drawdown_pct": 8.013543,
+          "trades": 5,
+          "expectancy_ratio": 1.543496
+        },
+        "v4c": {
+          "month": "2026-01",
+          "variant": "v4c",
+          "return_pct": 7.193941,
+          "max_drawdown_pct": 6.381102,
+          "trades": 5,
+          "expectancy_ratio": 0.973971
+        },
+        "v41": {
+          "month": "2026-01",
+          "variant": "v41",
+          "return_pct": 7.770078,
+          "max_drawdown_pct": 6.562404,
+          "trades": 5,
+          "expectancy_ratio": 1.039772
+        },
+        "v42": {
+          "month": "2026-01",
+          "variant": "v42",
+          "return_pct": 6.558311,
+          "max_drawdown_pct": 6.646166,
+          "trades": 5,
+          "expectancy_ratio": 0.892054
+        },
+        "v43": {
+          "month": "2026-01",
+          "variant": "v43",
+          "return_pct": 6.558311,
+          "max_drawdown_pct": 6.646166,
+          "trades": 5,
+          "expectancy_ratio": 0.892054
+        }
+      }
+    },
+    {
+      "month": "2026-02",
+      "regime": "strong_trend",
+      "direction": -1,
+      "features": {
+        "month": "2026-02",
+        "trailing_return": -0.26167807327228965,
+        "trend_z": 1.4049836432183787,
+        "directional_efficiency": 0.09193844511615272,
+        "realized_volatility": 0.4348446962017736,
+        "volatility_ratio": 0.8597241199531866,
+        "direction": -1,
+        "regime": "strong_trend"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2026-02",
+          "variant": "v4a",
+          "return_pct": 3.827509,
+          "max_drawdown_pct": 18.446936,
+          "trades": 10,
+          "expectancy_ratio": 0.195127
+        },
+        "v4b": {
+          "month": "2026-02",
+          "variant": "v4b",
+          "return_pct": 3.827509,
+          "max_drawdown_pct": 18.446936,
+          "trades": 10,
+          "expectancy_ratio": 0.195127
+        },
+        "v4c": {
+          "month": "2026-02",
+          "variant": "v4c",
+          "return_pct": -3.510982,
+          "max_drawdown_pct": 16.59121,
+          "trades": 10,
+          "expectancy_ratio": -0.192603
+        },
+        "v41": {
+          "month": "2026-02",
+          "variant": "v41",
+          "return_pct": 7.509428,
+          "max_drawdown_pct": 20.277621,
+          "trades": 10,
+          "expectancy_ratio": 0.343614
+        },
+        "v42": {
+          "month": "2026-02",
+          "variant": "v42",
+          "return_pct": -3.861517,
+          "max_drawdown_pct": 16.894226,
+          "trades": 10,
+          "expectancy_ratio": -0.206882
+        },
+        "v43": {
+          "month": "2026-02",
+          "variant": "v43",
+          "return_pct": -3.861517,
+          "max_drawdown_pct": 16.894226,
+          "trades": 10,
+          "expectancy_ratio": -0.206882
+        }
+      }
+    },
+    {
+      "month": "2026-03",
+      "regime": "weak_trend",
+      "direction": -1,
+      "features": {
+        "month": "2026-03",
+        "trailing_return": -0.29085186018399234,
+        "trend_z": 1.4154669674930602,
+        "directional_efficiency": 0.08749825664014063,
+        "realized_volatility": 0.4889825788372628,
+        "volatility_ratio": 1.0725193891398153,
+        "direction": -1,
+        "regime": "weak_trend"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2026-03",
+          "variant": "v4a",
+          "return_pct": 3.003178,
+          "max_drawdown_pct": 6.543004,
+          "trades": 9,
+          "expectancy_ratio": 0.199159
+        },
+        "v4b": {
+          "month": "2026-03",
+          "variant": "v4b",
+          "return_pct": 13.84563,
+          "max_drawdown_pct": 4.161825,
+          "trades": 7,
+          "expectancy_ratio": 2.281578
+        },
+        "v4c": {
+          "month": "2026-03",
+          "variant": "v4c",
+          "return_pct": 8.137957,
+          "max_drawdown_pct": 3.312162,
+          "trades": 7,
+          "expectancy_ratio": 1.504871
+        },
+        "v41": {
+          "month": "2026-03",
+          "variant": "v41",
+          "return_pct": 22.539449,
+          "max_drawdown_pct": 6.018714,
+          "trades": 6,
+          "expectancy_ratio": 1.941302
+        },
+        "v42": {
+          "month": "2026-03",
+          "variant": "v42",
+          "return_pct": 10.774402,
+          "max_drawdown_pct": 3.872365,
+          "trades": 6,
+          "expectancy_ratio": 1.017715
+        },
+        "v43": {
+          "month": "2026-03",
+          "variant": "v43",
+          "return_pct": 10.774402,
+          "max_drawdown_pct": 3.872365,
+          "trades": 6,
+          "expectancy_ratio": 1.017715
+        }
+      }
+    },
+    {
+      "month": "2026-04",
+      "regime": "weak_trend",
+      "direction": -1,
+      "features": {
+        "month": "2026-04",
+        "trailing_return": -0.24123038448406608,
+        "trend_z": 1.1307043104337198,
+        "directional_efficiency": 0.07131631272374402,
+        "realized_volatility": 0.4916714907936174,
+        "volatility_ratio": 0.796636857402957,
+        "direction": -1,
+        "regime": "weak_trend"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2026-04",
+          "variant": "v4a",
+          "return_pct": -5.038964,
+          "max_drawdown_pct": 6.971898,
+          "trades": 7,
+          "expectancy_ratio": -0.41107
+        },
+        "v4b": {
+          "month": "2026-04",
+          "variant": "v4b",
+          "return_pct": -7.721099,
+          "max_drawdown_pct": 9.110689,
+          "trades": 7,
+          "expectancy_ratio": -0.705809
+        },
+        "v4c": {
+          "month": "2026-04",
+          "variant": "v4c",
+          "return_pct": -6.876946,
+          "max_drawdown_pct": 8.052149,
+          "trades": 7,
+          "expectancy_ratio": -0.704718
+        },
+        "v41": {
+          "month": "2026-04",
+          "variant": "v41",
+          "return_pct": -7.517696,
+          "max_drawdown_pct": 8.354748,
+          "trades": 7,
+          "expectancy_ratio": -1.0
+        },
+        "v42": {
+          "month": "2026-04",
+          "variant": "v42",
+          "return_pct": -7.517696,
+          "max_drawdown_pct": 8.354748,
+          "trades": 7,
+          "expectancy_ratio": -1.0
+        },
+        "v43": {
+          "month": "2026-04",
+          "variant": "v43",
+          "return_pct": -7.517696,
+          "max_drawdown_pct": 8.354748,
+          "trades": 7,
+          "expectancy_ratio": -1.0
+        }
+      }
+    },
+    {
+      "month": "2026-05",
+      "regime": "range",
+      "direction": -1,
+      "features": {
+        "month": "2026-05",
+        "trailing_return": -0.07734115921612827,
+        "trend_z": 0.32074419018919176,
+        "directional_efficiency": 0.02190070847938154,
+        "realized_volatility": 0.5054046544173453,
+        "volatility_ratio": 0.7339753671203537,
+        "direction": -1,
+        "regime": "range"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2026-05",
+          "variant": "v4a",
+          "return_pct": -2.14134,
+          "max_drawdown_pct": 4.788983,
+          "trades": 5,
+          "expectancy_ratio": -0.282988
+        },
+        "v4b": {
+          "month": "2026-05",
+          "variant": "v4b",
+          "return_pct": -2.14134,
+          "max_drawdown_pct": 4.788983,
+          "trades": 5,
+          "expectancy_ratio": -0.282988
+        },
+        "v4c": {
+          "month": "2026-05",
+          "variant": "v4c",
+          "return_pct": -2.14134,
+          "max_drawdown_pct": 4.788983,
+          "trades": 5,
+          "expectancy_ratio": -0.282988
+        },
+        "v41": {
+          "month": "2026-05",
+          "variant": "v41",
+          "return_pct": -1.201147,
+          "max_drawdown_pct": 4.517784,
+          "trades": 5,
+          "expectancy_ratio": -0.19772
+        },
+        "v42": {
+          "month": "2026-05",
+          "variant": "v42",
+          "return_pct": -1.267442,
+          "max_drawdown_pct": 4.581853,
+          "trades": 5,
+          "expectancy_ratio": -0.208773
+        },
+        "v43": {
+          "month": "2026-05",
+          "variant": "v43",
+          "return_pct": -1.267442,
+          "max_drawdown_pct": 4.581853,
+          "trades": 5,
+          "expectancy_ratio": -0.208773
+        }
+      }
+    },
+    {
+      "month": "2026-06",
+      "regime": "range",
+      "direction": 1,
+      "features": {
+        "month": "2026-06",
+        "trailing_return": 0.06545634180141335,
+        "trend_z": 0.3370980360438083,
+        "directional_efficiency": 0.01964498529321045,
+        "realized_volatility": 0.37877396010424946,
+        "volatility_ratio": 0.7754463769942053,
+        "direction": 1,
+        "regime": "range"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2026-06",
+          "variant": "v4a",
+          "return_pct": 52.566556,
+          "max_drawdown_pct": 8.94458,
+          "trades": 5,
+          "expectancy_ratio": 7.572123
+        },
+        "v4b": {
+          "month": "2026-06",
+          "variant": "v4b",
+          "return_pct": 43.807896,
+          "max_drawdown_pct": 8.94458,
+          "trades": 6,
+          "expectancy_ratio": 4.68628
+        },
+        "v4c": {
+          "month": "2026-06",
+          "variant": "v4c",
+          "return_pct": 23.501878,
+          "max_drawdown_pct": 6.686812,
+          "trades": 6,
+          "expectancy_ratio": 2.880022
+        },
+        "v41": {
+          "month": "2026-06",
+          "variant": "v41",
+          "return_pct": 33.638762,
+          "max_drawdown_pct": 7.554231,
+          "trades": 6,
+          "expectancy_ratio": 6.212659
+        },
+        "v42": {
+          "month": "2026-06",
+          "variant": "v42",
+          "return_pct": 25.491544,
+          "max_drawdown_pct": 6.754279,
+          "trades": 6,
+          "expectancy_ratio": 5.156286
+        },
+        "v43": {
+          "month": "2026-06",
+          "variant": "v43",
+          "return_pct": 25.491544,
+          "max_drawdown_pct": 6.754279,
+          "trades": 6,
+          "expectancy_ratio": 5.156286
+        }
+      }
+    },
+    {
+      "month": "2026-07",
+      "regime": "turbulent",
+      "direction": -1,
+      "features": {
+        "month": "2026-07",
+        "trailing_return": -0.1528838692415334,
+        "trend_z": 0.8342248822626489,
+        "directional_efficiency": 0.046388686379076276,
+        "realized_volatility": 0.4005292111032103,
+        "volatility_ratio": 1.0991284841691393,
+        "direction": -1,
+        "regime": "turbulent"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2026-07",
+          "variant": "v4a",
+          "return_pct": -11.339434,
+          "max_drawdown_pct": 12.69742,
+          "trades": 8,
+          "expectancy_ratio": -0.744636
+        },
+        "v4b": {
+          "month": "2026-07",
+          "variant": "v4b",
+          "return_pct": -11.339434,
+          "max_drawdown_pct": 12.69742,
+          "trades": 8,
+          "expectancy_ratio": -0.744636
+        },
+        "v4c": {
+          "month": "2026-07",
+          "variant": "v4c",
+          "return_pct": -11.339434,
+          "max_drawdown_pct": 12.69742,
+          "trades": 8,
+          "expectancy_ratio": -0.744636
+        },
+        "v41": {
+          "month": "2026-07",
+          "variant": "v41",
+          "return_pct": -12.049592,
+          "max_drawdown_pct": 13.3967,
+          "trades": 8,
+          "expectancy_ratio": -0.751233
+        },
+        "v42": {
+          "month": "2026-07",
+          "variant": "v42",
+          "return_pct": -12.049592,
+          "max_drawdown_pct": 13.3967,
+          "trades": 8,
+          "expectancy_ratio": -0.751233
+        },
+        "v43": {
+          "month": "2026-07",
+          "variant": "v43",
+          "return_pct": -12.049592,
+          "max_drawdown_pct": 13.3967,
+          "trades": 8,
+          "expectancy_ratio": -0.751233
+        }
+      }
+    },
+    {
+      "month": "2026-08",
+      "regime": "weak_trend",
+      "direction": -1,
+      "features": {
+        "month": "2026-08",
+        "trailing_return": -0.20093729371759872,
+        "trend_z": 1.1763768069903866,
+        "directional_efficiency": 0.07538561329829918,
+        "realized_volatility": 0.38400660635648654,
+        "volatility_ratio": 0.7851239054586002,
+        "direction": -1,
+        "regime": "weak_trend"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2026-08",
+          "variant": "v4a",
+          "return_pct": 13.551764,
+          "max_drawdown_pct": 4.06304,
+          "trades": 3,
+          "expectancy_ratio": 3.872123
+        },
+        "v4b": {
+          "month": "2026-08",
+          "variant": "v4b",
+          "return_pct": 13.551764,
+          "max_drawdown_pct": 4.06304,
+          "trades": 3,
+          "expectancy_ratio": 3.872123
+        },
+        "v4c": {
+          "month": "2026-08",
+          "variant": "v4c",
+          "return_pct": 13.551764,
+          "max_drawdown_pct": 4.06304,
+          "trades": 3,
+          "expectancy_ratio": 3.872123
+        },
+        "v41": {
+          "month": "2026-08",
+          "variant": "v41",
+          "return_pct": 12.39632,
+          "max_drawdown_pct": 4.992378,
+          "trades": 3,
+          "expectancy_ratio": 2.37421
+        },
+        "v42": {
+          "month": "2026-08",
+          "variant": "v42",
+          "return_pct": 12.510434,
+          "max_drawdown_pct": 4.895918,
+          "trades": 3,
+          "expectancy_ratio": 2.47728
+        },
+        "v43": {
+          "month": "2026-08",
+          "variant": "v43",
+          "return_pct": 12.510434,
+          "max_drawdown_pct": 4.895918,
+          "trades": 3,
+          "expectancy_ratio": 2.47728
+        }
+      }
+    },
+    {
+      "month": "2026-09",
+      "regime": "range",
+      "direction": 1,
+      "features": {
+        "month": "2026-09",
+        "trailing_return": 0.16753971664209266,
+        "trend_z": 0.7893312291980361,
+        "directional_efficiency": 0.0566876636989297,
+        "realized_volatility": 0.39519709612341225,
+        "volatility_ratio": 1.0550614738595723,
+        "direction": 1,
+        "regime": "range"
+      },
+      "strategies": {
+        "v4a": {
+          "month": "2026-09",
+          "variant": "v4a",
+          "return_pct": 6.040545,
+          "max_drawdown_pct": 4.486958,
+          "trades": 2,
+          "expectancy_ratio": 1.425746
+        },
+        "v4b": {
+          "month": "2026-09",
+          "variant": "v4b",
+          "return_pct": 6.040545,
+          "max_drawdown_pct": 4.486958,
+          "trades": 2,
+          "expectancy_ratio": 1.425746
+        },
+        "v4c": {
+          "month": "2026-09",
+          "variant": "v4c",
+          "return_pct": 2.673793,
+          "max_drawdown_pct": 2.76994,
+          "trades": 2,
+          "expectancy_ratio": 0.631094
+        },
+        "v41": {
+          "month": "2026-09",
+          "variant": "v41",
+          "return_pct": 2.673793,
+          "max_drawdown_pct": 2.76994,
+          "trades": 2,
+          "expectancy_ratio": 0.631094
+        },
+        "v42": {
+          "month": "2026-09",
+          "variant": "v42",
+          "return_pct": 2.673793,
+          "max_drawdown_pct": 2.76994,
+          "trades": 2,
+          "expectancy_ratio": 0.631094
+        },
+        "v43": {
+          "month": "2026-09",
+          "variant": "v43",
+          "return_pct": 2.673793,
+          "max_drawdown_pct": 2.76994,
+          "trades": 2,
+          "expectancy_ratio": 0.631094
+        }
+      }
+    }
+  ],
+  "regime_matrix": [
+    {
+      "regime": "calibration",
+      "variant": "v41",
+      "months": 8,
+      "average_return_pct": 3.742437,
+      "median_return_pct": 0.9234235000000001,
+      "positive_month_ratio": 0.625,
+      "average_drawdown_pct": 10.651954875,
+      "average_expectancy_ratio": 0.46788587499999995
+    },
+    {
+      "regime": "calibration",
+      "variant": "v42",
+      "months": 8,
+      "average_return_pct": 1.998347375,
+      "median_return_pct": -0.18485800000000002,
+      "positive_month_ratio": 0.5,
+      "average_drawdown_pct": 10.250217,
+      "average_expectancy_ratio": 0.36023524999999995
+    },
+    {
+      "regime": "calibration",
+      "variant": "v43",
+      "months": 8,
+      "average_return_pct": 1.998347375,
+      "median_return_pct": -0.18485800000000002,
+      "positive_month_ratio": 0.5,
+      "average_drawdown_pct": 10.250217,
+      "average_expectancy_ratio": 0.36023524999999995
+    },
+    {
+      "regime": "calibration",
+      "variant": "v4a",
+      "months": 8,
+      "average_return_pct": 9.82841575,
+      "median_return_pct": 4.689294,
+      "positive_month_ratio": 0.625,
+      "average_drawdown_pct": 11.902366,
+      "average_expectancy_ratio": 1.032897125
+    },
+    {
+      "regime": "calibration",
+      "variant": "v4b",
+      "months": 8,
+      "average_return_pct": 10.0348915,
+      "median_return_pct": 4.6732985,
+      "positive_month_ratio": 0.625,
+      "average_drawdown_pct": 11.57161425,
+      "average_expectancy_ratio": 1.047222875
+    },
+    {
+      "regime": "calibration",
+      "variant": "v4c",
+      "months": 8,
+      "average_return_pct": 1.4970651250000002,
+      "median_return_pct": -1.3232385,
+      "positive_month_ratio": 0.5,
+      "average_drawdown_pct": 9.981396125,
+      "average_expectancy_ratio": 0.34531424999999993
+    },
+    {
+      "regime": "range",
+      "variant": "v41",
+      "months": 10,
+      "average_return_pct": 4.426737,
+      "median_return_pct": 0.736323,
+      "positive_month_ratio": 0.5,
+      "average_drawdown_pct": 8.490776199999999,
+      "average_expectancy_ratio": 0.9662350000000001
+    },
+    {
+      "regime": "range",
+      "variant": "v42",
+      "months": 10,
+      "average_return_pct": 2.794779,
+      "median_return_pct": 0.5993275,
+      "positive_month_ratio": 0.5,
+      "average_drawdown_pct": 8.0563154,
+      "average_expectancy_ratio": 0.7802701999999999
+    },
+    {
+      "regime": "range",
+      "variant": "v43",
+      "months": 10,
+      "average_return_pct": 2.794779,
+      "median_return_pct": 0.5993275,
+      "positive_month_ratio": 0.5,
+      "average_drawdown_pct": 8.0563154,
+      "average_expectancy_ratio": 0.7802701999999999
+    },
+    {
+      "regime": "range",
+      "variant": "v4a",
+      "months": 10,
+      "average_return_pct": 10.9503638,
+      "median_return_pct": 4.0798214999999995,
+      "positive_month_ratio": 0.6,
+      "average_drawdown_pct": 9.1115258,
+      "average_expectancy_ratio": 1.6335347
+    },
+    {
+      "regime": "range",
+      "variant": "v4b",
+      "months": 10,
+      "average_return_pct": 9.9732085,
+      "median_return_pct": 4.0798214999999995,
+      "positive_month_ratio": 0.6,
+      "average_drawdown_pct": 9.0680015,
+      "average_expectancy_ratio": 1.3275032
+    },
+    {
+      "regime": "range",
+      "variant": "v4c",
+      "months": 10,
+      "average_return_pct": 3.2383550000000003,
+      "median_return_pct": 0.2662264999999999,
+      "positive_month_ratio": 0.5,
+      "average_drawdown_pct": 7.764886,
+      "average_expectancy_ratio": 0.6096841
+    },
+    {
+      "regime": "strong_trend",
+      "variant": "v41",
+      "months": 3,
+      "average_return_pct": 3.5817576666666664,
+      "median_return_pct": 7.509428,
+      "positive_month_ratio": 0.6666666666666666,
+      "average_drawdown_pct": 12.222564333333333,
+      "average_expectancy_ratio": 0.38120999999999994
+    },
+    {
+      "regime": "strong_trend",
+      "variant": "v42",
+      "months": 3,
+      "average_return_pct": -0.6800186666666667,
+      "median_return_pct": -3.861517,
+      "positive_month_ratio": 0.3333333333333333,
+      "average_drawdown_pct": 11.122686666666667,
+      "average_expectancy_ratio": 0.14472333333333334
+    },
+    {
+      "regime": "strong_trend",
+      "variant": "v43",
+      "months": 3,
+      "average_return_pct": -0.6800186666666667,
+      "median_return_pct": -3.861517,
+      "positive_month_ratio": 0.3333333333333333,
+      "average_drawdown_pct": 11.122686666666667,
+      "average_expectancy_ratio": 0.14472333333333334
+    },
+    {
+      "regime": "strong_trend",
+      "variant": "v4a",
+      "months": 3,
+      "average_return_pct": 3.5156993333333335,
+      "median_return_pct": 3.827509,
+      "positive_month_ratio": 0.6666666666666666,
+      "average_drawdown_pct": 13.118740333333333,
+      "average_expectancy_ratio": 0.314148
+    },
+    {
+      "regime": "strong_trend",
+      "variant": "v4b",
+      "months": 3,
+      "average_return_pct": 5.401017666666666,
+      "median_return_pct": 3.827509,
+      "positive_month_ratio": 0.6666666666666666,
+      "average_drawdown_pct": 12.822024333333333,
+      "average_expectancy_ratio": 0.569809
+    },
+    {
+      "regime": "strong_trend",
+      "variant": "v4c",
+      "months": 3,
+      "average_return_pct": -0.28262099999999996,
+      "median_return_pct": -3.510982,
+      "positive_month_ratio": 0.3333333333333333,
+      "average_drawdown_pct": 10.881106666666668,
+      "average_expectancy_ratio": 0.179123
+    },
+    {
+      "regime": "turbulent",
+      "variant": "v41",
+      "months": 3,
+      "average_return_pct": 2.3011869999999996,
+      "median_return_pct": -7.522695,
+      "positive_month_ratio": 0.3333333333333333,
+      "average_drawdown_pct": 9.335077,
+      "average_expectancy_ratio": -0.11570099999999998
+    },
+    {
+      "regime": "turbulent",
+      "variant": "v42",
+      "months": 3,
+      "average_return_pct": -2.07895,
+      "median_return_pct": -7.522695,
+      "positive_month_ratio": 0.3333333333333333,
+      "average_drawdown_pct": 9.162227999999999,
+      "average_expectancy_ratio": -0.3145656666666667
+    },
+    {
+      "regime": "turbulent",
+      "variant": "v43",
+      "months": 3,
+      "average_return_pct": -2.07895,
+      "median_return_pct": -7.522695,
+      "positive_month_ratio": 0.3333333333333333,
+      "average_drawdown_pct": 9.162227999999999,
+      "average_expectancy_ratio": -0.3145656666666667
+    },
+    {
+      "regime": "turbulent",
+      "variant": "v4a",
+      "months": 3,
+      "average_return_pct": 5.070097,
+      "median_return_pct": -7.116049,
+      "positive_month_ratio": 0.3333333333333333,
+      "average_drawdown_pct": 9.895318666666666,
+      "average_expectancy_ratio": 0.15340966666666664
+    },
+    {
+      "regime": "turbulent",
+      "variant": "v4b",
+      "months": 3,
+      "average_return_pct": 5.070097,
+      "median_return_pct": -7.116049,
+      "positive_month_ratio": 0.3333333333333333,
+      "average_drawdown_pct": 9.895318666666666,
+      "average_expectancy_ratio": 0.15340966666666664
+    },
+    {
+      "regime": "turbulent",
+      "variant": "v4c",
+      "months": 3,
+      "average_return_pct": -0.2564990000000004,
+      "median_return_pct": -7.116049,
+      "positive_month_ratio": 0.3333333333333333,
+      "average_drawdown_pct": 8.793586,
+      "average_expectancy_ratio": -0.15652100000000002
+    },
+    {
+      "regime": "weak_trend",
+      "variant": "v41",
+      "months": 9,
+      "average_return_pct": 1.5027216666666665,
+      "median_return_pct": -0.715563,
+      "positive_month_ratio": 0.4444444444444444,
+      "average_drawdown_pct": 9.39443988888889,
+      "average_expectancy_ratio": 0.292719
+    },
+    {
+      "regime": "weak_trend",
+      "variant": "v42",
+      "months": 9,
+      "average_return_pct": -0.0353924444444444,
+      "median_return_pct": -1.172007,
+      "positive_month_ratio": 0.4444444444444444,
+      "average_drawdown_pct": 9.04886511111111,
+      "average_expectancy_ratio": 0.18752799999999997
+    },
+    {
+      "regime": "weak_trend",
+      "variant": "v43",
+      "months": 9,
+      "average_return_pct": -0.0353924444444444,
+      "median_return_pct": -1.172007,
+      "positive_month_ratio": 0.4444444444444444,
+      "average_drawdown_pct": 9.04886511111111,
+      "average_expectancy_ratio": 0.18752799999999997
+    },
+    {
+      "regime": "weak_trend",
+      "variant": "v4a",
+      "months": 9,
+      "average_return_pct": 2.3260301111111112,
+      "median_return_pct": 3.003178,
+      "positive_month_ratio": 0.5555555555555556,
+      "average_drawdown_pct": 9.276710333333334,
+      "average_expectancy_ratio": 0.5292595555555556
+    },
+    {
+      "regime": "weak_trend",
+      "variant": "v4b",
+      "months": 9,
+      "average_return_pct": 3.1566958888888887,
+      "median_return_pct": 6.650405,
+      "positive_month_ratio": 0.5555555555555556,
+      "average_drawdown_pct": 9.362205222222222,
+      "average_expectancy_ratio": 0.7202411111111111
+    },
+    {
+      "regime": "weak_trend",
+      "variant": "v4c",
+      "months": 9,
+      "average_return_pct": -0.003945555555555474,
+      "median_return_pct": -0.369016,
+      "positive_month_ratio": 0.4444444444444444,
+      "average_drawdown_pct": 8.902478888888888,
+      "average_expectancy_ratio": 0.43387155555555557
+    }
+  ],
+  "walk_forward": {
+    "warmup_months": 8,
+    "evaluation_months": 25,
+    "compound_return_pct": 284.12664321435767,
+    "month_end_max_drawdown_pct": 13.051648345493891,
+    "decisions": [
+      {
+        "month": "2024-01",
+        "regime": "calibration",
+        "selected_variant": "v4c",
+        "estimated_utility": 0.0,
+        "realized_return_pct": -4.314977,
+        "realized_drawdown_pct": 9.728141,
+        "history_months": 0
+      },
+      {
+        "month": "2024-02",
+        "regime": "calibration",
+        "selected_variant": "v4c",
+        "estimated_utility": 0.0,
+        "realized_return_pct": 37.763545,
+        "realized_drawdown_pct": 6.574249,
+        "history_months": 1
+      },
+      {
+        "month": "2024-03",
+        "regime": "calibration",
+        "selected_variant": "v4c",
+        "estimated_utility": 0.0,
+        "realized_return_pct": -13.582623,
+        "realized_drawdown_pct": 17.056517,
+        "history_months": 2
+      },
+      {
+        "month": "2024-04",
+        "regime": "calibration",
+        "selected_variant": "v4c",
+        "estimated_utility": 0.0,
+        "realized_return_pct": 0.835017,
+        "realized_drawdown_pct": 5.680892,
+        "history_months": 3
+      },
+      {
+        "month": "2024-05",
+        "regime": "calibration",
+        "selected_variant": "v4c",
+        "estimated_utility": 0.0,
+        "realized_return_pct": -6.26718,
+        "realized_drawdown_pct": 10.853384,
+        "history_months": 4
+      },
+      {
+        "month": "2024-06",
+        "regime": "calibration",
+        "selected_variant": "v4c",
+        "estimated_utility": 0.0,
+        "realized_return_pct": 0.02069,
+        "realized_drawdown_pct": 6.17223,
+        "history_months": 5
+      },
+      {
+        "month": "2024-07",
+        "regime": "calibration",
+        "selected_variant": "v4c",
+        "estimated_utility": 0.0,
+        "realized_return_pct": 0.189216,
+        "realized_drawdown_pct": 10.071744,
+        "history_months": 6
+      },
+      {
+        "month": "2024-08",
+        "regime": "calibration",
+        "selected_variant": "v4c",
+        "estimated_utility": 0.0,
+        "realized_return_pct": -2.667167,
+        "realized_drawdown_pct": 13.714012,
+        "history_months": 7
+      },
+      {
+        "month": "2024-09",
+        "regime": "range",
+        "selected_variant": "v4b",
+        "estimated_utility": 1.470311660630868,
+        "realized_return_pct": -4.374812,
+        "realized_drawdown_pct": 6.418693,
+        "history_months": 8
+      },
+      {
+        "month": "2024-10",
+        "regime": "range",
+        "selected_variant": "v4b",
+        "estimated_utility": -0.5527182482232016,
+        "realized_return_pct": 22.806676,
+        "realized_drawdown_pct": 11.03506,
+        "history_months": 9
+      },
+      {
+        "month": "2024-11",
+        "regime": "range",
+        "selected_variant": "v4b",
+        "estimated_utility": 2.967468782689885,
+        "realized_return_pct": 25.370479,
+        "realized_drawdown_pct": 7.899645,
+        "history_months": 10
+      },
+      {
+        "month": "2024-12",
+        "regime": "strong_trend",
+        "selected_variant": "v4b",
+        "estimated_utility": -2.7432372804106326,
+        "realized_return_pct": -0.554496,
+        "realized_drawdown_pct": 12.005594,
+        "history_months": 11
+      },
+      {
+        "month": "2025-01",
+        "regime": "weak_trend",
+        "selected_variant": "v4b",
+        "estimated_utility": -2.213291101943502,
+        "realized_return_pct": 6.650405,
+        "realized_drawdown_pct": 8.480396,
+        "history_months": 12
+      },
+      {
+        "month": "2025-02",
+        "regime": "weak_trend",
+        "selected_variant": "v4b",
+        "estimated_utility": -2.364210661666422,
+        "realized_return_pct": 11.429002,
+        "realized_drawdown_pct": 13.701553,
+        "history_months": 13
+      },
+      {
+        "month": "2025-03",
+        "regime": "range",
+        "selected_variant": "v4b",
+        "estimated_utility": -0.8014645119709516,
+        "realized_return_pct": -2.008,
+        "realized_drawdown_pct": 12.419342,
+        "history_months": 14
+      },
+      {
+        "month": "2025-04",
+        "regime": "range",
+        "selected_variant": "v4b",
+        "estimated_utility": 2.842848774230133,
+        "realized_return_pct": -2.944429,
+        "realized_drawdown_pct": 10.960866,
+        "history_months": 15
+      },
+      {
+        "month": "2025-05",
+        "regime": "range",
+        "selected_variant": "v4b",
+        "estimated_utility": 0.5799414260199431,
+        "realized_return_pct": 2.119098,
+        "realized_drawdown_pct": 12.605966,
+        "history_months": 16
+      },
+      {
+        "month": "2025-06",
+        "regime": "weak_trend",
+        "selected_variant": "v4a",
+        "estimated_utility": 0.21841033092739304,
+        "realized_return_pct": -5.562156,
+        "realized_drawdown_pct": 10.600721,
+        "history_months": 17
+      },
+      {
+        "month": "2025-07",
+        "regime": "weak_trend",
+        "selected_variant": "v4b",
+        "estimated_utility": 5.970881168448093,
+        "realized_return_pct": 14.416276,
+        "realized_drawdown_pct": 8.076835,
+        "history_months": 18
+      },
+      {
+        "month": "2025-08",
+        "regime": "weak_trend",
+        "selected_variant": "v4b",
+        "estimated_utility": 3.9531343372679295,
+        "realized_return_pct": -6.390339,
+        "realized_drawdown_pct": 11.942966,
+        "history_months": 19
+      },
+      {
+        "month": "2025-09",
+        "regime": "turbulent",
+        "selected_variant": "v4b",
+        "estimated_utility": 2.144482093644676,
+        "realized_return_pct": -7.116049,
+        "realized_drawdown_pct": 7.116049,
+        "history_months": 20
+      },
+      {
+        "month": "2025-10",
+        "regime": "range",
+        "selected_variant": "v4a",
+        "estimated_utility": 1.5206288180261405,
+        "realized_return_pct": 11.055972,
+        "realized_drawdown_pct": 11.119922,
+        "history_months": 21
+      },
+      {
+        "month": "2025-11",
+        "regime": "turbulent",
+        "selected_variant": "v4b",
+        "estimated_utility": -0.09648816992320253,
+        "realized_return_pct": 33.665774,
+        "realized_drawdown_pct": 9.872487,
+        "history_months": 22
+      },
+      {
+        "month": "2025-12",
+        "regime": "weak_trend",
+        "selected_variant": "v4b",
+        "estimated_utility": 7.623538577297419,
+        "realized_return_pct": -11.92665,
+        "realized_drawdown_pct": 14.232987,
+        "history_months": 23
+      },
+      {
+        "month": "2026-01",
+        "regime": "strong_trend",
+        "selected_variant": "v4b",
+        "estimated_utility": 3.347008629227725,
+        "realized_return_pct": 12.93004,
+        "realized_drawdown_pct": 8.013543,
+        "history_months": 24
+      },
+      {
+        "month": "2026-02",
+        "regime": "strong_trend",
+        "selected_variant": "v4a",
+        "estimated_utility": 5.017574227136776,
+        "realized_return_pct": 3.827509,
+        "realized_drawdown_pct": 18.446936,
+        "history_months": 25
+      },
+      {
+        "month": "2026-03",
+        "regime": "weak_trend",
+        "selected_variant": "v4b",
+        "estimated_utility": 6.061342174017497,
+        "realized_return_pct": 13.84563,
+        "realized_drawdown_pct": 4.161825,
+        "history_months": 26
+      },
+      {
+        "month": "2026-04",
+        "regime": "weak_trend",
+        "selected_variant": "v4b",
+        "estimated_utility": -0.26818386086830803,
+        "realized_return_pct": -7.721099,
+        "realized_drawdown_pct": 9.110689,
+        "history_months": 27
+      },
+      {
+        "month": "2026-05",
+        "regime": "range",
+        "selected_variant": "v4a",
+        "estimated_utility": 0.13372691023651706,
+        "realized_return_pct": -2.14134,
+        "realized_drawdown_pct": 4.788983,
+        "history_months": 28
+      },
+      {
+        "month": "2026-06",
+        "regime": "range",
+        "selected_variant": "v4b",
+        "estimated_utility": -0.23042063598189522,
+        "realized_return_pct": 43.807896,
+        "realized_drawdown_pct": 8.94458,
+        "history_months": 29
+      },
+      {
+        "month": "2026-07",
+        "regime": "turbulent",
+        "selected_variant": "v4b",
+        "estimated_utility": 6.431113212760018,
+        "realized_return_pct": -11.339434,
+        "realized_drawdown_pct": 12.69742,
+        "history_months": 30
+      },
+      {
+        "month": "2026-08",
+        "regime": "weak_trend",
+        "selected_variant": "v4a",
+        "estimated_utility": 3.0282990681087334,
+        "realized_return_pct": 13.551764,
+        "realized_drawdown_pct": 4.06304,
+        "history_months": 31
+      },
+      {
+        "month": "2026-09",
+        "regime": "range",
+        "selected_variant": "v4a",
+        "estimated_utility": 0.1237872170326213,
+        "realized_return_pct": 6.040545,
+        "realized_drawdown_pct": 4.486958,
+        "history_months": 32
+      }
+    ]
+  },
+  "always_variant_benchmarks": {
+    "v4a": {
+      "compound_return_pct": 263.29566776408564,
+      "month_end_max_drawdown_pct": 13.051648345493897
+    },
+    "v4b": {
+      "compound_return_pct": 284.6042906256292,
+      "month_end_max_drawdown_pct": 13.051648345493886
+    },
+    "v4c": {
+      "compound_return_pct": 23.04642717695784,
+      "month_end_max_drawdown_pct": 26.125737388867126
+    },
+    "v41": {
+      "compound_return_pct": 79.70704559895421,
+      "month_end_max_drawdown_pct": 29.118890447005857
+    },
+    "v42": {
+      "compound_return_pct": 9.64141363887423,
+      "month_end_max_drawdown_pct": 31.068335232577983
+    },
+    "v43": {
+      "compound_return_pct": 9.64141363887423,
+      "month_end_max_drawdown_pct": 31.068335232577983
+    }
+  },
+  "limitations": [
+    "independent monthly runs close positions at month boundaries",
+    "funding, liquidation tiers and order-book depth are not modeled",
+    "regime thresholds are hypotheses and are not tuned on future months",
+    "month-end drawdown understates possible intramonth portfolio drawdown"
+  ]
+}
