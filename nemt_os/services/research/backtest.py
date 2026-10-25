@@ -184,6 +184,11 @@ def compute_metrics(
     avg_win = _mean(wins) if wins else 0.0
     avg_loss = abs(_mean(losses)) if losses else 0.0
     payoff_ratio = (avg_win / avg_loss) if avg_loss > 0 else (float("inf") if avg_win > 0 else 0.0)
+    expected_trade_pnl = _mean(pnls)
+    expectancy_ratio = (
+        expected_trade_pnl / avg_loss if avg_loss > 0 else
+        (float("inf") if expected_trade_pnl > 0 else 0.0)
+    )
 
     max_consec = 0
     streak = 0
@@ -210,6 +215,8 @@ def compute_metrics(
         "average_win": avg_win,
         "average_loss": avg_loss,
         "payoff_ratio": payoff_ratio if payoff_ratio != float("inf") else 9999.0,
+        "expected_trade_pnl": expected_trade_pnl,
+        "expectancy_ratio": expectancy_ratio if expectancy_ratio != float("inf") else 9999.0,
         "maximum_consecutive_losses": float(max_consec),
         "trade_count": float(len(trades)),
         "exposure": exposure,
