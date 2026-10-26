@@ -1,0 +1,493 @@
+{
+  "protocol": "S-004.D",
+  "evidence": "EXPLORATORY",
+  "candidates_total": 2356,
+  "with_environment": 2205,
+  "week_clusters": 178,
+  "net_R_total": 881.47,
+  "cells": {
+    "DOWN/HIGH": {
+      "LONG": {
+        "n": 13,
+        "median_R": -1.02,
+        "sum_R": -10.41,
+        "win_pct": 7.7
+      },
+      "SHORT": {
+        "n": 124,
+        "median_R": -1.0156,
+        "sum_R": -97.37,
+        "win_pct": 8.9
+      }
+    },
+    "DOWN/LOW": {
+      "LONG": {
+        "n": 13,
+        "median_R": -1.0326,
+        "sum_R": -13.38,
+        "win_pct": 0.0
+      },
+      "SHORT": {
+        "n": 115,
+        "median_R": -1.019,
+        "sum_R": -35.41,
+        "win_pct": 12.2
+      }
+    },
+    "DOWN/NORMAL": {
+      "LONG": {
+        "n": 41,
+        "median_R": -1.0218,
+        "sum_R": 14.89,
+        "win_pct": 14.6
+      },
+      "SHORT": {
+        "n": 352,
+        "median_R": -1.0149,
+        "sum_R": 38.02,
+        "win_pct": 21.6
+      }
+    },
+    "FLAT/HIGH": {
+      "LONG": {
+        "n": 27,
+        "median_R": -1.0204,
+        "sum_R": -14.25,
+        "win_pct": 22.2
+      },
+      "SHORT": {
+        "n": 16,
+        "median_R": -1.0161,
+        "sum_R": -16.27,
+        "win_pct": 0.0
+      }
+    },
+    "FLAT/LOW": {
+      "LONG": {
+        "n": 93,
+        "median_R": -1.0214,
+        "sum_R": 293.07,
+        "win_pct": 40.9
+      },
+      "SHORT": {
+        "n": 111,
+        "median_R": -1.018,
+        "sum_R": -28.09,
+        "win_pct": 18.9
+      }
+    },
+    "FLAT/NORMAL": {
+      "LONG": {
+        "n": 116,
+        "median_R": -1.0264,
+        "sum_R": 36.1,
+        "win_pct": 13.8
+      },
+      "SHORT": {
+        "n": 151,
+        "median_R": -1.0144,
+        "sum_R": -3.12,
+        "win_pct": 23.8
+      }
+    },
+    "UP/HIGH": {
+      "LONG": {
+        "n": 66,
+        "median_R": -1.0201,
+        "sum_R": -25.36,
+        "win_pct": 15.2
+      },
+      "SHORT": {
+        "n": 2,
+        "median_R": 0.4791,
+        "sum_R": 0.96,
+        "win_pct": 50.0
+      }
+    },
+    "UP/LOW": {
+      "LONG": {
+        "n": 323,
+        "median_R": -1.0256,
+        "sum_R": 527.44,
+        "win_pct": 18.9
+      },
+      "SHORT": {
+        "n": 42,
+        "median_R": -1.0181,
+        "sum_R": 12.0,
+        "win_pct": 14.3
+      }
+    },
+    "UP/NORMAL": {
+      "LONG": {
+        "n": 579,
+        "median_R": -1.0216,
+        "sum_R": 211.31,
+        "win_pct": 17.1
+      },
+      "SHORT": {
+        "n": 21,
+        "median_R": -1.0211,
+        "sum_R": -8.66,
+        "win_pct": 19.0
+      }
+    }
+  },
+  "asymmetry": {
+    "DOWN/HIGH": {
+      "median_diff": -0.0043,
+      "ci95": [
+        -0.0076,
+        -0.0023
+      ],
+      "reps": 1958,
+      "n_long": 13,
+      "n_short": 124,
+      "verdict": "excludes 0"
+    },
+    "DOWN/LOW": {
+      "median_diff": -0.0137,
+      "ci95": [
+        -0.0176,
+        0.0011
+      ],
+      "reps": 1822,
+      "n_long": 13,
+      "n_short": 115,
+      "verdict": "includes 0"
+    },
+    "DOWN/NORMAL": {
+      "median_diff": -0.007,
+      "ci95": [
+        -0.0113,
+        -0.0023
+      ],
+      "reps": 2000,
+      "n_long": 41,
+      "n_short": 352,
+      "verdict": "excludes 0"
+    },
+    "FLAT/HIGH": {
+      "median_diff": -0.0043,
+      "ci95": [
+        -0.0065,
+        1.1748
+      ],
+      "reps": 1938,
+      "n_long": 27,
+      "n_short": 16,
+      "verdict": "includes 0"
+    },
+    "FLAT/LOW": {
+      "median_diff": -0.0034,
+      "ci95": [
+        -0.1852,
+        5.287
+      ],
+      "reps": 2000,
+      "n_long": 93,
+      "n_short": 111,
+      "verdict": "includes 0"
+    },
+    "FLAT/NORMAL": {
+      "median_diff": -0.012,
+      "ci95": [
+        -0.3679,
+        -0.006
+      ],
+      "reps": 2000,
+      "n_long": 116,
+      "n_short": 151,
+      "verdict": "excludes 0"
+    },
+    "UP/LOW": {
+      "median_diff": -0.0075,
+      "ci95": [
+        -0.012,
+        -0.0012
+      ],
+      "reps": 1999,
+      "n_long": 323,
+      "n_short": 42,
+      "verdict": "excludes 0"
+    },
+    "UP/NORMAL": {
+      "median_diff": -0.0005,
+      "ci95": [
+        -0.6658,
+        0.0028
+      ],
+      "reps": 1993,
+      "n_long": 579,
+      "n_short": 21,
+      "verdict": "includes 0"
+    }
+  },
+  "per_year": {
+    "UP": {
+      "2022": {
+        "LONG": [
+          95,
+          -1.021,
+          -74.3
+        ],
+        "SHORT": [
+          9,
+          7.447,
+          41.2
+        ]
+      },
+      "2023": {
+        "LONG": [
+          331,
+          -1.024,
+          388.2
+        ],
+        "SHORT": [
+          7,
+          -1.023,
+          -7.2
+        ]
+      },
+      "2024": {
+        "LONG": [
+          362,
+          -1.023,
+          474.7
+        ],
+        "SHORT": [
+          26,
+          -1.022,
+          -10.8
+        ]
+      },
+      "2025": {
+        "LONG": [
+          180,
+          -1.025,
+          -75.3
+        ],
+        "SHORT": [
+          23,
+          -1.015,
+          -18.9
+        ]
+      }
+    },
+    "FLAT": {
+      "2022": {
+        "LONG": [
+          15,
+          -1.024,
+          -0.3
+        ],
+        "SHORT": [
+          63,
+          -1.016,
+          -6.8
+        ]
+      },
+      "2023": {
+        "LONG": [
+          44,
+          -1.025,
+          293.0
+        ],
+        "SHORT": [
+          56,
+          -1.018,
+          3.8
+        ]
+      },
+      "2024": {
+        "LONG": [
+          91,
+          -1.023,
+          12.2
+        ],
+        "SHORT": [
+          86,
+          -1.015,
+          -42.7
+        ]
+      },
+      "2025": {
+        "LONG": [
+          86,
+          -1.025,
+          10.1
+        ],
+        "SHORT": [
+          73,
+          -1.018,
+          -1.8
+        ]
+      }
+    },
+    "DOWN": {
+      "2022": {
+        "LONG": [
+          19,
+          -1.021,
+          -19.4
+        ],
+        "SHORT": [
+          259,
+          -1.012,
+          157.2
+        ]
+      },
+      "2023": {
+        "LONG": [
+          8,
+          -1.034,
+          -8.3
+        ],
+        "SHORT": [
+          62,
+          -1.03,
+          -34.5
+        ]
+      },
+      "2024": {
+        "LONG": [
+          14,
+          -1.022,
+          37.9
+        ],
+        "SHORT": [
+          62,
+          -1.019,
+          -58.7
+        ]
+      },
+      "2025": {
+        "LONG": [
+          26,
+          -1.021,
+          -19.1
+        ],
+        "SHORT": [
+          208,
+          -1.017,
+          -158.7
+        ]
+      }
+    }
+  },
+  "secondary": {
+    "btc_trend_long": {
+      "DOWN": {
+        "LONG": {
+          "n": 143,
+          "median_R": -1.0199,
+          "sum_R": 123.87
+        },
+        "SHORT": {
+          "n": 447,
+          "median_R": -1.0146,
+          "sum_R": -101.82
+        }
+      },
+      "FLAT": {
+        "LONG": {
+          "n": 340,
+          "median_R": -1.0249,
+          "sum_R": 254.24
+        },
+        "SHORT": {
+          "n": 252,
+          "median_R": -1.0174,
+          "sum_R": 94.41
+        }
+      },
+      "UP": {
+        "LONG": {
+          "n": 788,
+          "median_R": -1.023,
+          "sum_R": 641.31
+        },
+        "SHORT": {
+          "n": 235,
+          "median_R": -1.0177,
+          "sum_R": -130.54
+        }
+      }
+    },
+    "btc_drawdown_state": {
+      "DEEP": {
+        "LONG": {
+          "n": 104,
+          "median_R": -1.0183,
+          "sum_R": 34.26
+        },
+        "SHORT": {
+          "n": 498,
+          "median_R": -1.0148,
+          "sum_R": -73.88
+        }
+      },
+      "MID": {
+        "LONG": {
+          "n": 355,
+          "median_R": -1.0253,
+          "sum_R": 116.09
+        },
+        "SHORT": {
+          "n": 431,
+          "median_R": -1.0175,
+          "sum_R": -58.95
+        }
+      },
+      "SHALLOW": {
+        "LONG": {
+          "n": 812,
+          "median_R": -1.0232,
+          "sum_R": 869.07
+        },
+        "SHORT": {
+          "n": 5,
+          "median_R": -1.0234,
+          "sum_R": -5.12
+        }
+      }
+    }
+  },
+  "portfolio": {
+    "weeks": 178,
+    "total_R": 881.47,
+    "top5_week_R": 956.78,
+    "top5_share_pct": 108.5,
+    "positive_weeks": 42,
+    "positive_week_pct": 23.6,
+    "mean_symbol_week_corr": 0.118,
+    "top_correlated": [
+      {
+        "pair": "ADA/DOT",
+        "corr": 0.463
+      },
+      {
+        "pair": "BTC/ETH",
+        "corr": 0.453
+      },
+      {
+        "pair": "ADA/DOG",
+        "corr": 0.434
+      },
+      {
+        "pair": "DOT/LIN",
+        "corr": 0.331
+      },
+      {
+        "pair": "DOG/ETH",
+        "corr": 0.319
+      }
+    ]
+  },
+  "exit_reason_counts": {
+    "2N_stop": 1588,
+    "opposite_channel": 508,
+    "entry_bar_stop": 104,
+    "end_of_window": 5
+  }
+}
