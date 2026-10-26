@@ -1,0 +1,654 @@
+{
+  "capital": 10000.0,
+  "years": "2022-01-01..2026-01-01",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "BNBUSDT",
+    "SOLUSDT",
+    "XRPUSDT",
+    "ADAUSDT",
+    "DOGEUSDT",
+    "AVAXUSDT",
+    "LINKUSDT",
+    "DOTUSDT"
+  ],
+  "leverage_cap": 3.0,
+  "aggregate_risk_cap": 0.075,
+  "arms": {
+    "L1": {
+      "cap2_f0.5": {
+        "final_equity": 14298.26,
+        "multiple": 1.4298,
+        "total_return_pct": 42.98,
+        "annualised_pct": 9.35,
+        "max_drawdown_pct": 9.26,
+        "trades_taken": 100,
+        "trades_skipped": 254,
+        "year_end_equity": {
+          "2022": 9401.56,
+          "2023": 9383.33,
+          "2024": 14448.19,
+          "2025": 14298.26
+        },
+        "year_returns_pct": {
+          "2022": -5.98,
+          "2023": -0.19,
+          "2024": 53.98,
+          "2025": -1.04
+        }
+      },
+      "cap2_f1": {
+        "final_equity": 18127.93,
+        "multiple": 1.8128,
+        "total_return_pct": 81.28,
+        "annualised_pct": 16.03,
+        "max_drawdown_pct": 18.98,
+        "trades_taken": 99,
+        "trades_skipped": 255,
+        "year_end_equity": {
+          "2022": 8812.33,
+          "2023": 8357.69,
+          "2024": 18582.32,
+          "2025": 18127.93
+        },
+        "year_returns_pct": {
+          "2022": -11.88,
+          "2023": -5.16,
+          "2024": 122.34,
+          "2025": -2.45
+        }
+      },
+      "cap2_f2": {
+        "final_equity": 22143.61,
+        "multiple": 2.2144,
+        "total_return_pct": 121.44,
+        "annualised_pct": 21.99,
+        "max_drawdown_pct": 37.41,
+        "trades_taken": 91,
+        "trades_skipped": 263,
+        "year_end_equity": {
+          "2022": 6906.11,
+          "2023": 6356.34,
+          "2024": 26267.28,
+          "2025": 22143.61
+        },
+        "year_returns_pct": {
+          "2022": -30.94,
+          "2023": -7.96,
+          "2024": 313.25,
+          "2025": -15.7
+        }
+      },
+      "cap2_f3": {
+        "final_equity": 24142.19,
+        "multiple": 2.4142,
+        "total_return_pct": 141.42,
+        "annualised_pct": 24.65,
+        "max_drawdown_pct": 48.71,
+        "trades_taken": 87,
+        "trades_skipped": 267,
+        "year_end_equity": {
+          "2022": 6053.94,
+          "2023": 5240.04,
+          "2024": 34073.81,
+          "2025": 24142.19
+        },
+        "year_returns_pct": {
+          "2022": -39.46,
+          "2023": -13.44,
+          "2024": 550.26,
+          "2025": -29.15
+        }
+      },
+      "cap2_f5": {
+        "final_equity": 62838.79,
+        "multiple": 6.2839,
+        "total_return_pct": 528.39,
+        "annualised_pct": 58.33,
+        "max_drawdown_pct": 53.37,
+        "trades_taken": 67,
+        "trades_skipped": 287,
+        "year_end_equity": {
+          "2022": 5569.99,
+          "2023": 5077.24,
+          "2024": 77541.61,
+          "2025": 62838.79
+        },
+        "year_returns_pct": {
+          "2022": -44.3,
+          "2023": -8.85,
+          "2024": 1427.24,
+          "2025": -18.96
+        }
+      },
+      "cap3_f0.5": {
+        "final_equity": 14812.31,
+        "multiple": 1.4812,
+        "total_return_pct": 48.12,
+        "annualised_pct": 10.32,
+        "max_drawdown_pct": 11.75,
+        "trades_taken": 129,
+        "trades_skipped": 225,
+        "year_end_equity": {
+          "2022": 9457.01,
+          "2023": 9134.99,
+          "2024": 14180.04,
+          "2025": 14812.31
+        },
+        "year_returns_pct": {
+          "2022": -5.43,
+          "2023": -3.41,
+          "2024": 55.23,
+          "2025": 4.46
+        }
+      },
+      "cap3_f1": {
+        "final_equity": 18302.48,
+        "multiple": 1.8302,
+        "total_return_pct": 83.02,
+        "annualised_pct": 16.31,
+        "max_drawdown_pct": 22.19,
+        "trades_taken": 123,
+        "trades_skipped": 231,
+        "year_end_equity": {
+          "2022": 9179.81,
+          "2023": 8157.36,
+          "2024": 18424.58,
+          "2025": 18302.48
+        },
+        "year_returns_pct": {
+          "2022": -8.2,
+          "2023": -11.14,
+          "2024": 125.86,
+          "2025": -0.66
+        }
+      },
+      "cap3_f2": {
+        "final_equity": 16820.89,
+        "multiple": 1.6821,
+        "total_return_pct": 68.21,
+        "annualised_pct": 13.88,
+        "max_drawdown_pct": 48.56,
+        "trades_taken": 109,
+        "trades_skipped": 245,
+        "year_end_equity": {
+          "2022": 6093.1,
+          "2023": 5224.21,
+          "2024": 21837.04,
+          "2025": 16820.89
+        },
+        "year_returns_pct": {
+          "2022": -39.07,
+          "2023": -14.26,
+          "2024": 318.0,
+          "2025": -22.97
+        }
+      },
+      "cap3_f3": {
+        "final_equity": 22407.93,
+        "multiple": 2.2408,
+        "total_return_pct": 124.08,
+        "annualised_pct": 22.35,
+        "max_drawdown_pct": 54.64,
+        "trades_taken": 93,
+        "trades_skipped": 261,
+        "year_end_equity": {
+          "2022": 5353.41,
+          "2023": 4633.69,
+          "2024": 31626.11,
+          "2025": 22407.93
+        },
+        "year_returns_pct": {
+          "2022": -46.47,
+          "2023": -13.44,
+          "2024": 582.53,
+          "2025": -29.15
+        }
+      },
+      "cap3_f5": {
+        "final_equity": 62838.79,
+        "multiple": 6.2839,
+        "total_return_pct": 528.39,
+        "annualised_pct": 58.33,
+        "max_drawdown_pct": 53.37,
+        "trades_taken": 67,
+        "trades_skipped": 287,
+        "year_end_equity": {
+          "2022": 5569.99,
+          "2023": 5077.24,
+          "2024": 77541.61,
+          "2025": 62838.79
+        },
+        "year_returns_pct": {
+          "2022": -44.3,
+          "2023": -8.85,
+          "2024": 1427.24,
+          "2025": -18.96
+        }
+      },
+      "cap4_f0.5": {
+        "final_equity": 13731.77,
+        "multiple": 1.3732,
+        "total_return_pct": 37.32,
+        "annualised_pct": 8.25,
+        "max_drawdown_pct": 13.73,
+        "trades_taken": 154,
+        "trades_skipped": 200,
+        "year_end_equity": {
+          "2022": 9308.61,
+          "2023": 8747.31,
+          "2024": 13351.23,
+          "2025": 13731.77
+        },
+        "year_returns_pct": {
+          "2022": -6.91,
+          "2023": -6.03,
+          "2024": 52.63,
+          "2025": 2.85
+        }
+      },
+      "cap4_f1": {
+        "final_equity": 16621.77,
+        "multiple": 1.6622,
+        "total_return_pct": 66.22,
+        "annualised_pct": 13.55,
+        "max_drawdown_pct": 25.66,
+        "trades_taken": 139,
+        "trades_skipped": 215,
+        "year_end_equity": {
+          "2022": 9210.73,
+          "2023": 7825.87,
+          "2024": 17086.74,
+          "2025": 16621.77
+        },
+        "year_returns_pct": {
+          "2022": -7.89,
+          "2023": -15.04,
+          "2024": 118.34,
+          "2025": -2.72
+        }
+      },
+      "cap4_f2": {
+        "final_equity": 16744.52,
+        "multiple": 1.6745,
+        "total_return_pct": 67.45,
+        "annualised_pct": 13.75,
+        "max_drawdown_pct": 47.06,
+        "trades_taken": 112,
+        "trades_skipped": 242,
+        "year_end_equity": {
+          "2022": 6270.77,
+          "2023": 5376.54,
+          "2024": 22216.93,
+          "2025": 16744.52
+        },
+        "year_returns_pct": {
+          "2022": -37.29,
+          "2023": -14.26,
+          "2024": 313.22,
+          "2025": -24.63
+        }
+      },
+      "cap4_f3": {
+        "final_equity": 22407.93,
+        "multiple": 2.2408,
+        "total_return_pct": 124.08,
+        "annualised_pct": 22.35,
+        "max_drawdown_pct": 54.64,
+        "trades_taken": 93,
+        "trades_skipped": 261,
+        "year_end_equity": {
+          "2022": 5353.41,
+          "2023": 4633.69,
+          "2024": 31626.11,
+          "2025": 22407.93
+        },
+        "year_returns_pct": {
+          "2022": -46.47,
+          "2023": -13.44,
+          "2024": 582.53,
+          "2025": -29.15
+        }
+      },
+      "cap4_f5": {
+        "final_equity": 62838.79,
+        "multiple": 6.2839,
+        "total_return_pct": 528.39,
+        "annualised_pct": 58.33,
+        "max_drawdown_pct": 53.37,
+        "trades_taken": 67,
+        "trades_skipped": 287,
+        "year_end_equity": {
+          "2022": 5569.99,
+          "2023": 5077.24,
+          "2024": 77541.61,
+          "2025": 62838.79
+        },
+        "year_returns_pct": {
+          "2022": -44.3,
+          "2023": -8.85,
+          "2024": 1427.24,
+          "2025": -18.96
+        }
+      }
+    },
+    "R0": {
+      "cap2_f0.5": {
+        "final_equity": 14030.39,
+        "multiple": 1.403,
+        "total_return_pct": 40.3,
+        "annualised_pct": 8.83,
+        "max_drawdown_pct": 13.33,
+        "trades_taken": 191,
+        "trades_skipped": 504,
+        "year_end_equity": {
+          "2022": 10496.86,
+          "2023": 9887.12,
+          "2024": 13553.75,
+          "2025": 14030.39
+        },
+        "year_returns_pct": {
+          "2022": 4.97,
+          "2023": -5.81,
+          "2024": 37.08,
+          "2025": 3.52
+        }
+      },
+      "cap2_f1": {
+        "final_equity": 15795.95,
+        "multiple": 1.5796,
+        "total_return_pct": 57.96,
+        "annualised_pct": 12.11,
+        "max_drawdown_pct": 25.73,
+        "trades_taken": 183,
+        "trades_skipped": 512,
+        "year_end_equity": {
+          "2022": 10342.8,
+          "2023": 8727.46,
+          "2024": 15356.52,
+          "2025": 15795.95
+        },
+        "year_returns_pct": {
+          "2022": 3.43,
+          "2023": -15.62,
+          "2024": 75.96,
+          "2025": 2.86
+        }
+      },
+      "cap2_f2": {
+        "final_equity": 14862.67,
+        "multiple": 1.4863,
+        "total_return_pct": 48.63,
+        "annualised_pct": 10.41,
+        "max_drawdown_pct": 45.35,
+        "trades_taken": 170,
+        "trades_skipped": 525,
+        "year_end_equity": {
+          "2022": 9173.25,
+          "2023": 6661.69,
+          "2024": 16805.37,
+          "2025": 14862.67
+        },
+        "year_returns_pct": {
+          "2022": -8.27,
+          "2023": -27.38,
+          "2024": 152.27,
+          "2025": -11.56
+        }
+      },
+      "cap2_f3": {
+        "final_equity": 13609.09,
+        "multiple": 1.3609,
+        "total_return_pct": 36.09,
+        "annualised_pct": 8.01,
+        "max_drawdown_pct": 56.14,
+        "trades_taken": 159,
+        "trades_skipped": 536,
+        "year_end_equity": {
+          "2022": 10214.19,
+          "2023": 5881.87,
+          "2024": 18125.81,
+          "2025": 13609.09
+        },
+        "year_returns_pct": {
+          "2022": 2.14,
+          "2023": -42.41,
+          "2024": 208.16,
+          "2025": -24.92
+        }
+      },
+      "cap2_f5": {
+        "final_equity": 39227.33,
+        "multiple": 3.9227,
+        "total_return_pct": 292.27,
+        "annualised_pct": 40.73,
+        "max_drawdown_pct": 72.33,
+        "trades_taken": 113,
+        "trades_skipped": 582,
+        "year_end_equity": {
+          "2022": 7506.66,
+          "2023": 4411.95,
+          "2024": 36108.21,
+          "2025": 39227.33
+        },
+        "year_returns_pct": {
+          "2022": -24.93,
+          "2023": -41.23,
+          "2024": 718.42,
+          "2025": 8.64
+        }
+      },
+      "cap3_f0.5": {
+        "final_equity": 15005.49,
+        "multiple": 1.5005,
+        "total_return_pct": 50.05,
+        "annualised_pct": 10.68,
+        "max_drawdown_pct": 16.18,
+        "trades_taken": 264,
+        "trades_skipped": 431,
+        "year_end_equity": {
+          "2022": 11359.6,
+          "2023": 10683.86,
+          "2024": 13915.41,
+          "2025": 15005.49
+        },
+        "year_returns_pct": {
+          "2022": 13.6,
+          "2023": -5.95,
+          "2024": 30.25,
+          "2025": 7.83
+        }
+      },
+      "cap3_f1": {
+        "final_equity": 15679.36,
+        "multiple": 1.5679,
+        "total_return_pct": 56.79,
+        "annualised_pct": 11.9,
+        "max_drawdown_pct": 30.57,
+        "trades_taken": 236,
+        "trades_skipped": 459,
+        "year_end_equity": {
+          "2022": 12061.62,
+          "2023": 9981.82,
+          "2024": 15725.75,
+          "2025": 15679.36
+        },
+        "year_returns_pct": {
+          "2022": 20.62,
+          "2023": -17.24,
+          "2024": 57.54,
+          "2025": -0.29
+        }
+      },
+      "cap3_f2": {
+        "final_equity": 7489.14,
+        "multiple": 0.7489,
+        "total_return_pct": -25.11,
+        "annualised_pct": -6.97,
+        "max_drawdown_pct": 52.01,
+        "trades_taken": 211,
+        "trades_skipped": 484,
+        "year_end_equity": {
+          "2022": 7761.74,
+          "2023": 5487.03,
+          "2024": 10671.86,
+          "2025": 7489.14
+        },
+        "year_returns_pct": {
+          "2022": -22.38,
+          "2023": -29.31,
+          "2024": 94.49,
+          "2025": -29.82
+        }
+      },
+      "cap3_f3": {
+        "final_equity": 12095.43,
+        "multiple": 1.2095,
+        "total_return_pct": 20.95,
+        "annualised_pct": 4.87,
+        "max_drawdown_pct": 57.8,
+        "trades_taken": 170,
+        "trades_skipped": 525,
+        "year_end_equity": {
+          "2022": 8951.65,
+          "2023": 5435.97,
+          "2024": 16415.84,
+          "2025": 12095.43
+        },
+        "year_returns_pct": {
+          "2022": -10.48,
+          "2023": -39.27,
+          "2024": 201.99,
+          "2025": -26.32
+        }
+      },
+      "cap3_f5": {
+        "final_equity": 39227.33,
+        "multiple": 3.9227,
+        "total_return_pct": 292.27,
+        "annualised_pct": 40.73,
+        "max_drawdown_pct": 72.33,
+        "trades_taken": 113,
+        "trades_skipped": 582,
+        "year_end_equity": {
+          "2022": 7506.66,
+          "2023": 4411.95,
+          "2024": 36108.21,
+          "2025": 39227.33
+        },
+        "year_returns_pct": {
+          "2022": -24.93,
+          "2023": -41.23,
+          "2024": 718.42,
+          "2025": 8.64
+        }
+      },
+      "cap4_f0.5": {
+        "final_equity": 13025.33,
+        "multiple": 1.3025,
+        "total_return_pct": 30.25,
+        "annualised_pct": 6.83,
+        "max_drawdown_pct": 17.61,
+        "trades_taken": 324,
+        "trades_skipped": 371,
+        "year_end_equity": {
+          "2022": 10581.42,
+          "2023": 10121.93,
+          "2024": 12651.74,
+          "2025": 13025.33
+        },
+        "year_returns_pct": {
+          "2022": 5.81,
+          "2023": -4.34,
+          "2024": 24.99,
+          "2025": 2.95
+        }
+      },
+      "cap4_f1": {
+        "final_equity": 13083.42,
+        "multiple": 1.3083,
+        "total_return_pct": 30.83,
+        "annualised_pct": 6.95,
+        "max_drawdown_pct": 28.01,
+        "trades_taken": 260,
+        "trades_skipped": 435,
+        "year_end_equity": {
+          "2022": 11284.79,
+          "2023": 9921.11,
+          "2024": 14052.9,
+          "2025": 13083.42
+        },
+        "year_returns_pct": {
+          "2022": 12.85,
+          "2023": -12.08,
+          "2024": 41.65,
+          "2025": -6.9
+        }
+      },
+      "cap4_f2": {
+        "final_equity": 5493.3,
+        "multiple": 0.5493,
+        "total_return_pct": -45.07,
+        "annualised_pct": -13.91,
+        "max_drawdown_pct": 56.16,
+        "trades_taken": 217,
+        "trades_skipped": 478,
+        "year_end_equity": {
+          "2022": 7639.7,
+          "2023": 5059.38,
+          "2024": 7905.8,
+          "2025": 5493.3
+        },
+        "year_returns_pct": {
+          "2022": -23.6,
+          "2023": -33.78,
+          "2024": 56.26,
+          "2025": -30.52
+        }
+      },
+      "cap4_f3": {
+        "final_equity": 10293.71,
+        "multiple": 1.0294,
+        "total_return_pct": 2.94,
+        "annualised_pct": 0.73,
+        "max_drawdown_pct": 55.5,
+        "trades_taken": 168,
+        "trades_skipped": 527,
+        "year_end_equity": {
+          "2022": 8145.77,
+          "2023": 6124.67,
+          "2024": 13970.56,
+          "2025": 10293.71
+        },
+        "year_returns_pct": {
+          "2022": -18.54,
+          "2023": -24.81,
+          "2024": 128.1,
+          "2025": -26.32
+        }
+      },
+      "cap4_f5": {
+        "final_equity": 39227.33,
+        "multiple": 3.9227,
+        "total_return_pct": 292.27,
+        "annualised_pct": 40.73,
+        "max_drawdown_pct": 72.33,
+        "trades_taken": 113,
+        "trades_skipped": 582,
+        "year_end_equity": {
+          "2022": 7506.66,
+          "2023": 4411.95,
+          "2024": 36108.21,
+          "2025": 39227.33
+        },
+        "year_returns_pct": {
+          "2022": -24.93,
+          "2023": -41.23,
+          "2024": 718.42,
+          "2025": 8.64
+        }
+      }
+    }
+  }
+}
