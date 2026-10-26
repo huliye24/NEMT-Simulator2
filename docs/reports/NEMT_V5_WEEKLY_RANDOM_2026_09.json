@@ -1,0 +1,174 @@
+{
+  "protocol": "nemt-v5-4h-weekly-horizon-random-001",
+  "month": "2026-09",
+  "seed": 202609,
+  "sampling": "uniform_without_replacement_from_causally_eligible_entries",
+  "strict_candidate_count": 0,
+  "experimental_candidate_count": 4,
+  "sample_pool_count": 3,
+  "selection_tier": "experimental_top_quartile_positive_edge",
+  "config": {
+    "horizon_bars": 42,
+    "longest_lookback_bars": 252,
+    "neighbor_count": 32,
+    "training_stride": 6,
+    "minimum_training_samples": 80,
+    "minimum_persistence_probability": 0.58,
+    "minimum_expected_reward_risk": 1.5,
+    "maximum_leverage": 3
+  },
+  "assumptions": {
+    "bar_interval": "4h",
+    "validation_horizon_bars": 42,
+    "validation_horizon_days": 7,
+    "capital_per_independent_trade": 100.0,
+    "risk_per_trade_pct": 1,
+    "maximum_leverage": 3,
+    "fee_bps_each_side": 5,
+    "slippage_bps_each_side": 2,
+    "funding_modeled": false
+  },
+  "experiments": [
+    {
+      "signal_at": "2026-09-09T16:00:00+00:00",
+      "decision": {
+        "direction": "LONG",
+        "permitted": false,
+        "persistence_probability": 0.625,
+        "expected_reward_risk": 1.060077862281752,
+        "expected_return_pct": 0.19071772663136755,
+        "expected_horizon_bars": 42,
+        "neighbor_count": 32,
+        "reason": "reward_risk_below_threshold",
+        "features": [
+          -0.019980586243340426,
+          0.01155227590062613,
+          0.14329358825675031,
+          0.2303130109927023,
+          0.05446250982156294,
+          0.1758422152586319,
+          0.008578689015599222,
+          0.6206244828913792,
+          -0.002384249142117648,
+          0.7529988545864474
+        ]
+      },
+      "validation": {
+        "entry_at": "2026-09-09T20:00:00+00:00",
+        "entry_price": 78250.586988,
+        "direction": "LONG",
+        "leverage_cap": 3,
+        "notional": 48.25045377689652,
+        "stop_price": 76628.82841657143,
+        "exit_at": "2026-09-11T00:00:00+00:00",
+        "exit_price": 76613.50265088811,
+        "exit_reason": "protective_stop",
+        "holding_bars": 7,
+        "holding_days": 1.1666666666666667,
+        "mfe_pct": 0.40102320516537393,
+        "mae_pct": 2.336507360326423,
+        "net_pnl_usdt": -1.0571958194868967,
+        "return_on_equity_pct": -1.0571958194868967,
+        "realized_r": -1.0571958194868967
+      }
+    },
+    {
+      "signal_at": "2026-09-09T20:00:00+00:00",
+      "decision": {
+        "direction": "LONG",
+        "permitted": false,
+        "persistence_probability": 0.625,
+        "expected_reward_risk": 1.0795401338477864,
+        "expected_return_pct": 0.2522698687517706,
+        "expected_horizon_bars": 42,
+        "neighbor_count": 32,
+        "reason": "reward_risk_below_threshold",
+        "features": [
+          -0.025334249916886487,
+          0.01249573151076655,
+          0.12939593528732107,
+          0.22383857409976327,
+          0.058658861832832795,
+          0.16333097878723893,
+          0.008579109894451653,
+          0.5868594308686556,
+          -0.0013948385721909004,
+          0.8113905154528533
+        ]
+      },
+      "validation": {
+        "entry_at": "2026-09-10T00:00:00+00:00",
+        "entry_price": 78322.091286,
+        "direction": "LONG",
+        "leverage_cap": 3,
+        "notional": 50.028619778589324,
+        "stop_price": 76756.54557171428,
+        "exit_at": "2026-09-10T16:00:00+00:00",
+        "exit_price": 76741.19426259994,
+        "exit_reason": "protective_stop",
+        "holding_bars": 4,
+        "holding_days": 0.6666666666666666,
+        "mfe_pct": 0.30936190546193565,
+        "mae_pct": 2.1467209860912106,
+        "net_pnl_usdt": -1.059329440872331,
+        "return_on_equity_pct": -1.059329440872331,
+        "realized_r": -1.059329440872331
+      }
+    },
+    {
+      "signal_at": "2026-09-10T00:00:00+00:00",
+      "decision": {
+        "direction": "LONG",
+        "permitted": false,
+        "persistence_probability": 0.625,
+        "expected_reward_risk": 1.0276371778609876,
+        "expected_return_pct": 0.09256032698085129,
+        "expected_horizon_bars": 42,
+        "neighbor_count": 32,
+        "reason": "reward_risk_below_threshold",
+        "features": [
+          -0.015934265360527,
+          0.00797961599835273,
+          0.13197999180295183,
+          0.22078651562810236,
+          0.03844522757878399,
+          0.16661479209730778,
+          0.008550911091218227,
+          0.5455449741343792,
+          -0.0008934436202773393,
+          0.884332227577972
+        ]
+      },
+      "validation": {
+        "entry_at": "2026-09-10T04:00:00+00:00",
+        "entry_price": 78343.745616,
+        "direction": "LONG",
+        "leverage_cap": 3,
+        "notional": 50.104082587841056,
+        "stop_price": 76780.125616,
+        "exit_at": "2026-09-10T16:00:00+00:00",
+        "exit_price": 76764.76959087681,
+        "exit_reason": "protective_stop",
+        "holding_bars": 3,
+        "holding_days": 0.5,
+        "mfe_pct": 0.2816362458357258,
+        "mae_pct": 2.174962300493477,
+        "net_pnl_usdt": -1.0594199886971463,
+        "return_on_equity_pct": -1.0594199886971463,
+        "realized_r": -1.0594199886971463
+      }
+    }
+  ],
+  "summary": {
+    "samples": 3,
+    "profitable": 0,
+    "aggregate_net_pnl_usdt": -3.175945249056374,
+    "average_return_on_equity_pct": -1.0586484163521248,
+    "average_realized_r": -1.0586484163521248
+  },
+  "limitations": [
+    "Three points are a smoke test, not statistical validation.",
+    "Funding, liquidation tiers, latency, and order-book depth are not modeled.",
+    "A protective stop may end a trade before seven days; the forecast horizon remains 42 bars."
+  ]
+}
