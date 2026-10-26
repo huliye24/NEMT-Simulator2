@@ -1,200 +1,48 @@
-<p align="center">
-  <img src="docs/assets/brand/nemt-readme-banner.webp" alt="NEMT — 银白与青蓝色的 NEMT 品牌横幅" width="100%" />
-</p>
+# NEMT — Non-Equilibrium Market Theory
+非平衡市场理论 · 市场研究与交易策略知识库
 
-<h1 align="center">NEMT</h1>
+> **Research only. No executable trading software.**  
+> 本仓库用于提出、修订与检验市场理论及交易策略假设，不提供交易程序、交易所接口、回测服务、自动下单或可执行的软件产品。
 
-<p align="center">
-  <strong>非平衡市场理论 · Non-Equilibrium Market Theory</strong><br />
-  AI 原生金融研究、市场模拟与移动交易基础设施
-</p>
+## 研究定位
 
-<p align="center">
-  <a href="#项目简介">项目简介</a> ·
-  <a href="#开发状态">开发状态</a> ·
-  <a href="#系统架构">系统架构</a> ·
-  <a href="#快速开始">快速开始</a> ·
-  <a href="#工程协议">工程协议</a>
-</p>
+NEMT 的研究核心是：市场是否呈现可定义、可观测、可重复验证的非平衡状态？如果可以，这些状态是否具有独立于朴素基准的可检验预测或风险管理价值？
 
-<p align="center">
-  <strong>DEMO 已实现</strong> ·
-  <strong>TESTNET 待验收</strong> ·
-  <strong>LIVE 禁用</strong>
-</p>
+本项目区分三个层次：
+1. **理论（Theory）**：定义概念、变量、方程、适用边界与反证条件。
+2. **假设与证据（Evidence）**：事先登记可证伪命题，记录数据来源与实验结论；接受 FAIL / INCONCLUSIVE / BLOCKED。
+3. **策略规范（Strategy Specifications）**：以自然语言和数学表达式描述策略、风险、适用市场、成本假设、样本外验证标准；不发布可执行的策略代码。
 
----
+## 目录
 
-## 项目简介
+- [theory/book/](theory/book/)：NEMT《非平衡市场与宏观趋势调度理论》原书稿（研究资产，保留章节顺序）
+- [theory/principles/](theory/principles/)：风险优先、策略生命周期等研究思想
+- [theory/notes/](theory/notes/)：术语和建模备忘
+- [experiments/preregistration/](experiments/preregistration/)：已制定的数学及样本外实验方案（不含运行程序）
+- [experiments/reports/](experiments/reports/)：已有研究报告文本，须独立核对原始证据
+- [strategies/](strategies/)：假设性的策略候选与填写模板
+- [archive/legacy/](archive/legacy/)：历史研究记录，**不代表当前已验证结论**
+- [governance/](governance/)：可证伪性、证据分类、出版审查与仓库边界
 
-NEMT 是一个连接**市场理论研究、金融数据、计算实验、策略验证、模拟交易及移动终端**的开源工程项目。
+## 策略与理论的边界
 
-我们采用循证、可复现的长期研发方法：
+* 文档中的指标、参数、信号和阶段划分均为研究对象，不应被解读为已获证实。
+* 回测收益、示例仓位或历史策略清单不构成投资建议，也不代表可复制的未来表现。
+* 研究者可以引用 Emergenzix 的试验报告，但必须明确版本、数据集、时间范围、手续费/滑点、样本外划分及审阅状态。
+* **NEMT 无权部署策略，更不能直接连接交易账户。**
 
-**理论假设 → 数据采集 → MATLAB / 云计算实验 → 策略验证 → Paper Trading → 交易应用**
+## 与 Emergenzix 的关系
 
-研究层负责解释、检验和迭代假设；交易层负责在明确权限、风险限制和审计机制下执行操作。**研究结果和 AI 输出不能绕过风控直接发起真实交易。**
+- **NEMT**（本文档）：提出理论、定义策略、评价证据。
+- **[Emergenzix](https://github.com/huliye24/emergenzix)**：承担代码实现、实验执行、回测、模拟交易、风控和产品部署。
+- 由理论流向产品的是**经版本化评审的策略规范与证据引用**，不是仓库内可直接运行的交易程序。
 
-## 开发状态
+## 来源与整理
 
-NEMT App V0.1 已交付可演示的移动端 DEMO 基线，但**真实 Binance Spot Testnet 端到端验收尚未完成，LIVE 写入功能仍然禁用**。
+本文档快照基于 [NEMT-Simulator2](https://github.com/huliye24/NEMT-Simulator2) 于 2026-10-26 的公开默认分支材料筛选。历史文本原作者、日期、内部参考以及不同阶段状态应予保留。详细见 [MIGRATION.md](MIGRATION.md)。
 
-| 模块 | 状态 | 说明 |
-| --- | --- | --- |
-| 手机端 Web / PWA | DEMO 已实现 | Next.js 16、React 19、TypeScript |
-| 云端 API | 基线已实现 | FastAPI、登录、RBAC、CSRF、审计 |
-| DEMO 模拟交易 | 已测试 | 订单预览、确认、模拟成交、撤单及余额更新 |
-| 公共行情 | 基线已实现 | Binance 公共行情、数据新鲜度和异常提示 |
-| Binance Spot Testnet | 待正式验收 | 需要服务端专用密钥及真实下单测试证据 |
-| 订单数据流与恢复 | 待完善 | 部分成交、周期对账、断线重连和重启恢复 |
-| LIVE 真实资金交易 | **禁用** | V0.1 不提供可执行的 LIVE 下单路径 |
-| MATLAB / GPU 研究 | 持续建设 | 独立于交易执行，重视实验复现与参数记录 |
-
-进度依据：[NEMT App EPIC #5](https://github.com/huliye24/NEMT-Simulator2/issues/5) · [Testnet 验收清单](docs/NEMT_APP_TESTNET_ACCEPTANCE.md)。
-
-## 系统架构
-
-```text
-                NEMT Research & Experiments
-         理论 · 数据集 · MATLAB · GPU · 模型验证
-                            │
-                     策略候选 / 证据
-                            │
-              回测 · 样本外评估 · Paper Trading
-                            │
-                       人工审核 / 风控
-                            │
-     ┌──────────────────────┴──────────────────────┐
-     │             NEMT Mobile Web / PWA           │
-     │       Next.js · 行情 · 账户 · 订单交互        │
-     └──────────────────────┬──────────────────────┘
-                            │ NEMT API
-     ┌──────────────────────┴──────────────────────┐
-     │               FastAPI Cloud API             │
-     │       身份认证 · 权限 · 风控 · 审计 · 持久化    │
-     └──────────────────────┬──────────────────────┘
-                            │
-                 DEMO / Binance Spot TESTNET
-                 LIVE 写入默认禁止
-```
-
-**当前技术基线：** `web/` 已采用 Next.js，而不是部分历史文档中的 Vite 方案；技术决策见 [ADR-001](docs/ADR-001-nemt-app-baseline.md)。
-
-| 目录 | 职责 |
-| --- | --- |
-| `web/` | 当前网站与手机端交易工作台 |
-| `backend/trade_app/` | 独立 FastAPI 交易服务 |
-| `backend/trade_main.py` | 云端 API 入口 |
-| `backend/tests/` | DEMO 与服务端逻辑测试 |
-| `quant-mvp/` | 行情采集与历史量化模块 |
-| `matlab/` | 数学建模与实验研究 |
-| `docs/` | 架构、实验、工程规范与运维手册 |
-| `scripts/` | 工程与自动化检查工具 |
-
-仓库部分历史组件仍在分阶段审查。清理工作见 [Issue #18](https://github.com/huliye24/NEMT-Simulator2/issues/18)。
-
-## 快速开始
-
-要求：**Python 3.11+、Node.js 22、npm**。以下过程默认在 **DEMO** 环境运行，不需要 Binance API Key。
-
-### 1. 获取代码
-
-```bash
-git clone https://github.com/huliye24/NEMT-Simulator2.git
-cd NEMT-Simulator2
-```
-
-### 2. 启动 FastAPI
-
-```bash
-python -m pip install -r backend/trade_requirements.txt
-python backend/trade_main.py
-```
-
-建议在独立的 Python 虚拟环境中安装依赖。API 默认监听 `127.0.0.1:8000`，健康检查为 `/api/v1/health`。
-
-### 3. 启动移动 Web 应用
-
-在另一终端执行：
-
-```bash
-cd web
-npm ci
-npm run build
-npm start
-```
-
-访问 **http://localhost:3000/trade**。DEMO 账户、Android 手机联调和启动排障见 [运行手册](docs/NEMT_APP_RUNBOOK.md)。
-
-## 运行模式与安全边界
-
-| 运行模式 | 用途 | 交易能力 |
-| --- | --- | --- |
-| `DEMO` | 本地模拟及界面验证 | 只操作模拟订单与模拟资金 |
-| `TESTNET` | Binance Spot 测试网 | 必须在服务端显式配置测试网专用凭据 |
-| `LIVE` | 真实资金环境 | **V0.1 不提供订单写入能力** |
-
-- **Fail Closed：** 模式、权限、价格新鲜度或风控条件异常时拒绝订单。
-- **密钥留在服务端：** 不将交易所凭据放入浏览器或客户端包。
-- **先审查再交易：** 预览、确认、额度限制、幂等、审计在服务端执行。
-- **研究与执行隔离：** AI 研究或回测结果不自动获得下单权限。
-- **历史凭据风险：** 仓库曾记录需撤销或轮换的凭据信息；新源码 CI 通过不等于历史风险已经解决。详见 [安全清理方案](docs/SECURITY_CLEANUP_PLAN.md)。
-
-实盘准入须单独审批，见 [Issue #15](https://github.com/huliye24/NEMT-Simulator2/issues/15)。
-
-## 工程协议
-
-NEMT 对人工与 AI 贡献者采用相同的工程纪律。开始修改前，须阅读：
-
-- [AGENTS.md](AGENTS.md) 和 [Direction Lock](.cursor/rules/DIRECTION_LOCK.md)：允许范围、受保护目录与审批条件。
-- [微任务协议](docs/MICRO_TASK_PROTOCOL.md) 和 [工程开发协议](docs/ENGINEERING_PROTOCOL.md)：任务以 **15–30 分钟**为计划单位；单一目标、明确测试和回滚。
-- [科学实验协议](docs/SCIENTIFIC_EXPERIMENT_PROTOCOL.md)：数据版本、MATLAB/GPU 参数、实验记录及可复现性。
-- [量化策略协议](docs/QUANT_STRATEGY_PROTOCOL.md)：从理论和实验到策略候选、验证、人工审核和 Paper Trading。
-
-超过 Direction Lock 许可范围的操作必须获得维护者单独、明确的批准，不得以自动化或开发便利为由绕过。
-
-## 测试
-
-后端测试（需预先安装上述 Python 依赖）：
-
-```bash
-cd backend
-python -m pytest
-```
-
-前端质量检查（在项目根目录运行）：
-
-```bash
-cd web
-npm ci
-npm run lint
-npx tsc --noEmit
-npm run build
-```
-
-仓库 CI 包括后端 DEMO 测试、前端 Lint/TypeScript/构建以及新应用源码的基本密钥守卫。**CI 通过不等于真实 Testnet 或生产环境通过验收。**
-
-## 项目路线
-
-| 阶段 | 核心目标 | 状态 |
-| --- | --- | --- |
-| Phase 1 | 手机端 DEMO、基础 API、模拟交易及风控 | 已有交付 |
-| Phase 2 | Spot Testnet 下单、撤单、对账、异常恢复 | 开发及验收中 |
-| Phase 3 | 云端实验、策略验证与 Paper Trading 闭环 | 长期研究 |
-| Phase 4 | 安全、合规与受限实盘就绪评估 | 必须单独审批 |
-
-## 理念
-
-> **让市场研究能够被验证，让实验结果能够被复现，让交易执行始终受到约束。**
-
-NEMT 的长期目标不是单一的交易页面，而是从可证伪的科学研究走向可审计金融软件的一套基础设施。
+**本分支是独立研究仓库的可审核导出快照，不是新 GitHub 仓库，也不是对原仓库 main 的清理。创建新的 NEMT-Theory 仓库时仅导入文件快照，不复制源仓库 Git 历史。**
 
 ## License
 
-本仓库采用 **GNU General Public License v3.0（GPL-3.0-only）** 作为项目维护者发布和有权重新许可部分的当前仓库许可证。详见根目录 [LICENSE](LICENSE)。
-
-历史上以 Apache-2.0 发布的代码及其他第三方内容仍保留其既有许可证与版权声明；完整历史 Apache-2.0 许可证存档于 [LICENSES/Apache-2.0.txt](LICENSES/Apache-2.0.txt)。本次变更不撤销既有版本已经授予的许可，也不自动改变其他贡献者的授权。详细边界见 [许可证政策](docs/LICENSE_POLICY.md)。
-
----
-
-*NEMT — Research First · Evidence Driven · Risk Controlled*
+保留原项目已有的 GPL-3.0-only 许可证文本及历史 Apache-2.0 许可证说明。历史贡献及第三方内容仍受其原有授权约束，仓库迁移本身不改变版权归属。

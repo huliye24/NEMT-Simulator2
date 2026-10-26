@@ -1,3 +1,0 @@
-"""
-Dark Matter Framework Tests
-"""
