@@ -1,0 +1,175 @@
+{
+  "capital": 10000.0,
+  "year": 2025,
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "leverage_cap": 3.0,
+  "aggregate_risk_cap": 0.075,
+  "max_concurrent": 2,
+  "arms": {
+    "R0": {
+      "signals": 32,
+      "grid": {
+        "0.5%": {
+          "final_equity": 10483.33,
+          "multiple": 1.0483,
+          "return_pct": 4.83,
+          "max_drawdown_pct": 4.43,
+          "trades_taken": 32,
+          "trades_skipped": 0,
+          "log_growth": 0.0483
+        },
+        "1%": {
+          "final_equity": 10726.38,
+          "multiple": 1.0726,
+          "return_pct": 7.26,
+          "max_drawdown_pct": 8.69,
+          "trades_taken": 31,
+          "trades_skipped": 1,
+          "log_growth": 0.0726
+        },
+        "2%": {
+          "final_equity": 10340.11,
+          "multiple": 1.034,
+          "return_pct": 3.4,
+          "max_drawdown_pct": 16.73,
+          "trades_taken": 27,
+          "trades_skipped": 5,
+          "log_growth": 0.0378
+        },
+        "3%": {
+          "final_equity": 9267.03,
+          "multiple": 0.9267,
+          "return_pct": -7.33,
+          "max_drawdown_pct": 21.71,
+          "trades_taken": 26,
+          "trades_skipped": 6,
+          "log_growth": -0.0718
+        },
+        "5%": {
+          "final_equity": 11549.81,
+          "multiple": 1.155,
+          "return_pct": 15.5,
+          "max_drawdown_pct": 21.78,
+          "trades_taken": 20,
+          "trades_skipped": 12,
+          "log_growth": 0.1428
+        },
+        "7.5%": {
+          "final_equity": 12239.91,
+          "multiple": 1.224,
+          "return_pct": 22.4,
+          "max_drawdown_pct": 28.01,
+          "trades_taken": 19,
+          "trades_skipped": 13,
+          "log_growth": 0.2021
+        }
+      },
+      "per_symbol": {
+        "BTCUSDT": {
+          "final_100": 93.6684,
+          "return_pct": -6.332,
+          "trades": 18,
+          "wins": 3,
+          "losses": 15,
+          "max_dd_pct": 11.28,
+          "longs": 8,
+          "shorts": 10
+        },
+        "ETHUSDT": {
+          "final_100": 116.8968,
+          "return_pct": 16.897,
+          "trades": 14,
+          "wins": 5,
+          "losses": 9,
+          "max_dd_pct": 7.2,
+          "longs": 7,
+          "shorts": 7
+        }
+      }
+    },
+    "L1": {
+      "signals": 15,
+      "grid": {
+        "0.5%": {
+          "final_equity": 10639.06,
+          "multiple": 1.0639,
+          "return_pct": 6.39,
+          "max_drawdown_pct": 2.38,
+          "trades_taken": 15,
+          "trades_skipped": 0,
+          "log_growth": 0.0631
+        },
+        "1%": {
+          "final_equity": 11063.13,
+          "multiple": 1.1063,
+          "return_pct": 10.63,
+          "max_drawdown_pct": 4.72,
+          "trades_taken": 14,
+          "trades_skipped": 1,
+          "log_growth": 0.1039
+        },
+        "2%": {
+          "final_equity": 10445.21,
+          "multiple": 1.0445,
+          "return_pct": 4.45,
+          "max_drawdown_pct": 9.27,
+          "trades_taken": 13,
+          "trades_skipped": 2,
+          "log_growth": 0.0436
+        },
+        "3%": {
+          "final_equity": 10530.61,
+          "multiple": 1.0531,
+          "return_pct": 5.31,
+          "max_drawdown_pct": 13.66,
+          "trades_taken": 13,
+          "trades_skipped": 2,
+          "log_growth": 0.0518
+        },
+        "5%": {
+          "final_equity": 11682.49,
+          "multiple": 1.1682,
+          "return_pct": 16.82,
+          "max_drawdown_pct": 12.9,
+          "trades_taken": 11,
+          "trades_skipped": 4,
+          "log_growth": 0.1542
+        },
+        "7.5%": {
+          "final_equity": 12853.26,
+          "multiple": 1.2853,
+          "return_pct": 28.53,
+          "max_drawdown_pct": 15.21,
+          "trades_taken": 10,
+          "trades_skipped": 5,
+          "log_growth": 0.251
+        }
+      },
+      "per_symbol": {
+        "BTCUSDT": {
+          "final_100": 99.2718,
+          "return_pct": -0.728,
+          "trades": 8,
+          "wins": 2,
+          "losses": 6,
+          "max_dd_pct": 6.71,
+          "longs": 8,
+          "shorts": 0
+        },
+        "ETHUSDT": {
+          "final_100": 113.8031,
+          "return_pct": 13.803,
+          "trades": 7,
+          "wins": 3,
+          "losses": 4,
+          "max_dd_pct": 6.85,
+          "longs": 7,
+          "shorts": 0
+        }
+      }
+    }
+  }
+}
